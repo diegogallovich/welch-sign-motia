@@ -1,0 +1,69 @@
+[
+  {
+    "id": "basic-tutorial",
+    "config": {
+      "steps/state-audit-cron.step.ts": {
+        "x": -165,
+        "y": 217,
+        "sourceHandlePosition": "right"
+      },
+      "steps/process-food-order.step.ts": {
+        "x": 211,
+        "y": 17,
+        "sourceHandlePosition": "bottom",
+        "targetHandlePosition": "left"
+      },
+      "steps/api.step.ts": {
+        "x": -100,
+        "y": 3,
+        "sourceHandlePosition": "right",
+        "targetHandlePosition": "left"
+      },
+      "steps/notification.step.ts": {
+        "x": 300,
+        "y": 264
+      }
+    }
+  },
+  {
+    "id": "shopvox-to-wrike",
+    "config": {
+      "steps/shopvox-sales-order-event/sales-order-updated-event.step.ts": {
+        "x": 293,
+        "y": 366
+      },
+      "steps/shopvox-sales-order-event/sales-order-deleted-event.step.ts": {
+        "x": 661,
+        "y": 368
+      },
+      "steps/shopvox-sales-order-event/sales-order-created-event.step.ts": {
+        "x": -88,
+        "y": 363
+      },
+      "steps/shopvox-quote-event/quote-updated.step.ts": {
+        "x": 680,
+        "y": -30
+      },
+      "steps/shopvox-quote-event/quote-deleted.step.ts": {
+        "x": 302,
+        "y": -32
+      },
+      "steps/shopvox-quote-event/quote-created.step.ts": {
+        "x": -62,
+        "y": -32
+      },
+      "steps/shopvox-work-order-event/work-order-created.step.ts": {
+        "x": 1205,
+        "y": 307
+      },
+      "steps/shopvox-webhook.step.ts": {
+        "x": -641,
+        "y": 67
+      },
+      "steps/shopvox-work-order-event/work-order-updated.step.ts": {
+        "x": 958,
+        "y": 111
+      }
+    }
+  }
+]

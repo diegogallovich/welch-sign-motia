@@ -1,0 +1,1727 @@
+{
+  "kind": "customfields",
+  "data": [
+    {
+      "id": "IEADYYMRJUAJFPCR",
+      "accountId": "IEADYYMR",
+      "title": "shopVoxId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": "API Id"
+    },
+    {
+      "id": "IEADYYMRJUAJFPY4",
+      "accountId": "IEADYYMR",
+      "title": "active",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFPY5",
+      "accountId": "IEADYYMR",
+      "title": "title",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFPZB",
+      "accountId": "IEADYYMR",
+      "title": "description",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFPZC",
+      "accountId": "IEADYYMR",
+      "title": "txnDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFPZD",
+      "accountId": "IEADYYMR",
+      "title": "totalPriceInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFPZF",
+      "accountId": "IEADYYMR",
+      "title": "totalTaxInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFPZH",
+      "accountId": "IEADYYMR",
+      "title": "totalPriceWithTaxInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFP2V",
+      "accountId": "IEADYYMR",
+      "title": "workflowState",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFP27",
+      "accountId": "IEADYYMR",
+      "title": "expiryDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFP3B",
+      "accountId": "IEADYYMR",
+      "title": "txnNumber",
+      "type": "Numeric",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "useThousandsSeparator": false,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQR5",
+      "accountId": "IEADYYMR",
+      "title": "nextContactDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQR6",
+      "accountId": "IEADYYMR",
+      "title": "potentialClosingDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQR7",
+      "accountId": "IEADYYMR",
+      "title": "closingPotential",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "aggregation": "Sum",
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQSC",
+      "accountId": "IEADYYMR",
+      "title": "customerPoNumber",
+      "type": "Numeric",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "useThousandsSeparator": false,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQSE",
+      "accountId": "IEADYYMR",
+      "title": "customerPoDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQSF",
+      "accountId": "IEADYYMR",
+      "title": "autoExpire",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQSH",
+      "accountId": "IEADYYMR",
+      "title": "downpaymentPercent",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQSJ",
+      "accountId": "IEADYYMR",
+      "title": "shippingTracking",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFQSL",
+      "accountId": "IEADYYMR",
+      "title": "shippingDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSVG",
+      "accountId": "IEADYYMR",
+      "title": "createdAt",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWB",
+      "accountId": "IEADYYMR",
+      "title": "updatedAt",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWE",
+      "accountId": "IEADYYMR",
+      "title": "lastNote",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWF",
+      "accountId": "IEADYYMR",
+      "title": "age",
+      "type": "Numeric",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "useThousandsSeparator": false,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWJ",
+      "accountId": "IEADYYMR",
+      "title": "lastEmailedDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWM",
+      "accountId": "IEADYYMR",
+      "title": "quoteFor",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWP",
+      "accountId": "IEADYYMR",
+      "title": "customerNote",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWW",
+      "accountId": "IEADYYMR",
+      "title": "site",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWX",
+      "accountId": "IEADYYMR",
+      "title": "quickQuote",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWY",
+      "accountId": "IEADYYMR",
+      "title": "inHandDate",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSW5",
+      "accountId": "IEADYYMR",
+      "title": "createdBy",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": "Id of the createdBy object received - rest of the object in the task's native description"
+    },
+    {
+      "id": "IEADYYMRJUAJFSXF",
+      "accountId": "IEADYYMR",
+      "title": "salesOrders",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXH",
+      "accountId": "IEADYYMR",
+      "title": "primaryContact.name",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXI",
+      "accountId": "IEADYYMR",
+      "title": "primaryContact.primaryEmail",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXJ",
+      "accountId": "IEADYYMR",
+      "title": "primaryContact.phoneWithExt",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXK",
+      "accountId": "IEADYYMR",
+      "title": "primaryContact.id",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXL",
+      "accountId": "IEADYYMR",
+      "title": "primarySalesRep.name",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXM",
+      "accountId": "IEADYYMR",
+      "title": "primarySalesRep.id",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXO",
+      "accountId": "IEADYYMR",
+      "title": "primarySalesRep.initials",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXP",
+      "accountId": "IEADYYMR",
+      "title": "company.id",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXR",
+      "accountId": "IEADYYMR",
+      "title": "company.name",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXV",
+      "accountId": "IEADYYMR",
+      "title": "company.phoneWithExt",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXW",
+      "accountId": "IEADYYMR",
+      "title": "leadSourceId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSX2",
+      "accountId": "IEADYYMR",
+      "title": "lineItems",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS26",
+      "accountId": "IEADYYMR",
+      "title": "totalPaymentsInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS27",
+      "accountId": "IEADYYMR",
+      "title": "balanceInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3A",
+      "accountId": "IEADYYMR",
+      "title": "lastInvoicedAt",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3F",
+      "accountId": "IEADYYMR",
+      "title": "lastInvoicedOn",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3G",
+      "accountId": "IEADYYMR",
+      "title": "invoiced",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3H",
+      "accountId": "IEADYYMR",
+      "title": "fullyInvoiced",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3J",
+      "accountId": "IEADYYMR",
+      "title": "billingAddressId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3K",
+      "accountId": "IEADYYMR",
+      "title": "shippingAddressId",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3M",
+      "accountId": "IEADYYMR",
+      "title": "termCodeId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3N",
+      "accountId": "IEADYYMR",
+      "title": "salesTaxId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS3Z",
+      "accountId": "IEADYYMR",
+      "title": "shippingMethodId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS37",
+      "accountId": "IEADYYMR",
+      "title": "productionManagerId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS4A",
+      "accountId": "IEADYYMR",
+      "title": "projectManagerId",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS4C",
+      "accountId": "IEADYYMR",
+      "title": "setupChargesInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS4M",
+      "accountId": "IEADYYMR",
+      "title": "setupChargesTaxable",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS4R",
+      "accountId": "IEADYYMR",
+      "title": "setupChargesIsPercent",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS4U",
+      "accountId": "IEADYYMR",
+      "title": "setupChargesPercent",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS4V",
+      "accountId": "IEADYYMR",
+      "title": "setupChargesTaxInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS5C",
+      "accountId": "IEADYYMR",
+      "title": "miscChargesTaxable",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS5G",
+      "accountId": "IEADYYMR",
+      "title": "miscChargesLabel",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFS5J",
+      "accountId": "IEADYYMR",
+      "title": "miscChargesIsPercent",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCB",
+      "accountId": "IEADYYMR",
+      "title": "miscChargesPercent",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCD",
+      "accountId": "IEADYYMR",
+      "title": "miscChargesTaxInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCE",
+      "accountId": "IEADYYMR",
+      "title": "shippingChargesInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCI",
+      "accountId": "IEADYYMR",
+      "title": "shippingChargesTaxable",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCJ",
+      "accountId": "IEADYYMR",
+      "title": "shippingChargesIsPercent",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCK",
+      "accountId": "IEADYYMR",
+      "title": "shippingChargesPercent",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCM",
+      "accountId": "IEADYYMR",
+      "title": "shippingChargesTaxInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCP",
+      "accountId": "IEADYYMR",
+      "title": "financeChargesInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCR",
+      "accountId": "IEADYYMR",
+      "title": "financeChargesTaxable",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCV",
+      "accountId": "IEADYYMR",
+      "title": "financeChargesIsPercent",
+      "type": "Checkbox",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUCY",
+      "accountId": "IEADYYMR",
+      "title": "financeChargesPercent",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUC2",
+      "accountId": "IEADYYMR",
+      "title": "financeChargesTaxInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUC5",
+      "accountId": "IEADYYMR",
+      "title": "company.specialNotes",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUC6",
+      "accountId": "IEADYYMR",
+      "title": "termCode.id",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDA",
+      "accountId": "IEADYYMR",
+      "title": "termCode.name",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDB",
+      "accountId": "IEADYYMR",
+      "title": "termCode.type",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDC",
+      "accountId": "IEADYYMR",
+      "title": "termCode.days",
+      "type": "Numeric",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "useThousandsSeparator": false,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDD",
+      "accountId": "IEADYYMR",
+      "title": "tax.id",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDE",
+      "accountId": "IEADYYMR",
+      "title": "tax.name",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDG",
+      "accountId": "IEADYYMR",
+      "title": "tax.rate",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDH",
+      "accountId": "IEADYYMR",
+      "title": "tax.rateInPercent",
+      "type": "Percentage",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDS",
+      "accountId": "IEADYYMR",
+      "title": "tax.agency",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDT",
+      "accountId": "IEADYYMR",
+      "title": "tax.code",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDW",
+      "accountId": "IEADYYMR",
+      "title": "updatedBy",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDX",
+      "accountId": "IEADYYMR",
+      "title": "relatedTransactions",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUDZ",
+      "accountId": "IEADYYMR",
+      "title": "orderPayments",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUD4",
+      "accountId": "IEADYYMR",
+      "title": "purchaseOrderLineItemsTotalPriceInDollars",
+      "type": "Currency",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUD6",
+      "accountId": "IEADYYMR",
+      "title": "purchaseOrders",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFUED",
+      "accountId": "IEADYYMR",
+      "title": "signatures",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJG7E4",
+      "accountId": "IEADYYMR",
+      "title": "ShopVox Quote Link",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    }
+  ]
+}

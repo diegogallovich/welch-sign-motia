@@ -1,0 +1,104 @@
+{
+  "id": "a7facd9e-d36a-4ded-a637-c4dde3911763",
+  "active": true,
+  "title": "[TEST COPY - DO NOT PAY ATTENTION] UNE Donor plaque for tennis court and soccer field",
+  "description": "<p>About this quote</p>",
+  "txnDate": "2025-09-10",
+  "txnNumber": 11101,
+  "totalPriceInDollars": 5600.0,
+  "totalTaxInDollars": 0.0,
+  "totalPriceWithTaxInDollars": 5600.0,
+  "workflowState": "draft",
+  "expiryDate": "2025-10-10",
+  "nextContactDate": "2025-09-13",
+  "potentialClosingDate": null,
+  "closingPotential": 0.0,
+  "customerPoNumber": "79yr9734982",
+  "customerPoDate": null,
+  "autoExpire": false,
+  "downpaymentPercent": 50.0,
+  "shippingTracking": null,
+  "shippingDate": null,
+  "createdAt": "2025-09-10T14:25:01-04:00",
+  "updatedAt": "2025-09-10T14:29:33-04:00",
+  "lastNote": null,
+  "age": 0,
+  "lastEmailedDate": null,
+  "quoteFor": null,
+  "customerNote": "You may call the office at 207-883-6200, Monday through Friday, between 7:30 am and 4:00 pm to pay with a credit or debit card. You are also welcome to mail in a check made out to Welch Sign and sent to 7 Lincoln Ave., Scarborough, ME 04074. Please reference this invoice number on the phone or add it to the memo of your check to ensure payment is applied to your order.",
+  "site": null,
+  "quickQuote": false,
+  "dueDate": "2025-09-11",
+  "inHandDate": null,
+  "billingAddress": {
+    "id": "1da7e83b-5bd5-4982-b906-c8e260ef5d0c",
+    "name": "",
+    "street": "11 Hills Beach Road",
+    "city": "Biddeford",
+    "state": "ME",
+    "zip": "4005",
+    "countryName": "United States"
+  },
+  "shippingAddress": {
+    "id": "1da7e83b-5bd5-4982-b906-c8e260ef5d0c",
+    "name": "",
+    "street": "11 Hills Beach Road",
+    "city": "Biddeford",
+    "state": "ME",
+    "zip": "4005",
+    "countryName": "United States"
+  },
+  "installingAddress": {
+    "id": "cd3b33ae-cd5d-45f3-9678-aadbf3915048",
+    "name": "",
+    "street": "11 Hills Beach Road",
+    "city": "Biddeford",
+    "state": "ME",
+    "zip": "04005",
+    "countryName": "United States"
+  },
+  "createdBy": {
+    "id": "df6e9531-0157-49f2-b12d-df76393b452e",
+    "name": "Diego",
+    "initials": ""
+  },
+  "salesOrders": [],
+  "pm": {
+    "id": "5b9628fe-6385-44f5-8e92-1f72dd76e9fe",
+    "initials": "NEW",
+    "name": "Scarborough Shop"
+  },
+  "projectManager": {
+    "id": "037c530d-e76f-4a2b-8aed-b10705754402",
+    "initials": "IR",
+    "name": "Isaac Rico"
+  },
+  "primaryContact": {
+    "name": "Marine Miller",
+    "primaryEmail": "mmiller17@une.edu",
+    "phoneWithExt": "(207) 221-4286",
+    "id": "86b63fcb-398a-45d7-b01e-5ce7106360a4"
+  },
+  "primarySalesRep": {
+    "id": "0a7ad1d5-9519-40ed-b59f-7d9b0e4af834",
+    "name": "Erik Joncas",
+    "initials": "EJ"
+  },
+  "company": {
+    "id": "c2c2f5d0-569c-4d4e-a990-80956fc07db6",
+    "name": "University Of New England",
+    "phoneWithExt": "(207) 221-4286"
+  },
+  "estimator": {
+    "id": "037c530d-e76f-4a2b-8aed-b10705754402",
+    "name": "Isaac Rico",
+    "initials": "IR"
+  },
+  "leadSourceId": null,
+  "lineItems": [
+    {},
+    {},
+    {},
+    {}
+  ]
+}

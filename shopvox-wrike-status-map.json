@@ -1,0 +1,34 @@
+[
+    {
+        "shopVoxStatusName": "draft",
+        "wrikeStatusId": "IEADYYMRJMGGGFXI"
+    },
+    {
+        "shopVoxStatusName": "expired",
+        "wrikeStatusId": "IEADYYMRJMGGGFYJ"
+    },
+    {
+        "shopVoxStatusName": "hold",
+        "wrikeStatusId": "IEADYYMRJMGGGGMI"
+    },
+    {
+        "shopVoxStatusName": "ordered",
+        "wrikeStatusId": "IEADYYMRJMGGGFXJ"
+    },
+    {
+        "shopVoxStatusName": "customer_review",
+        "wrikeStatusId": "IEADYYMRJMGGGFXS"
+    },
+    {
+        "shopVoxStatusName": "approved",
+        "wrikeStatusId": "IEADYYMRJMGGGFX4"
+    },
+    {
+        "shopVoxStatusName": "approved_with_changes",
+        "wrikeStatusId": "IEADYYMRJMGGGGL4"
+    },
+    {
+        "shopVoxStatusName": "void",
+        "wrikeStatusId": "IEADYYMRJMGGGGNH"
+    }
+]
