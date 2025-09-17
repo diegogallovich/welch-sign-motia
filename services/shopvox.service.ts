@@ -1,4 +1,5 @@
 import { ShopVoxQuote } from "../schemas/quote.schema";
+import { ShopVoxSalesOrder } from "../schemas/sales-order.schema";
 
 export class ShopVoxService {
     private readonly baseUrl = "https://api.shopvox.com/v1";
@@ -51,6 +52,40 @@ export class ShopVoxService {
      */
     async getQuotes(quoteIds: string[]): Promise<ShopVoxQuote[]> {
         const promises = quoteIds.map(id => this.getQuote(id));
+        return Promise.all(promises);
+    }
+
+    /**
+     * Fetches a sales order by ID from ShopVox
+     */
+    async getSalesOrder(salesOrderId: string): Promise<ShopVoxSalesOrder> {
+        const url = `${this.baseUrl}/sales_orders/${salesOrderId}?account_id=${this.accountId}&authToken=${this.authToken}`;
+        
+        const response = await fetch(url, {
+            method: "GET",
+            headers: this.getHeaders()
+        });
+
+        if (!response.ok) {
+            let errorDetails = '';
+            try {
+                const errorResponse = await response.json();
+                errorDetails = JSON.stringify(errorResponse, null, 2);
+            } catch (e) {
+                errorDetails = await response.text();
+            }
+            
+            throw new Error(`Failed to fetch sales order from ShopVox: ${response.status} ${response.statusText}\nSales Order ID: ${salesOrderId}\nURL: ${url}\nError response: ${errorDetails}`);
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Fetches multiple sales orders by IDs from ShopVox
+     */
+    async getSalesOrders(salesOrderIds: string[]): Promise<ShopVoxSalesOrder[]> {
+        const promises = salesOrderIds.map(id => this.getSalesOrder(id));
         return Promise.all(promises);
     }
 }

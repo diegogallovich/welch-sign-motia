@@ -1,5 +1,7 @@
 import { EventConfig, Handlers, FlowContext } from "motia";
 import { ShopVoxEventSchema } from "../../schemas/shopvox-event.schema";
+import { ShopVoxSalesOrder } from "../../schemas/sales-order.schema";
+import { shopvoxService } from "../../services/shopvox.service";
 
 
 export const config: EventConfig = {
@@ -13,11 +15,16 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-work-order-updated"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
-    logger.info("Processing work order updated event", { input, traceId });
-    
-    // prettify input and display fully
-    const inputJson = JSON.stringify(input, null, 2);
-    logger.info("Work order updated event", { inputJson, traceId });
+    let salesOrder: ShopVoxSalesOrder;
+    try {
+        salesOrder = await shopvoxService.getSalesOrder(input.id);
+        const salesOrderJson = JSON.stringify(salesOrder, null, 2);
+        logger.info("Sales order retrieved from ShopVox", { salesOrderJson, traceId });
+        
+    } catch (error) {
+        logger.error("Error getting sales order from ShopVox", { error, traceId });
+        return;
+    }
 
     await emit({
         topic: "work-order-updated-in-wrike"

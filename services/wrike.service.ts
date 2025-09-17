@@ -439,7 +439,7 @@ export class WrikeService {
         }
 
         const requestBody: any = {
-            title: quote.title,
+            title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
             // customItemTypeId: ''
@@ -622,6 +622,8 @@ export class WrikeService {
 
     /**
      * Creates an HTML table for quote line items
+     * 
+     * TODO: Figure out why the table is not displaying correctly in Wrike. Not all rows are being displayed. Weirdly around the 6th or 7th row
      */
     private createQuoteLineItemsTable(quote: ShopVoxQuote): string {
         if (!quote.lineItems || quote.lineItems.length === 0) {
@@ -635,34 +637,21 @@ export class WrikeService {
                 
                 return `
 <tr>
-    <td style="text-align: center; font-weight: bold;">${index + 1}</td>
     <td style="font-weight: bold;">${this.escapeHtml(item?.name || 'Unnamed Item')}</td>
     <td style="max-width: 200px; word-wrap: break-word;">${this.escapeHtml(displayDescription)}</td>
     <td style="text-align: center;">${item?.quantity || 0}</td>
-    <td style="text-align: center;">${this.escapeHtml(item?.uom || 'N/A')}</td>
-    <td style="text-align: right;">$${item?.priceInDollars || 0}</td>
-    <td style="text-align: right; font-weight: bold;">$${item?.totalPriceInDollars || 0}</td>
-    <td style="text-align: center;">${item?.taxable ? 'Yes' : 'No'}</td>
-    <td style="text-align: center;">${((item?.taxRate || 0) * 100).toFixed(1)}%</td>
 </tr>`;
             }).join('');
 
             return `
-<h2>📦 Quote Line Items</h2>
 <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 12px; margin: 10px 0;">
     <tr style="background-color: #e6f3ff; font-weight: bold;">
-        <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 40px; font-weight: bold;">#Item</td>
         <td style="padding: 8px; border: 1px solid #ccc; width: 120px; font-weight: bold;">Name</td>
         <td style="padding: 8px; border: 1px solid #ccc; width: 200px; font-weight: bold;">Description</td>
         <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 60px; font-weight: bold;">Quantity</td>
-        <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 60px; font-weight: bold;">Unit</td>
-        <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 80px; font-weight: bold;">Unit Price</td>
-        <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 80px; font-weight: bold;">Total Price</td>
-        <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 60px; font-weight: bold;">Taxable</td>
-        <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 60px; font-weight: bold;">Tax Rate</td>
     </tr>
     ${tableRows}
-</table>`.trim();
+</table>`;
         } catch (error) {
             console.error('Error processing line items table:', error);
             return '<h2>📦 Line Items</h2><p>Error processing line items</p>';
