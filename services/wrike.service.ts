@@ -1,4 +1,5 @@
 import { ShopVoxQuote } from "../schemas/quote.schema";
+import { mapShopVoxToWrikeUserId } from "../user-mapping";
 
 export interface WrikeTask {
     id: string;
@@ -213,6 +214,26 @@ export class WrikeService {
     }
 
     /**
+     * Creates HTML anchor tags for ShopVox work orders from sales orders array
+     */
+    private createWorkOrderLinks(salesOrders: any[]): string {
+        if (!salesOrders || salesOrders.length === 0) {
+            return '';
+        }
+
+        const links = salesOrders
+            .filter(order => order && order.id && order.txnNumber) // Filter out invalid orders
+            .map(order => {
+                const url = `https://api.shopvox.com/edge//work_orders/${order.id}/pdf_document?pdf_type=WorkOrder`;
+                const displayText = `SO #${order.txnNumber}`;
+                return `<a href="${this.escapeHtml(url)}" target="_blank">${this.escapeHtml(displayText)}</a>`;
+            })
+            .join(', ');
+
+        return links;
+    }
+
+    /**
      * Cleans HTML tags from text while preserving the content
      */
     private cleanHtmlTags(text: string): string {
@@ -232,7 +253,7 @@ export class WrikeService {
      * Maps a ShopVox quote to Wrike custom fields
      */
     private mapQuoteToCustomFields(quote: ShopVoxQuote) {
-        return [
+        const baseCustomFields = [
             {
                 id: 'IEADYYMRJUAJFPCR',
                 value: this.sanitizeWrikeCustomFieldValue(quote.id),
@@ -378,10 +399,6 @@ export class WrikeService {
                 value: this.sanitizeWrikeCustomFieldValue(quote.primaryContact?.id),
             },
             {
-                id: 'IEADYYMRJUAJFSXL',
-                value: this.sanitizeWrikeCustomFieldValue(quote.primarySalesRep?.name),
-            },
-            {
                 id: 'IEADYYMRJUAJFSXM',
                 value: this.sanitizeWrikeCustomFieldValue(quote.primarySalesRep?.id),
             },
@@ -411,9 +428,57 @@ export class WrikeService {
             },
             {
                 id: 'IEADYYMRJUAJG7E4',
-                value: `https://express.shopvox.com/transactions/quotes/${quote.id}`,
+                value: `<a href="${this.escapeHtml(`https://express.shopvox.com/transactions/quotes/${quote.id}`)}" target="_blank">QT #${this.escapeHtml(quote.txnNumber)}</a>`,
+            },
+            {
+                id: 'IEADYYMRJUAJJ6HA',
+                value: this.createWorkOrderLinks(quote.salesOrders),
             },
         ];
+
+        // Add contact field mappings if the respective users exist in the quote
+        const contactFields = [];
+
+        // Project Manager (IEADYYMRJUAJIFD5)
+        if (quote.projectManager?.id) {
+            contactFields.push({
+                id: 'IEADYYMRJUAJIFD5',
+                value: mapShopVoxToWrikeUserId(quote.projectManager.id),
+            });
+        }
+
+        // Production Manager (IEADYYMRJUAJIFEE) 
+        if (quote.pm?.id) {
+            contactFields.push({
+                id: 'IEADYYMRJUAJIFEE',
+                value: mapShopVoxToWrikeUserId(quote.pm.id),
+            });
+        }
+
+        // Estimator (IEADYYMRJUAJIFEM)
+        if (quote.estimator?.id) {
+            contactFields.push({
+                id: 'IEADYYMRJUAJIFEM',
+                value: mapShopVoxToWrikeUserId(quote.estimator.id),
+            });
+        }
+
+        // Sales Rep (IEADYYMRJUAJFSXL)
+        if (quote.primarySalesRep?.id) {
+            contactFields.push({
+                id: 'IEADYYMRJUAJFSXL',
+                value: mapShopVoxToWrikeUserId(quote.primarySalesRep.id),
+            });
+        }
+
+        // Created By (IEADYYMRJUAJIFEN) - always present
+        contactFields.push({
+            id: 'IEADYYMRJUAJIFEN',
+            value: mapShopVoxToWrikeUserId(quote.createdBy.id),
+        });
+
+        // Combine all custom fields
+        return [...baseCustomFields, ...contactFields];
     }
 
     /**
@@ -442,7 +507,6 @@ export class WrikeService {
             title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
-            // customItemTypeId: ''
         };
 
         // Only add dates if dueDate is valid
@@ -538,7 +602,7 @@ export class WrikeService {
         }
 
         const requestBody: any = {
-            title: quote.title,
+            title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
         };

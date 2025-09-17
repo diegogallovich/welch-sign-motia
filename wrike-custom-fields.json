@@ -138,7 +138,7 @@
     {
       "id": "IEADYYMRJUAJFPZH",
       "accountId": "IEADYYMR",
-      "title": "totalPriceWithTaxInDollars",
+      "title": "Quote Total",
       "type": "Currency",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -160,7 +160,7 @@
     {
       "id": "IEADYYMRJUAJFP2V",
       "accountId": "IEADYYMR",
-      "title": "workflowState",
+      "title": "Status",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -327,11 +327,14 @@
     {
       "id": "IEADYYMRJUAJFQSH",
       "accountId": "IEADYYMR",
-      "title": "downpaymentPercent",
+      "title": "Downpayment",
       "type": "Percentage",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": [],
+        "spaceWriters": "Admin"
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
@@ -339,7 +342,8 @@
         ],
         "decimalPlaces": 0,
         "aggregation": "Sum",
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -381,11 +385,16 @@
     {
       "id": "IEADYYMRJUAJFSVG",
       "accountId": "IEADYYMR",
-      "title": "createdAt",
+      "title": "Date Created",
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": [
+          "KUAVYLX5",
+          "KUAIIJPC"
+        ]
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
@@ -399,17 +408,19 @@
     {
       "id": "IEADYYMRJUAJFSWB",
       "accountId": "IEADYYMR",
-      "title": "updatedAt",
+      "title": "Last Updated On",
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": []
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false,
+        "readOnly": true,
         "allowTime": false
       },
       "description": ""
@@ -593,51 +604,63 @@
     {
       "id": "IEADYYMRJUAJFSXH",
       "accountId": "IEADYYMR",
-      "title": "primaryContact.name",
+      "title": "Primary Contact",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": []
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": true,
+        "allowTime": false
       },
       "description": ""
     },
     {
       "id": "IEADYYMRJUAJFSXI",
       "accountId": "IEADYYMR",
-      "title": "primaryContact.primaryEmail",
+      "title": "Primary Contact email",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": [
+          "KUAVYLX5",
+          "KUAIIJPC"
+        ]
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
     {
       "id": "IEADYYMRJUAJFSXJ",
       "accountId": "IEADYYMR",
-      "title": "primaryContact.phoneWithExt",
+      "title": "Primary Contact Phone",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": []
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": true,
+        "allowTime": false
       },
       "description": ""
     },
@@ -661,8 +684,8 @@
     {
       "id": "IEADYYMRJUAJFSXL",
       "accountId": "IEADYYMR",
-      "title": "primarySalesRep.name",
-      "type": "Text",
+      "title": "Sales Rep",
+      "type": "Contacts",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
       "sharing": {},
@@ -671,7 +694,8 @@
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -729,17 +753,23 @@
     {
       "id": "IEADYYMRJUAJFSXR",
       "accountId": "IEADYYMR",
-      "title": "company.name",
+      "title": "Company Name",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": [
+          "KUAVYLX5",
+          "KUAIIJPC"
+        ]
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -1710,6 +1740,337 @@
       "id": "IEADYYMRJUAJG7E4",
       "accountId": "IEADYYMR",
       "title": "ShopVox Quote Link",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFD5",
+      "accountId": "IEADYYMR",
+      "title": "Project Manager",
+      "type": "Contacts",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "contacts": [
+          "KUAIIJPC",
+          "KUAIINDI",
+          "KUAUNR4P",
+          "KUATJHVJ",
+          "KUATISBM",
+          "KUAUNFRL",
+          "KUATZFAN",
+          "KUATEHED",
+          "KUATHPK4",
+          "KUAUVQGU",
+          "KUASSV4P",
+          "KUATIEHY",
+          "KUATIDV4",
+          "KUAIIJ76"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFEE",
+      "accountId": "IEADYYMR",
+      "title": "Production Manager",
+      "type": "Contacts",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "contacts": [
+          "KUATJIS2"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFEM",
+      "accountId": "IEADYYMR",
+      "title": "Estimator",
+      "type": "Contacts",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFEN",
+      "accountId": "IEADYYMR",
+      "title": "Created By (ShopVox)",
+      "type": "Contacts",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": [
+          "KUAVYLX5",
+          "KUAIIJPC"
+        ]
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIG5N",
+      "accountId": "IEADYYMR",
+      "title": "Install Address",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": []
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": true,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJC2C",
+      "accountId": "IEADYYMR",
+      "title": "Sign Types",
+      "type": "Multiple",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "values": [
+          "ADA",
+          "Environmental graphics",
+          "Dimensional Letters",
+          "Vinyl",
+          "Fabricated Letters",
+          "Channel letters",
+          "Building sign",
+          "Blade sign",
+          "Traffic sign",
+          "Wayfinding",
+          "Post & Panel",
+          "Monument sign",
+          "Pylon Sign",
+          "Other",
+          "EMC"
+        ],
+        "options": [
+          {
+            "value": "ADA",
+            "color": "Blue"
+          },
+          {
+            "value": "Environmental graphics",
+            "color": "Green"
+          },
+          {
+            "value": "Dimensional Letters",
+            "color": "Orange"
+          },
+          {
+            "value": "Vinyl",
+            "color": "DarkRed"
+          },
+          {
+            "value": "Fabricated Letters",
+            "color": "Indigo"
+          },
+          {
+            "value": "Channel letters",
+            "color": "Turquoise"
+          },
+          {
+            "value": "Building sign",
+            "color": "YellowGreen"
+          },
+          {
+            "value": "Blade sign",
+            "color": "Brown"
+          },
+          {
+            "value": "Traffic sign",
+            "color": "Red"
+          },
+          {
+            "value": "Wayfinding",
+            "color": "DarkBlue"
+          },
+          {
+            "value": "Post & Panel",
+            "color": "DarkCyan"
+          },
+          {
+            "value": "Monument sign",
+            "color": "Yellow"
+          },
+          {
+            "value": "Pylon Sign",
+            "color": "Gray"
+          },
+          {
+            "value": "Other",
+            "color": "Purple"
+          },
+          {
+            "value": "EMC",
+            "color": "Blue"
+          }
+        ],
+        "optionColorsEnabled": true,
+        "allowOtherValues": false,
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJC2I",
+      "accountId": "IEADYYMR",
+      "title": "End User",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": "If not the same as the business"
+    },
+    {
+      "id": "IEADYYMRJUAJJD5O",
+      "accountId": "IEADYYMR",
+      "title": "Drawing Type",
+      "type": "DropDown",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "values": [
+          "Proof",
+          "Photo Comp",
+          "Concept Package",
+          "Shops"
+        ],
+        "options": [
+          {
+            "value": "Proof",
+            "color": "Brown"
+          },
+          {
+            "value": "Photo Comp",
+            "color": "Red"
+          },
+          {
+            "value": "Concept Package",
+            "color": "DarkBlue"
+          },
+          {
+            "value": "Shops",
+            "color": "DarkCyan"
+          }
+        ],
+        "optionColorsEnabled": true,
+        "allowOtherValues": true,
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJEVR",
+      "accountId": "IEADYYMR",
+      "title": "Work Order Link",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJK6X",
+      "accountId": "IEADYYMR",
+      "title": "Due to Production",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": [
+          "KX7XLYUP"
+        ]
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": true,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJ6HA",
+      "accountId": "IEADYYMR",
+      "title": "WoSo's",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],

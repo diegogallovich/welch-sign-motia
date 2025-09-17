@@ -12,13 +12,24 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-quote-deleted"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
+    logger.info("Processing quote deleted event", { input, traceId });
+    
     try {
         // TODO: Delete Quote from Wrike
         await emit({
             topic: "quote-deleted-in-wrike"
         } as never)
     } catch (error) {
-        logger.error("Error deleting quote from Wrike", { error, traceId });
+        logger.error("Error deleting quote from Wrike", { 
+            error: error instanceof Error ? {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            } : error,
+            quoteId: input.id,
+            input,
+            traceId 
+        });
         return;
     }
 }

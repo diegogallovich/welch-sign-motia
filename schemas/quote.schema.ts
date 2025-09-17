@@ -39,7 +39,55 @@ export const ShopVoxQuoteSchema = z.object({
     initials: z.string()
   }),
 
+  billingAddress: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+    countryName: z.string()
+  }),
+
+  shippingAddress: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+    countryName: z.string()
+  }),
+
+  installingAddress: z.object({
+    id: z.string().uuid(),
+    name: z.string().nullable(),
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+    countryName: z.string()
+  }),
+
   salesOrders: z.array(z.any()),
+
+  pm: z.object({
+    id: z.string().uuid(),
+    initials: z.string(),
+    name: z.string()
+  }),
+
+  projectManager: z.object({
+    id: z.string().uuid(),
+    initials: z.string(),
+    name: z.string()
+  }),
+
+  estimator: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    initials: z.string()
+  }),
 
   primaryContact: z.object({
     id: z.string().uuid(),

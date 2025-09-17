@@ -15,13 +15,23 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-quote-updated"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
+    logger.info("Processing quote updated event", { input, traceId });
     
     let quote: ShopVoxQuote;
     try {
         quote = await shopvoxService.getQuote(input.id);
         logger.info("Quote retrieved from ShopVox", { quote, traceId });
     } catch (error) {
-        logger.error("Error getting quote from ShopVox", { error, traceId });
+        logger.error("Error getting quote from ShopVox", { 
+            error: error instanceof Error ? {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            } : error,
+            quoteId: input.id,
+            input,
+            traceId 
+        });
         return;
     }
 

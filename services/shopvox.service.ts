@@ -27,6 +27,8 @@ export class ShopVoxService {
     async getQuote(quoteId: string): Promise<ShopVoxQuote> {
         const url = `${this.baseUrl}/quotes/${quoteId}?account_id=${this.accountId}&authToken=${this.authToken}`;
         
+        console.log(`[ShopVoxService] Fetching quote ${quoteId} from: ${this.baseUrl}/quotes/${quoteId}`);
+        
         const response = await fetch(url, {
             method: "GET",
             headers: this.getHeaders()
@@ -41,10 +43,13 @@ export class ShopVoxService {
                 errorDetails = await response.text();
             }
             
+            console.error(`[ShopVoxService] Failed to fetch quote ${quoteId}: ${response.status} ${response.statusText}`);
             throw new Error(`Failed to fetch quote from ShopVox: ${response.status} ${response.statusText}\nQuote ID: ${quoteId}\nURL: ${url}\nError response: ${errorDetails}`);
         }
 
-        return await response.json();
+        const quote = await response.json();
+        console.log(`[ShopVoxService] Successfully fetched quote ${quoteId}`);
+        return quote;
     }
 
     /**
