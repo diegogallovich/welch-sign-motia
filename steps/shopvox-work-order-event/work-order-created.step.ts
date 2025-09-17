@@ -1,8 +1,8 @@
 import { EventConfig, Handlers, FlowContext } from "motia";
 import { ShopVoxEventSchema } from "../../schemas/shopvox-event.schema";
 import { shopvoxService } from "../../services/shopvox.service";
+import { wrikeService } from "../../services/wrike.service";
 import { ShopVoxSalesOrder } from "../../schemas/sales-order.schema";
-
 
 export const config: EventConfig = {
     type: "event",
@@ -15,8 +15,6 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-work-order-created"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
-    // TODO: Fetch Work Order or Sales Order from ShopVox?
-
     let salesOrder: ShopVoxSalesOrder;
     try {
         salesOrder = await shopvoxService.getSalesOrder(input.id);
@@ -28,8 +26,26 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (in
         return;
     }
 
-    // todo: add sales order to wrike
-    await emit({
-        topic: "work-order-created-in-wrike"
-    } as never)
+    try {
+        // Create or update the WoSo task in Wrike (address formatting is handled internally)
+        const result = await wrikeService.createOrUpdateWosoTask(salesOrder);
+        logger.info("WoSo task processed in Wrike", { 
+            taskId: result.taskId, 
+            wasCreated: result.wasCreated, 
+            salesOrderId: salesOrder.id,
+            traceId 
+        });
+
+        await emit({
+            topic: "work-order-created-in-wrike",
+            taskId: result.taskId,
+            wasCreated: result.wasCreated,
+            salesOrderId: salesOrder.id,
+            customFields: result.customFields
+        } as never);
+        
+    } catch (error) {
+        logger.error("Error creating/updating WoSo task in Wrike", { error, salesOrderId: salesOrder.id, traceId });
+        throw error;
+    }
 }

@@ -6,7 +6,7 @@ export const ShopVoxSalesOrderLineItemSchema = z.object({
   companyId: z.string().uuid(),
   position: z.number(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullable(),
   fullDescription: z.string(),
   quantity: z.string(),
   volumeDiscountPercent: z.string(),
@@ -29,7 +29,7 @@ export const ShopVoxSalesOrderLineItemSchema = z.object({
   taxable: z.boolean(),
   taxName: z.string(),
   taxRate: z.string(),
-  priceOverride: z.string(),
+  priceOverride: z.boolean(),
   incomeCoaAccountId: z.string().uuid(),
   incomeAccountName: z.string(),
   incomeAccountNumber: z.string(),
@@ -38,10 +38,16 @@ export const ShopVoxSalesOrderLineItemSchema = z.object({
   cogAccountName: z.string(),
   cogAccountNumber: z.string(),
   parentLineItemId: z.string().uuid().nullable(),
+  customFields: z.array(z.any()),
   purchaseOrderLineItems: z.array(z.any()),
   purchaseTrackings: z.array(z.any()),
-  incomeAccountEditMode: z.string(),
-  cogAccountEditMode: z.string()
+  lineItemPricing: z.object({
+    pricingType: z.string(),
+    id: z.string().uuid(),
+    useTemplate: z.boolean()
+  }),
+  incomeAccountEditMode: z.boolean(),
+  cogAccountEditMode: z.boolean()
 });
 
 export const ShopVoxSignatureSchema = z.object({
@@ -61,7 +67,8 @@ export const ShopVoxRelatedTransactionSchema = z.object({
 });
 
 export const ShopVoxSalesOrderSchema = z.object({
-  active: z.string(),
+  className: z.string(),
+  active: z.boolean(),
   id: z.string().uuid(),
   title: z.string(),
   description: z.string(),
@@ -74,27 +81,16 @@ export const ShopVoxSalesOrderSchema = z.object({
   balanceInDollars: z.string(),
   workflowState: z.string(),
   dueDate: z.string(),
+  inHandDate: z.string().nullable(),
   shippingDate: z.string().nullable(),
   customerPoNumber: z.string().nullable(),
   customerPoDate: z.string().nullable(),
   downpaymentPercent: z.string(),
-  lastInvoicedAt: z.string(),
-  lastInvoicedOn: z.string(),
+  lastInvoicedAt: z.string().nullable(),
+  lastInvoicedOn: z.string().nullable(),
   invoiced: z.boolean(),
   fullyInvoiced: z.boolean(),
   primarySalesRepInitials: z.string(),
-  companyId: z.string().uuid(),
-  primarySalesRepId: z.string().uuid(),
-  primaryContactId: z.string().uuid(),
-  billingAddressId: z.string().uuid().nullable(),
-  shippingAddressId: z.string().uuid().nullable(),
-  termCodeId: z.string().uuid(),
-  salesTaxId: z.string().uuid(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  shippingMethodId: z.string().uuid().nullable(),
-  productionManagerId: z.string().uuid().nullable(),
-  projectManagerId: z.string().uuid().nullable(),
   setupChargesInDollars: z.string(),
   setupChargesTaxable: z.boolean(),
   setupChargesIsPercent: z.boolean(),
@@ -116,26 +112,23 @@ export const ShopVoxSalesOrderSchema = z.object({
   financeChargesIsPercent: z.boolean(),
   financeChargesPercent: z.string(),
   financeChargesTaxInDollars: z.string(),
+  companyId: z.string().uuid(),
+  primarySalesRepId: z.string().uuid(),
+  primaryContactId: z.string().uuid(),
+  billingAddressId: z.string().uuid().nullable(),
+  shippingAddressId: z.string().uuid().nullable(),
+  termCodeId: z.string().uuid(),
+  salesTaxId: z.string().uuid(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  createdById: z.string().uuid(),
+  updatedById: z.string().uuid(),
+  shippingMethodId: z.string().uuid().nullable(),
+  productionManagerId: z.string().uuid().nullable(),
+  projectManagerId: z.string().uuid().nullable(),
+  paymentMethodId: z.string().uuid().nullable(),
 
   lineItems: z.array(ShopVoxSalesOrderLineItemSchema),
-
-  pm: z.object({
-    id: z.string().uuid(),
-    initials: z.string(),
-    name: z.string()
-  }),
-
-  projectManager: z.object({
-    id: z.string().uuid(),
-    initials: z.string(),
-    name: z.string()
-  }),
-
-  estimator: z.object({
-    id: z.string().uuid(),
-    name: z.string(),
-    initials: z.string()
-  }),
 
   company: z.object({
     id: z.string().uuid(),
@@ -157,18 +150,33 @@ export const ShopVoxSalesOrderSchema = z.object({
     rate: z.string(),
     rateInPercent: z.string(),
     agency: z.string(),
-    code: z.string().nullable()
+    code: z.string(),
+    hasSplit: z.boolean(),
+    taxSplit: z.object({}),
+    taxSplitStr: z.string()
   }),
 
   primaryContact: z.object({
     id: z.string().uuid(),
     name: z.string(),
-    title: z.string(),
+    title: z.string().nullable(),
     email: z.string(),
     phoneWithExt: z.string().nullable()
   }),
 
   primarySalesRep: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    initials: z.string()
+  }),
+
+  productionManager: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    initials: z.string()
+  }),
+
+  projectManager: z.object({
     id: z.string().uuid(),
     name: z.string(),
     initials: z.string()
@@ -182,6 +190,38 @@ export const ShopVoxSalesOrderSchema = z.object({
   updatedBy: z.object({
     id: z.string().uuid(),
     name: z.string()
+  }),
+
+  billingAddress: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    nameStreet: z.string(),
+    street: z.string(),
+    street1: z.string().nullable(),
+    suburb: z.string(),
+    city: z.string(),
+    nameStreetCity: z.string(),
+    zip: z.string(),
+    state: z.string(),
+    country: z.string(),
+    countryCode: z.string(),
+    attentionTo: z.string()
+  }),
+
+  shippingAddress: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    nameStreet: z.string(),
+    street: z.string(),
+    street1: z.string().nullable(),
+    suburb: z.string(),
+    city: z.string(),
+    nameStreetCity: z.string(),
+    zip: z.string(),
+    state: z.string(),
+    country: z.string(),
+    countryCode: z.string(),
+    attentionTo: z.string()
   }),
 
   relatedTransactions: z.array(ShopVoxRelatedTransactionSchema),

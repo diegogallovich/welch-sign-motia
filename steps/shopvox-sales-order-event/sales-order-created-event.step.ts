@@ -1,6 +1,8 @@
 import { EventConfig, Handlers, FlowContext } from "motia";
 import { ShopVoxEventSchema } from "../../schemas/shopvox-event.schema";
 import { ShopVoxSalesOrder } from "schemas/sales-order.schema";
+import { shopvoxService } from "../../services/shopvox.service";
+import { wrikeService } from "../../services/wrike.service";
 
 export const config: EventConfig = {
     type: "event",
@@ -15,31 +17,37 @@ export const config: EventConfig = {
 export const handler: Handlers["process-shopvox-sales-order-created"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
     let salesOrder: ShopVoxSalesOrder;
     try {
-        // const salesOrderResponse = await fetch(`https://api.shopvox.com/v1/sales_orders/${input.id}?account_id=${process.env.SHOPVOX_ACCOUNT_ID}&authToken=${process.env.SHOPVOX_AUTH_TOKEN}`, {
-        //     method: "GET",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // });
-
-        // salesOrder = await salesOrderResponse.json();
-        // logger.info("Sales order retrieved from ShopVox", { salesOrder, traceId });
-
-        // prettify input and display fully
-        const inputJson = JSON.stringify(input, null, 2);
-        logger.info("Sales order created event", { inputJson, traceId });
+        // Fetch the sales order from ShopVox
+        salesOrder = await shopvoxService.getSalesOrder(input.id);
+        logger.info("Sales order retrieved from ShopVox", { salesOrderId: salesOrder.id, traceId });
     } catch (error) {
         logger.error("Error getting sales order from ShopVox", { error, traceId });
         return;
     }
     
     try {
-        // TODO: Add Sales Order to Wrike
+        // Create or update the WoSo task in Wrike (address formatting is handled internally)
+        const result = await wrikeService.createOrUpdateWosoTask(salesOrder);
+        logger.info("WoSo task processed in Wrike", { 
+            taskId: result.taskId, 
+            wasCreated: result.wasCreated, 
+            salesOrderId: salesOrder.id,
+            traceId 
+        });
+
+        // Emit event with sales order data and formatted addresses
         await emit({
-            topic: "sales-order-created-in-wrike"
-        } as never)
+            topic: "sales-order-created-in-wrike",
+            data: {
+                salesOrder,
+                customFields: result.customFields,
+                taskId: result.taskId,
+                wasCreated: result.wasCreated,
+                traceId
+            }
+        } as never);
     } catch (error) {
-        logger.error("Error adding sales order to Wrike", { error, traceId });
+        logger.error("Error processing sales order for Wrike", { error, traceId });
         return;
     }
 }

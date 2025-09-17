@@ -1,5 +1,8 @@
 import { ShopVoxQuote } from "../schemas/quote.schema";
+import { ShopVoxSalesOrder } from "../schemas/sales-order.schema";
 import { mapShopVoxToWrikeUserId } from "../user-mapping";
+import { formatAddress, getInstallAddressFromQuote, WRIKE_ADDRESS_FIELD_IDS } from "../utils/address-formatter";
+import { shopvoxService } from "./shopvox.service";
 
 export interface WrikeTask {
     id: string;
@@ -23,17 +26,19 @@ export class WrikeService {
     private readonly baseUrl = "https://www.wrike.com/api/v4";
     private readonly authToken: string;
     private readonly quotesDbId: string;
+    private readonly wososDbId: string;
 
     constructor() {
         this.authToken = process.env.WRIKE_PERMANENT_TOKEN!;
         this.quotesDbId = process.env.WRIKE_QUOTES_DB_ID!;
+        this.wososDbId = process.env.WRIKE_WOSOS_DB_ID!;
         
-        if (!this.authToken || !this.quotesDbId) {
-            throw new Error("Missing required Wrike environment variables: WRIKE_PERMANENT_TOKEN, WRIKE_QUOTES_DB_ID");
+        if (!this.authToken || !this.quotesDbId || !this.wososDbId) {
+            throw new Error("Missing required Wrike environment variables: WRIKE_PERMANENT_TOKEN, WRIKE_QUOTES_DB_ID, WRIKE_WOSOS_DB_ID");
         }
 
         // Log configuration (without sensitive data)
-        console.log(`WrikeService initialized with folder ID: ${this.quotesDbId}`);
+        console.log(`WrikeService initialized with quotes folder ID: ${this.quotesDbId}, wosos folder ID: ${this.wososDbId}`);
     }
 
     private getHeaders() {
@@ -247,6 +252,34 @@ export class WrikeService {
             .replace(/&quot;/g, '"')
             .replace(/&#39;/g, "'")
             .trim();
+    }
+
+    /**
+     * Formats addresses for a sales order and returns them as custom field data
+     * @param salesOrder - The sales order to format addresses for
+     * @returns Promise<Record<string, string>> - Custom field data with formatted addresses
+     */
+    private async formatSalesOrderAddresses(salesOrder: ShopVoxSalesOrder): Promise<Record<string, string>> {
+        try {
+            // Format addresses for Wrike custom fields
+            const shippingAddressText = formatAddress(salesOrder.shippingAddress as any);
+            const billingAddressText = formatAddress(salesOrder.billingAddress as any);
+            const installAddressText = await getInstallAddressFromQuote(salesOrder, shopvoxService);
+
+            return {
+                [WRIKE_ADDRESS_FIELD_IDS.SHIPPING_ADDRESS]: shippingAddressText,
+                [WRIKE_ADDRESS_FIELD_IDS.BILLING_ADDRESS]: billingAddressText,
+                [WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS]: installAddressText
+            };
+        } catch (error) {
+            console.error('Error formatting sales order addresses:', error);
+            // Return empty addresses if formatting fails
+            return {
+                [WRIKE_ADDRESS_FIELD_IDS.SHIPPING_ADDRESS]: '',
+                [WRIKE_ADDRESS_FIELD_IDS.BILLING_ADDRESS]: '',
+                [WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS]: ''
+            };
+        }
     }
 
     /**
@@ -482,6 +515,319 @@ export class WrikeService {
     }
 
     /**
+     * Maps a ShopVox sales order to Wrike custom fields
+     */
+    private mapSalesOrderToCustomFields(salesOrder: ShopVoxSalesOrder, customFields?: Record<string, string>) {
+        const baseCustomFields = [
+            {
+                id: 'IEADYYMRJUAJFPCR',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.id),
+            },
+            {
+                id: 'IEADYYMRJUAJFPY4',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.active),
+            },
+            {
+                id: 'IEADYYMRJUAJFPY5',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.title),
+            },
+            {
+                id: 'IEADYYMRJUAJFPZB',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.description),
+            },
+            {
+                id: 'IEADYYMRJUAJFPZC',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.txnDate),
+            },
+            {
+                id: 'IEADYYMRJUAJFP3B',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.txnNumber),
+            },
+            {
+                id: 'IEADYYMRJUAJFPZD',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.totalPriceInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFPZF',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.totalTaxInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFPZH',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.totalPriceWithTaxInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFP2V',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.workflowState),
+            },
+            {
+                id: 'IEADYYMRJUAJFQSC',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.customerPoNumber),
+            },
+            {
+                id: 'IEADYYMRJUAJFQSE',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.customerPoDate),
+            },
+            {
+                id: 'IEADYYMRJUAJFQSH',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.downpaymentPercent),
+            },
+            {
+                id: 'IEADYYMRJUAJFQSL',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.shippingDate),
+            },
+            {
+                id: 'IEADYYMRJUAJFSVG',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.createdAt),
+            },
+            {
+                id: 'IEADYYMRJUAJFSWB',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.updatedAt),
+            },
+            {
+                id: 'IEADYYMRJUAJFSW5',
+                value: this.convertToPlainText(salesOrder.createdBy),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXH',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.primaryContact?.name),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXI',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.primaryContact?.email),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXJ',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.primaryContact?.phoneWithExt),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXK',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.primaryContact?.id),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXM',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.primarySalesRep?.id),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXO',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.primarySalesRep?.initials),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXP',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.company?.id),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXR',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.company?.name),
+            },
+            {
+                id: 'IEADYYMRJUAJFSXV',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.company?.phoneWithExt),
+            },
+            {
+                id: 'IEADYYMRJUAJFSX2',
+                value: this.convertToPlainText(salesOrder.lineItems),
+            },
+            // Sales Order specific fields
+            {
+                id: 'IEADYYMRJUAJFS26',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.totalPaymentsInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFS27',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.balanceInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3A',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.lastInvoicedAt),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3F',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.lastInvoicedOn),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3G',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.invoiced),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3H',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.fullyInvoiced),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3J',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.billingAddressId),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3K',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.shippingAddressId),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3M',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.termCodeId),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3N',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.salesTaxId),
+            },
+            {
+                id: 'IEADYYMRJUAJFS3Z',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.shippingMethodId),
+            },
+            {
+                id: 'IEADYYMRJUAJFS37',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.productionManagerId),
+            },
+            {
+                id: 'IEADYYMRJUAJFS4A',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.projectManagerId),
+            },
+            {
+                id: 'IEADYYMRJUAJFS4C',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.setupChargesInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFS4M',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.setupChargesTaxable),
+            },
+            {
+                id: 'IEADYYMRJUAJFS4R',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.setupChargesIsPercent),
+            },
+            {
+                id: 'IEADYYMRJUAJFS4U',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.setupChargesPercent),
+            },
+            {
+                id: 'IEADYYMRJUAJFS4V',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.setupChargesTaxInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFS5C',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.miscChargesTaxable),
+            },
+            {
+                id: 'IEADYYMRJUAJFS5G',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.miscChargesLabel),
+            },
+            {
+                id: 'IEADYYMRJUAJFS5J',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.miscChargesIsPercent),
+            },
+            {
+                id: 'IEADYYMRJUAJFUCB',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.miscChargesPercent),
+            },
+            {
+                id: 'IEADYYMRJUAJFUCY',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.financeChargesPercent),
+            },
+            {
+                id: 'IEADYYMRJUAJFUC5',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.company?.specialNotes),
+            },
+            {
+                id: 'IEADYYMRJUAJFUDA',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.termCode?.name),
+            },
+            {
+                id: 'IEADYYMRJUAJFUDE',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.tax?.name),
+            },
+            {
+                id: 'IEADYYMRJUAJFUDW',
+                value: this.convertToPlainText(salesOrder.updatedBy),
+            },
+            {
+                id: 'IEADYYMRJUAJFUDX',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.relatedTransactions),
+            },
+            {
+                id: 'IEADYYMRJUAJFUDZ',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.orderPayments),
+            },
+            {
+                id: 'IEADYYMRJUAJFUD4',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.purchaseOrderLineItemsTotalPriceInDollars),
+            },
+            {
+                id: 'IEADYYMRJUAJFUD6',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.purchaseOrders),
+            },
+            {
+                id: 'IEADYYMRJUAJFUED',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.signatures),
+            },
+            {
+                id: 'IEADYYMRJUAJJEVR',
+                value: `<a href="${this.escapeHtml(`https://express.shopvox.com/transactions/sales_orders/${salesOrder.id}`)}" target="_blank">SO #${this.escapeHtml(salesOrder.txnNumber)}</a>`,
+            },
+        ];
+
+        // Add contact field mappings if the respective users exist in the sales order
+        const contactFields = [];
+
+        // Project Manager (IEADYYMRJUAJIFD5)
+        if (salesOrder.projectManager?.id) {
+            contactFields.push({
+                id: 'IEADYYMRJUAJIFD5',
+                value: mapShopVoxToWrikeUserId(salesOrder.projectManager.id),
+            });
+        }
+
+        // Production Manager (IEADYYMRJUAJIFEE) 
+        if ((salesOrder as any).productionManager?.id) {
+            contactFields.push({
+                id: 'IEADYYMRJUAJIFEE',
+                value: mapShopVoxToWrikeUserId((salesOrder as any).productionManager.id),
+            });
+        }
+
+        // Sales Rep (IEADYYMRJUAJFSXL)
+        if (salesOrder.primarySalesRep?.id) {
+            contactFields.push({
+                id: 'IEADYYMRJUAJFSXL',
+                value: mapShopVoxToWrikeUserId(salesOrder.primarySalesRep.id),
+            });
+        }
+
+        // Created By (IEADYYMRJUAJIFEN) - always present
+        contactFields.push({
+            id: 'IEADYYMRJUAJIFEN',
+            value: mapShopVoxToWrikeUserId(salesOrder.createdBy.id),
+        });
+
+        // Add address fields if provided
+        const addressFields: any[] = [];
+        if (customFields) {
+            // Shipping Address (IEADYYMRJUAJJ7RA)
+            if (customFields['IEADYYMRJUAJJ7RA']) {
+                addressFields.push({
+                    id: 'IEADYYMRJUAJJ7RA',
+                    value: this.sanitizeWrikeCustomFieldValue(customFields['IEADYYMRJUAJJ7RA']),
+                });
+            }
+            
+            // Billing Address (IEADYYMRJUAJJ7RD)
+            if (customFields['IEADYYMRJUAJJ7RD']) {
+                addressFields.push({
+                    id: 'IEADYYMRJUAJJ7RD',
+                    value: this.sanitizeWrikeCustomFieldValue(customFields['IEADYYMRJUAJJ7RD']),
+                });
+            }
+            
+            // Install Address (IEADYYMRJUAJIG5N)
+            if (customFields['IEADYYMRJUAJIG5N']) {
+                addressFields.push({
+                    id: 'IEADYYMRJUAJIG5N',
+                    value: this.sanitizeWrikeCustomFieldValue(customFields['IEADYYMRJUAJIG5N']),
+                });
+            }
+        }
+
+        // Combine all custom fields
+        return [...baseCustomFields, ...contactFields, ...addressFields];
+    }
+
+    /**
      * Creates a new task in Wrike from a ShopVox quote
      */
     async createQuoteTask(quote: ShopVoxQuote): Promise<WrikeTaskCreateResponse> {
@@ -672,6 +1018,212 @@ export class WrikeService {
     }
 
     /**
+     * Creates a new WoSo task in Wrike from a ShopVox sales order
+     */
+    async createWosoTask(salesOrder: ShopVoxSalesOrder, customFields?: Record<string, string>): Promise<WrikeTaskCreateResponse> {
+        // Validate required fields
+        if (!salesOrder.title || salesOrder.title.trim() === '') {
+            throw new Error('Sales order title is required but was empty or undefined');
+        }
+
+        let description: string;
+        try {
+            description = this.createWosoTaskDescription(salesOrder);
+            // Wrike has a limit on description length, truncate if necessary
+            if (description.length > 5000) {
+                console.warn(`Description too long (${description.length} chars), truncating to 5000 chars`);
+                description = description.substring(0, 5000) + '...';
+            }
+        } catch (error) {
+            console.error('Error creating task description:', error);
+            description = `<h2>📋 Sales Order Information</h2><p><strong>Sales Order ID:</strong> ${this.escapeHtml(salesOrder.id)}</p><p><strong>Title:</strong> ${this.escapeHtml(salesOrder.title)}</p>`;
+        }
+
+        const requestBody: any = {
+            title: `SO #${salesOrder.txnNumber}: ${salesOrder.title}`,
+            description: description,
+            customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
+        };
+
+        // Only add dates if dueDate is valid
+        if (salesOrder.dueDate && salesOrder.dueDate.trim() !== '') {
+            requestBody.dates = {
+                due: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
+            };
+        }
+
+        // Log the request for debugging (without sensitive data)
+        console.log(`Creating Wrike WoSo task for sales order ${salesOrder.id} with title: "${salesOrder.title}"`);
+        console.log(`Request body description length: ${requestBody.description?.length || 0} characters`);
+        console.log(`Custom fields count: ${requestBody.customFields?.length || 0}`);
+
+        // Validate request body before sending
+        try {
+            JSON.stringify(requestBody);
+        } catch (error) {
+            console.error('Request body is not serializable:', error);
+            throw new Error(`Request body serialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+
+        const response = await fetch(`${this.baseUrl}/folders/${this.wososDbId}/tasks`, {
+            method: "POST",
+            headers: this.getHeaders(),
+            body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+            let errorDetails = '';
+            try {
+                const errorResponse = await response.json();
+                errorDetails = JSON.stringify(errorResponse, null, 2);
+            } catch (e) {
+                errorDetails = await response.text();
+            }
+            
+            const errorMessage = `Failed to create Wrike WoSo task: ${response.status} ${response.statusText}\nSales Order ID: ${salesOrder.id}\nSales Order Title: "${salesOrder.title}"\nDescription length: ${requestBody.description?.length || 0}\nRequest body: ${JSON.stringify(requestBody, null, 2)}\nError response: ${errorDetails}`;
+            console.error('Wrike API Error:', errorMessage);
+            throw new Error(errorMessage);
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Searches for a WoSo task by ShopVox sales order ID
+     */
+    async findTaskBySalesOrderId(salesOrderId: string): Promise<WrikeTaskSearchResult> {
+        const params = new URLSearchParams({
+            customFields: JSON.stringify([{
+                id: 'IEADYYMRJUAJFPCR', // shopvoxId
+                comparator: 'EqualTo',
+                value: salesOrderId,
+            }])
+        });
+
+        const response = await fetch(`${this.baseUrl}/folders/${this.wososDbId}/tasks?${params.toString()}`, {
+            method: "GET",
+            headers: this.getHeaders(),
+        });
+
+        if (!response.ok) {
+            let errorDetails = '';
+            try {
+                const errorResponse = await response.json();
+                errorDetails = JSON.stringify(errorResponse, null, 2);
+            } catch (e) {
+                errorDetails = await response.text();
+            }
+            
+            throw new Error(`Failed to search Wrike WoSo tasks: ${response.status} ${response.statusText}\nSearch params: ${params.toString()}\nError response: ${errorDetails}`);
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Updates an existing WoSo task in Wrike from a ShopVox sales order
+     */
+    async updateWosoTask(taskId: string, salesOrder: ShopVoxSalesOrder, customFields?: Record<string, string>): Promise<WrikeTaskUpdateResponse> {
+        let description: string;
+        try {
+            description = this.createWosoTaskDescription(salesOrder);
+            // Wrike has a limit on description length, truncate if necessary
+            if (description.length > 5000) {
+                console.warn(`Description too long (${description.length} chars), truncating to 5000 chars`);
+                description = description.substring(0, 5000) + '...';
+            }
+        } catch (error) {
+            console.error('Error creating task description:', error);
+            description = `<h2>📋 Sales Order Information</h2><p><strong>Sales Order ID:</strong> ${this.escapeHtml(salesOrder.id)}</p><p><strong>Title:</strong> ${this.escapeHtml(salesOrder.title)}</p>`;
+        }
+
+        const requestBody: any = {
+            title: `SO #${salesOrder.txnNumber}: ${salesOrder.title}`,
+            description: description,
+            customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
+        };
+
+        // Only add dates if dueDate is valid
+        if (salesOrder.dueDate && salesOrder.dueDate.trim() !== '') {
+            requestBody.dates = {
+                due: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
+            };
+        }
+
+        const response = await fetch(`${this.baseUrl}/tasks/${taskId}`, {
+            method: "PUT",
+            headers: this.getHeaders(),
+            body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+            let errorDetails = '';
+            try {
+                const errorResponse = await response.json();
+                errorDetails = JSON.stringify(errorResponse, null, 2);
+            } catch (e) {
+                errorDetails = await response.text();
+            }
+            
+            const errorMessage = `Failed to update Wrike WoSo task: ${response.status} ${response.statusText}\nTask ID: ${taskId}\nDescription length: ${requestBody.description?.length || 0}\nRequest body: ${JSON.stringify(requestBody, null, 2)}\nError response: ${errorDetails}`;
+            console.error('Wrike API Error:', errorMessage);
+            throw new Error(errorMessage);
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Creates or updates a WoSo task in Wrike
+     * Returns the task ID and whether it was created or updated
+     * Automatically formats addresses for the sales order
+     */
+    async createOrUpdateWosoTask(salesOrder: ShopVoxSalesOrder, customFields?: Record<string, string>): Promise<{ taskId: string; wasCreated: boolean; customFields: Record<string, string> }> {
+        try {
+            console.log(`Starting createOrUpdateWosoTask for sales order ${salesOrder.id}`);
+            
+            // Format addresses for the sales order
+            const addressFields = await this.formatSalesOrderAddresses(salesOrder);
+            
+            // Merge any provided custom fields with the formatted addresses
+            const mergedCustomFields = {
+                ...addressFields,
+                ...(customFields || {})
+            };
+            
+            console.log(`Formatted addresses for sales order ${salesOrder.id}:`, {
+                shippingAddress: addressFields[WRIKE_ADDRESS_FIELD_IDS.SHIPPING_ADDRESS],
+                billingAddress: addressFields[WRIKE_ADDRESS_FIELD_IDS.BILLING_ADDRESS],
+                installAddress: addressFields[WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS]
+            });
+            
+            // First, try to find existing task
+            console.log(`Searching for existing WoSo task with sales order ID: ${salesOrder.id}`);
+            const searchResult = await this.findTaskBySalesOrderId(salesOrder.id);
+            console.log(`Search result: ${searchResult.data.length} tasks found`);
+        
+            if (searchResult.data.length > 0) {
+                // Task exists, update it
+                const taskId = searchResult.data[0].id;
+                console.log(`Updating existing WoSo task: ${taskId}`);
+                await this.updateWosoTask(taskId, salesOrder, mergedCustomFields);
+                console.log(`Successfully updated WoSo task: ${taskId}`);
+                return { taskId, wasCreated: false, customFields: mergedCustomFields };
+            } else {
+                // Task doesn't exist, create it
+                console.log(`Creating new WoSo task for sales order: ${salesOrder.id}`);
+                const createResult = await this.createWosoTask(salesOrder, mergedCustomFields);
+                const taskId = createResult.data[0].id;
+                console.log(`Successfully created WoSo task: ${taskId}`);
+                return { taskId, wasCreated: true, customFields: mergedCustomFields };
+            }
+        } catch (error) {
+            console.error(`Error in createOrUpdateWosoTask for sales order ${salesOrder.id}:`, error);
+            throw error;
+        }
+    }
+
+    /**
      * Creates a simple HTML description for a ShopVox quote task in Wrike focusing on line items
      */
     createWrikeQuoteTaskDescription(quote: ShopVoxQuote): string {
@@ -681,6 +1233,19 @@ export class WrikeService {
             console.error('Error creating quote task description:', error);
             // Fallback to a simple description if there's an error
             return `<h2>📋 Quote Information</h2><p><strong>Quote ID:</strong> ${this.escapeHtml(quote.id)}</p><p><strong>Title:</strong> ${this.escapeHtml(quote.title)}</p>`;
+        }
+    }
+
+    /**
+     * Creates a simple HTML description for a ShopVox sales order task in Wrike focusing on line items
+     */
+    createWosoTaskDescription(salesOrder: ShopVoxSalesOrder): string {
+        try {
+            return this.createSalesOrderLineItemsTable(salesOrder);
+        } catch (error) {
+            console.error('Error creating sales order task description:', error);
+            // Fallback to a simple description if there's an error
+            return `<h2>📋 Sales Order Information</h2><p><strong>Sales Order ID:</strong> ${this.escapeHtml(salesOrder.id)}</p><p><strong>Title:</strong> ${this.escapeHtml(salesOrder.title)}</p>`;
         }
     }
 
@@ -718,6 +1283,42 @@ export class WrikeService {
 </table>`;
         } catch (error) {
             console.error('Error processing line items table:', error);
+            return '<h2>📦 Line Items</h2><p>Error processing line items</p>';
+        }
+    }
+
+    /**
+     * Creates an HTML table for sales order line items
+     */
+    private createSalesOrderLineItemsTable(salesOrder: ShopVoxSalesOrder): string {
+        if (!salesOrder.lineItems || salesOrder.lineItems.length === 0) {
+            return '<h2>�� Line Items</h2><p>No line items</p>';
+        }
+
+        try {
+            const tableRows = salesOrder.lineItems.map((item, index) => {
+                const description = item?.fullDescription ? this.cleanHtmlTags(item.fullDescription) : '';
+                const displayDescription = description || 'No description';
+                
+                return `
+<tr>
+    <td style="font-weight: bold;">${this.escapeHtml(item?.name || 'Unnamed Item')}</td>
+    <td style="max-width: 200px; word-wrap: break-word;">${this.escapeHtml(displayDescription)}</td>
+    <td style="text-align: center;">${item?.quantity || 0}</td>
+</tr>`;
+            }).join('');
+
+            return `
+<table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 12px; margin: 10px 0;">
+    <tr style="background-color: #e6f3ff; font-weight: bold;">
+        <td style="padding: 8px; border: 1px solid #ccc; width: 120px; font-weight: bold;">Name</td>
+        <td style="padding: 8px; border: 1px solid #ccc; width: 200px; font-weight: bold;">Description</td>
+        <td style="padding: 8px; border: 1px solid #ccc; text-align: center; width: 60px; font-weight: bold;">Quantity</td>
+    </tr>
+    ${tableRows}
+</table>`;
+        } catch (error) {
+            console.error('Error processing sales order line items table:', error);
             return '<h2>📦 Line Items</h2><p>Error processing line items</p>';
         }
     }

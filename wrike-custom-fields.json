@@ -629,17 +629,14 @@
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
       "sharing": {
-        "writerIds": [
-          "KUAVYLX5",
-          "KUAIIJPC"
-        ]
+        "writerIds": []
       },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false,
+        "readOnly": true,
         "allowTime": false
       },
       "description": ""
@@ -1815,7 +1812,10 @@
       "type": "Contacts",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {},
+      "sharing": {
+        "writerIds": [],
+        "spaceWriters": "Admin"
+      },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
@@ -1857,14 +1857,15 @@
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
       "sharing": {
-        "writerIds": []
+        "writerIds": [],
+        "spaceWriters": "Admin"
       },
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -2052,17 +2053,13 @@
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {
-        "writerIds": [
-          "KX7XLYUP"
-        ]
-      },
+      "sharing": {},
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -2071,6 +2068,57 @@
       "id": "IEADYYMRJUAJJ6HA",
       "accountId": "IEADYYMR",
       "title": "WoSo's",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJ7OK",
+      "accountId": "IEADYYMR",
+      "title": "Designer",
+      "type": "Contacts",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJ7RA",
+      "accountId": "IEADYYMR",
+      "title": "Shipping Address",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJ7RD",
+      "accountId": "IEADYYMR",
+      "title": "Billing Address",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
