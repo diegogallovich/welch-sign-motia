@@ -854,7 +854,7 @@ export class WrikeService {
             title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
-            status: mapShopVoxToWrikeStatusId(quote.workflowState),
+            customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
         };
 
         // Only add dates if dueDate is valid
@@ -953,7 +953,7 @@ export class WrikeService {
             title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
-            status: mapShopVoxToWrikeStatusId(quote.workflowState),
+            customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
         };
 
         // Only add dates if dueDate is valid
