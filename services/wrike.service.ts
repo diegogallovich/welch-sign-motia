@@ -1,6 +1,7 @@
 import { ShopVoxQuote } from "../schemas/quote.schema";
 import { ShopVoxSalesOrder } from "../schemas/sales-order.schema";
-import { mapShopVoxToWrikeUserId } from "../user-mapping";
+import { mapShopVoxToWrikeUserId } from "../utils/user-mapping";
+import { mapShopVoxToWrikeStatusId } from "../utils/status-mapping";
 import { formatAddress, getInstallAddressFromQuote, WRIKE_ADDRESS_FIELD_IDS } from "../utils/address-formatter";
 import { shopvoxService } from "./shopvox.service";
 
@@ -853,6 +854,7 @@ export class WrikeService {
             title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
+            status: mapShopVoxToWrikeStatusId(quote.workflowState),
         };
 
         // Only add dates if dueDate is valid
@@ -951,6 +953,7 @@ export class WrikeService {
             title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
+            status: mapShopVoxToWrikeStatusId(quote.workflowState),
         };
 
         // Only add dates if dueDate is valid
