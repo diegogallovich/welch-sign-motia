@@ -21,8 +21,8 @@ export const handler: Handlers["process-shopvox-quote-created"] = async (input, 
     let quote: ShopVoxQuote;
     try {
         quote = await shopvoxService.getQuote(input.id);
-        const quoteJson = JSON.stringify(quote, null, 2);
-        logger.info("Quote retrieved from ShopVox", { quoteJson, traceId });
+        const quoteId = quote.id;
+        logger.info("Quote retrieved from ShopVox", { quoteId });
     } catch (error) {
         logger.error("Error getting quote from ShopVox", { 
             error: error instanceof Error ? {

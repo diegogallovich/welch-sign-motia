@@ -15,22 +15,19 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-quote-updated"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
-    logger.info("Processing quote updated event", { input, traceId });
+    logger.info("Processing quote updated event", { input });
     
     let quote: ShopVoxQuote;
     try {
         quote = await shopvoxService.getQuote(input.id);
-        logger.info("Quote retrieved from ShopVox", { quote, traceId });
+        logger.info("Quote retrieved from ShopVox", { quote });
     } catch (error) {
         logger.error("Error getting quote from ShopVox", { 
             error: error instanceof Error ? {
                 message: error.message,
                 stack: error.stack,
                 name: error.name
-            } : error,
-            quoteId: input.id,
-            input,
-            traceId 
+            } : error, 
         });
         return;
     }
@@ -40,12 +37,12 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (input, 
         const { taskId, wasCreated } = await wrikeService.createOrUpdateQuoteTask(quote);
         
         if (wasCreated) {
-            logger.info("Wrike task created for quote", { taskId, quote, traceId });
+            logger.info("Wrike task created for quote", { taskId });
             await emit({
                 topic: "quote-created-in-wrike"
             } as never);
         } else {
-            logger.info("Wrike task updated for quote", { taskId, quote, traceId });
+            logger.info("Wrike task updated for quote", { taskId });
         }
     } catch (error) {
         logger.error("Error creating or updating quote in Wrike", { 
@@ -54,9 +51,6 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (input, 
                 stack: error.stack,
                 name: error.name
             } : error,
-            quoteId: quote.id,
-            quoteTitle: quote.title,
-            traceId 
         });
         return;
     }

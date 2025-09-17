@@ -12,7 +12,7 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-quote-deleted"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
-    logger.info("Processing quote deleted event", { input, traceId });
+    logger.info("Processing quote deleted event", { input });
     
     try {
         // TODO: Delete Quote from Wrike
