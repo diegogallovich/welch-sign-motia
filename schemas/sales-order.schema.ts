@@ -119,6 +119,24 @@ export const ShopVoxSalesOrderSchema = z.object({
 
   lineItems: z.array(ShopVoxSalesOrderLineItemSchema),
 
+  pm: z.object({
+    id: z.string().uuid(),
+    initials: z.string(),
+    name: z.string()
+  }),
+
+  projectManager: z.object({
+    id: z.string().uuid(),
+    initials: z.string(),
+    name: z.string()
+  }),
+
+  estimator: z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    initials: z.string()
+  }),
+
   company: z.object({
     id: z.string().uuid(),
     name: z.string(),
