@@ -855,13 +855,6 @@ export class WrikeService {
             customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
         };
 
-        // Only add dates if dueDate is valid
-        if (quote.dueDate && quote.dueDate.trim() !== '') {
-            requestBody.dates = {
-                due: this.sanitizeWrikeCustomFieldValue(quote.dueDate),
-            };
-        }
-
         // Validate request body before sending
         try {
             JSON.stringify(requestBody);
@@ -949,13 +942,6 @@ export class WrikeService {
             customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
         };
 
-        // Only add dates if dueDate is valid
-        if (quote.dueDate && quote.dueDate.trim() !== '') {
-            requestBody.dates = {
-                due: this.sanitizeWrikeCustomFieldValue(quote.dueDate),
-            };
-        }
-
         const response = await fetch(`${this.baseUrl}/tasks/${taskId}`, {
             method: "PUT",
             headers: this.getHeaders(),
@@ -1030,13 +1016,6 @@ export class WrikeService {
             description: description,
             customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
         };
-
-        // Only add dates if dueDate is valid
-        if (salesOrder.dueDate && salesOrder.dueDate.trim() !== '') {
-            requestBody.dates = {
-                due: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
-            };
-        }
 
         // Validate request body before sending
         try {
@@ -1123,13 +1102,6 @@ export class WrikeService {
             description: description,
             customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
         };
-
-        // Only add dates if dueDate is valid
-        if (salesOrder.dueDate && salesOrder.dueDate.trim() !== '') {
-            requestBody.dates = {
-                due: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
-            };
-        }
 
         const response = await fetch(`${this.baseUrl}/tasks/${taskId}`, {
             method: "PUT",
