@@ -38,8 +38,6 @@ export class WrikeService {
             throw new Error("Missing required Wrike environment variables: WRIKE_PERMANENT_TOKEN, WRIKE_QUOTES_DB_ID, WRIKE_WOSOS_DB_ID");
         }
 
-        // Log configuration (without sensitive data)
-        console.log(`WrikeService initialized with quotes folder ID: ${this.quotesDbId}, wosos folder ID: ${this.wososDbId}`);
     }
 
     private getHeaders() {
@@ -759,7 +757,7 @@ export class WrikeService {
             },
             {
                 id: 'IEADYYMRJUAJJEVR',
-                value: `<a href="${this.escapeHtml(`https://express.shopvox.com/transactions/sales_orders/${salesOrder.id}`)}" target="_blank">SO #${this.escapeHtml(salesOrder.txnNumber)}</a>`,
+                value: `<a href="${this.escapeHtml(`https://express.shopvox.com/transactions/sales-orders/${salesOrder.id}`)}" target="_blank">SO #${this.escapeHtml(salesOrder.txnNumber)}</a>`,
             },
         ];
 
@@ -863,11 +861,6 @@ export class WrikeService {
                 due: this.sanitizeWrikeCustomFieldValue(quote.dueDate),
             };
         }
-
-        // Log the request for debugging (without sensitive data)
-        console.log(`Creating Wrike task for quote ${quote.id} with title: "${quote.title}"`);
-        console.log(`Request body description length: ${requestBody.description?.length || 0} characters`);
-        console.log(`Custom fields count: ${requestBody.customFields?.length || 0}`);
 
         // Validate request body before sending
         try {
@@ -992,26 +985,16 @@ export class WrikeService {
      */
     async createOrUpdateQuoteTask(quote: ShopVoxQuote): Promise<{ taskId: string; wasCreated: boolean }> {
         try {
-            console.log(`Starting createOrUpdateQuoteTask for quote ${quote.id}`);
-            
-        // First, try to find existing task
-            console.log(`Searching for existing task with quote ID: ${quote.id}`);
         const searchResult = await this.findTaskByQuoteId(quote.id);
-            console.log(`Search result: ${searchResult.data.length} tasks found`);
         
         if (searchResult.data.length > 0) {
             // Task exists, update it
             const taskId = searchResult.data[0].id;
-                console.log(`Updating existing task: ${taskId}`);
             await this.updateQuoteTask(taskId, quote);
-                console.log(`Successfully updated task: ${taskId}`);
             return { taskId, wasCreated: false };
         } else {
-            // Task doesn't exist, create it
-                console.log(`Creating new task for quote: ${quote.id}`);
             const createResult = await this.createQuoteTask(quote);
             const taskId = createResult.data[0].id;
-                console.log(`Successfully created task: ${taskId}`);
             return { taskId, wasCreated: true };
             }
         } catch (error) {
@@ -1054,11 +1037,6 @@ export class WrikeService {
                 due: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
             };
         }
-
-        // Log the request for debugging (without sensitive data)
-        console.log(`Creating Wrike WoSo task for sales order ${salesOrder.id} with title: "${salesOrder.title}"`);
-        console.log(`Request body description length: ${requestBody.description?.length || 0} characters`);
-        console.log(`Custom fields count: ${requestBody.customFields?.length || 0}`);
 
         // Validate request body before sending
         try {
@@ -1183,7 +1161,6 @@ export class WrikeService {
      */
     async createOrUpdateWosoTask(salesOrder: ShopVoxSalesOrder, customFields?: Record<string, string>): Promise<{ taskId: string; wasCreated: boolean; customFields: Record<string, string> }> {
         try {
-            console.log(`Starting createOrUpdateWosoTask for sales order ${salesOrder.id}`);
             
             // Format addresses for the sales order
             const addressFields = await this.formatSalesOrderAddresses(salesOrder);
@@ -1194,30 +1171,17 @@ export class WrikeService {
                 ...(customFields || {})
             };
             
-            console.log(`Formatted addresses for sales order ${salesOrder.id}:`, {
-                shippingAddress: addressFields[WRIKE_ADDRESS_FIELD_IDS.SHIPPING_ADDRESS],
-                billingAddress: addressFields[WRIKE_ADDRESS_FIELD_IDS.BILLING_ADDRESS],
-                installAddress: addressFields[WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS]
-            });
-            
-            // First, try to find existing task
-            console.log(`Searching for existing WoSo task with sales order ID: ${salesOrder.id}`);
             const searchResult = await this.findTaskBySalesOrderId(salesOrder.id);
-            console.log(`Search result: ${searchResult.data.length} tasks found`);
         
             if (searchResult.data.length > 0) {
                 // Task exists, update it
                 const taskId = searchResult.data[0].id;
-                console.log(`Updating existing WoSo task: ${taskId}`);
                 await this.updateWosoTask(taskId, salesOrder, mergedCustomFields);
-                console.log(`Successfully updated WoSo task: ${taskId}`);
                 return { taskId, wasCreated: false, customFields: mergedCustomFields };
             } else {
                 // Task doesn't exist, create it
-                console.log(`Creating new WoSo task for sales order: ${salesOrder.id}`);
                 const createResult = await this.createWosoTask(salesOrder, mergedCustomFields);
                 const taskId = createResult.data[0].id;
-                console.log(`Successfully created WoSo task: ${taskId}`);
                 return { taskId, wasCreated: true, customFields: mergedCustomFields };
             }
         } catch (error) {

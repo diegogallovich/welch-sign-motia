@@ -20,7 +20,7 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (input, 
     let quote: ShopVoxQuote;
     try {
         quote = await shopvoxService.getQuote(input.id);
-        logger.info("Quote retrieved from ShopVox", { quote });
+        logger.info("Quote retrieved from ShopVox");
     } catch (error) {
         logger.error("Error getting quote from ShopVox", { 
             error: error instanceof Error ? {

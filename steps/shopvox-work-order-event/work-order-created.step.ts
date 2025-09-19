@@ -18,8 +18,7 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (in
     let salesOrder: ShopVoxSalesOrder;
     try {
         salesOrder = await shopvoxService.getSalesOrder(input.id);
-        const salesOrderJson = JSON.stringify(salesOrder, null, 2);
-        logger.info("Sales order retrieved from ShopVox", { salesOrderJson, traceId });
+        logger.info("Sales order retrieved from ShopVox");
         
     } catch (error) {
         logger.error("Error getting sales order from ShopVox", { error, traceId });
@@ -28,20 +27,11 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (in
 
     try {
         // Create or update the WoSo task in Wrike (address formatting is handled internally)
-        const result = await wrikeService.createOrUpdateWosoTask(salesOrder);
-        logger.info("WoSo task processed in Wrike", { 
-            taskId: result.taskId, 
-            wasCreated: result.wasCreated, 
-            salesOrderId: salesOrder.id,
-            traceId 
-        });
+        await wrikeService.createOrUpdateWosoTask(salesOrder);
+        logger.info("WoSo task processed in Wrike");
 
         await emit({
             topic: "work-order-created-in-wrike",
-            taskId: result.taskId,
-            wasCreated: result.wasCreated,
-            salesOrderId: salesOrder.id,
-            customFields: result.customFields
         } as never);
         
     } catch (error) {
