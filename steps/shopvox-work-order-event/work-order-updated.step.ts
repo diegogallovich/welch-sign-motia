@@ -15,11 +15,24 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-work-order-updated"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
+    const inputJson = JSON.stringify(input, null, 2);
+    logger.info("Processing work order updated event", { inputJson });
+    
     let salesOrder: ShopVoxSalesOrder;
     try {
         salesOrder = await shopvoxService.getSalesOrder(input.id);
-        const salesOrderJson = JSON.stringify(salesOrder, null, 2);
-        logger.info("Sales order retrieved from ShopVox", { salesOrderJson, traceId });
+        const dateFields = {
+            txnDate: salesOrder.txnDate,
+            dueDate: salesOrder.dueDate,
+            inHandDate: salesOrder.inHandDate,
+            shippingDate: salesOrder.shippingDate,
+            customerPoDate: salesOrder.customerPoDate,
+            lastInvoicedAt: salesOrder.lastInvoicedAt,
+            lastInvoicedOn: salesOrder.lastInvoicedOn,
+            createdAt: salesOrder.createdAt,
+            updatedAt: salesOrder.updatedAt
+        };
+        logger.info("Sales order retrieved from ShopVox", { salesOrderId: salesOrder.id, dateFields });
         
     } catch (error) {
         logger.error("Error getting sales order from ShopVox", { error, traceId });

@@ -85,11 +85,6 @@
         "wrikeUserId": "KUASXTCX"
     },
     {
-        "name": "Michael Head",
-        "shopVoxUserId": "b30c95a2-939b-44cb-8e8f-564d1cd0394c",
-        "wrikeUserId": "KUASJSYN"
-    },
-    {
         "name": "Morgan Foote",
         "shopVoxUserId": "fc8659ee-6f67-40b6-ab69-79afae1525a2",
         "wrikeUserId": "KUAIIJ76"
@@ -123,5 +118,30 @@
         "name": "Sean Murphy",
         "shopVoxUserId": "559544df-621a-40bf-b329-07dbee56dd8c",
         "wrikeUserId": "KUATZFAN"
+    },
+    {
+        "name": "Andy Dennis",
+        "shopVoxUserId": "2947d1da-3ed1-434d-8db9-2c80457db751",
+        "wrikeUserId": "KUAWAU6Z"
+    },
+    {
+        "name": "Baxter W Wilson",
+        "shopVoxUserId": "d96c57a2-47dd-4aff-8000-e532f9a5cb81",
+        "wrikeUserId": "KUAWBVMR"
+    },
+    {
+        "name": "Christine Nickerson",
+        "shopVoxUserId": "2f95250b-cb58-47dd-b997-bd4cb00f06e8",
+        "wrikeUserId": "KUAWAUU5"
+    },
+    {
+        "name": "Michael Head",
+        "shopVoxUserId": "b30c95a2-939b-44cb-8e8f-564d1cd0394c",
+        "wrikeUserId": "KUAWAVEQ"
+    },
+    {
+        "name": "Neill Ewing-Wegmann",
+        "shopVoxUserId": "5b9628fe-6385-44f5-8e92-1f72dd76e9fe",
+        "wrikeUserId": "KUAWAUUX"
     }
 ]

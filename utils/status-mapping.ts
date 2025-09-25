@@ -44,6 +44,10 @@ export const SHOPVOX_WRIKE_STATUS_MAPPING: StatusMapping[] = [
     {
         shopVoxStatusName: "void",
         wrikeStatusId: "IEADYYMRJMGGGGNH"
+    },
+    {
+        shopVoxStatusName: "revise",
+        wrikeStatusId: "IEADYYMRJMGG5SYK"
     }
 ];
 

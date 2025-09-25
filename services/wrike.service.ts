@@ -575,6 +575,14 @@ export class WrikeService {
                 value: this.sanitizeWrikeCustomFieldValue(salesOrder.shippingDate),
             },
             {
+                id: 'IEADYYMRJUAJKGQJ',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.inHandDate),
+            },
+            {
+                id: 'IEADYYMRJUAJKGSN',
+                value: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
+            },
+            {
                 id: 'IEADYYMRJUAJFSVG',
                 value: this.sanitizeWrikeCustomFieldValue(salesOrder.createdAt),
             },

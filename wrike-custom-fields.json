@@ -40,7 +40,7 @@
     {
       "id": "IEADYYMRJUAJFPY5",
       "accountId": "IEADYYMR",
-      "title": "title",
+      "title": "Title",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -76,7 +76,7 @@
     {
       "id": "IEADYYMRJUAJFPZC",
       "accountId": "IEADYYMR",
-      "title": "txnDate",
+      "title": "SO Created Date",
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -94,7 +94,7 @@
     {
       "id": "IEADYYMRJUAJFPZD",
       "accountId": "IEADYYMR",
-      "title": "totalPriceInDollars",
+      "title": "SO Subtotal",
       "type": "Currency",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -138,7 +138,7 @@
     {
       "id": "IEADYYMRJUAJFPZH",
       "accountId": "IEADYYMR",
-      "title": "Quote Total",
+      "title": "Total",
       "type": "Currency",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -272,7 +272,7 @@
     {
       "id": "IEADYYMRJUAJFQSC",
       "accountId": "IEADYYMR",
-      "title": "customerPoNumber",
+      "title": "Customer PO #",
       "type": "Numeric",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -285,7 +285,8 @@
         "decimalPlaces": 0,
         "useThousandsSeparator": false,
         "aggregation": "Sum",
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -350,7 +351,7 @@
     {
       "id": "IEADYYMRJUAJFQSJ",
       "accountId": "IEADYYMR",
-      "title": "shippingTracking",
+      "title": "Tracking #",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -360,14 +361,15 @@
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
     {
       "id": "IEADYYMRJUAJFQSL",
       "accountId": "IEADYYMR",
-      "title": "shippingDate",
+      "title": "Shipped Date",
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -412,15 +414,13 @@
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {
-        "writerIds": []
-      },
+      "sharing": {},
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -552,7 +552,7 @@
     {
       "id": "IEADYYMRJUAJFSWY",
       "accountId": "IEADYYMR",
-      "title": "inHandDate",
+      "title": "Booking Date",
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -608,15 +608,13 @@
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {
-        "writerIds": []
-      },
+      "sharing": {},
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -628,15 +626,13 @@
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {
-        "writerIds": []
-      },
+      "sharing": {},
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -648,15 +644,13 @@
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
-      "sharing": {
-        "writerIds": []
-      },
+      "sharing": {},
       "settings": {
         "inheritanceType": "All",
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -733,7 +727,7 @@
     {
       "id": "IEADYYMRJUAJFSXP",
       "accountId": "IEADYYMR",
-      "title": "company.id",
+      "title": "Company ID",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -743,7 +737,8 @@
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -824,7 +819,7 @@
     {
       "id": "IEADYYMRJUAJFS26",
       "accountId": "IEADYYMR",
-      "title": "totalPaymentsInDollars",
+      "title": "Payment Total",
       "type": "Currency",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -838,14 +833,15 @@
         "useThousandsSeparator": true,
         "currency": "USD",
         "aggregation": "Sum",
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
     {
       "id": "IEADYYMRJUAJFS27",
       "accountId": "IEADYYMR",
-      "title": "balanceInDollars",
+      "title": "Remaining Balance",
       "type": "Currency",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -859,7 +855,8 @@
         "useThousandsSeparator": true,
         "currency": "USD",
         "aggregation": "Sum",
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -902,7 +899,7 @@
     {
       "id": "IEADYYMRJUAJFS3G",
       "accountId": "IEADYYMR",
-      "title": "invoiced",
+      "title": "Invoiced?",
       "type": "Checkbox",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -912,14 +909,15 @@
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
     {
       "id": "IEADYYMRJUAJFS3H",
       "accountId": "IEADYYMR",
-      "title": "fullyInvoiced",
+      "title": "Fully Invoiced?",
       "type": "Checkbox",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -929,7 +927,8 @@
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -1765,19 +1764,19 @@
         ],
         "contacts": [
           "KUAIIJPC",
+          "KUAIIJ76",
           "KUAIINDI",
-          "KUAUNR4P",
-          "KUATJHVJ",
-          "KUATISBM",
-          "KUAUNFRL",
-          "KUATZFAN",
+          "KUASSV4P",
           "KUATEHED",
           "KUATHPK4",
-          "KUAUVQGU",
-          "KUASSV4P",
-          "KUATIEHY",
           "KUATIDV4",
-          "KUAIIJ76"
+          "KUATIEHY",
+          "KUATISBM",
+          "KUATJHVJ",
+          "KUATZFAN",
+          "KUAUNFRL",
+          "KUAUNR4P",
+          "KUAUVQGU"
         ],
         "readOnly": false,
         "allowTime": false
@@ -1970,23 +1969,6 @@
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJJC2I",
-      "accountId": "IEADYYMR",
-      "title": "End User",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false
-      },
-      "description": "If not the same as the business"
-    },
-    {
       "id": "IEADYYMRJUAJJD5O",
       "accountId": "IEADYYMR",
       "title": "Drawing Type",
@@ -2032,7 +2014,7 @@
     {
       "id": "IEADYYMRJUAJJEVR",
       "accountId": "IEADYYMR",
-      "title": "Work Order Link",
+      "title": "ShopVox Sales Order Link",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -2042,7 +2024,8 @@
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     },
@@ -2129,6 +2112,78 @@
           "WorkItem"
         ],
         "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJKDIX",
+      "accountId": "IEADYYMR",
+      "title": "Install Date",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJKGQJ",
+      "accountId": "IEADYYMR",
+      "title": "In Hand Date",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJKGSA",
+      "accountId": "IEADYYMR",
+      "title": "Shipping Date",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJKGSN",
+      "accountId": "IEADYYMR",
+      "title": "Production Due Date",
+      "type": "Date",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
       },
       "description": ""
     }

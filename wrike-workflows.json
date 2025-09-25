@@ -3,13 +3,12 @@
     "data": [
       {
         "id": "IEADYYMRK4GGGFXI",
-        "spaceId": "MQAAAABm_ZEf",
         "name": "Quote Workflow",
         "standard": false,
         "hidden": false,
         "customStatuses": [
           {
-            "standardName": true,
+            "standardName": false,
             "standard": false,
             "id": "IEADYYMRJMGGGFXI",
             "name": "Draft",
@@ -29,11 +28,38 @@
           {
             "standardName": false,
             "standard": false,
+            "id": "IEADYYMRJMGGGGLS",
+            "name": "Draft",
+            "color": "Orange",
+            "group": "Active",
+            "hidden": true
+          },
+          {
+            "standardName": false,
+            "standard": false,
+            "id": "IEADYYMRJMGG5SYK",
+            "name": "Revise",
+            "color": "Red",
+            "group": "Active",
+            "hidden": false
+          },
+          {
+            "standardName": false,
+            "standard": false,
             "id": "IEADYYMRJMGGGFX4",
             "name": "Approved",
             "color": "Green",
             "group": "Active",
             "hidden": false
+          },
+          {
+            "standardName": false,
+            "standard": false,
+            "id": "IEADYYMRJMGG5SXW",
+            "name": "Revise",
+            "color": "Red",
+            "group": "Active",
+            "hidden": true
           },
           {
             "standardName": false,

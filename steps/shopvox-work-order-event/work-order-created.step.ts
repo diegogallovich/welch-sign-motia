@@ -15,6 +15,9 @@ export const config: EventConfig = {
 }
 
 export const handler: Handlers["process-shopvox-work-order-created"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
+    const inputJson = JSON.stringify(input, null, 2);
+    logger.info("Processing work order created event", { inputJson });
+    
     let salesOrder: ShopVoxSalesOrder;
     try {
         salesOrder = await shopvoxService.getSalesOrder(input.id);
