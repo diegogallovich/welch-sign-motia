@@ -863,6 +863,7 @@ export class WrikeService {
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
             customStatus: useNewStatus ? NEW_WRIKE_STATUS_ID : mapShopVoxToWrikeStatusId(quote.workflowState),
+            customItemTypeId: 'IEADYYMRPIAFJ6UP' // Quote Custom Item Type ID
         };
 
         // Validate request body before sending
@@ -1027,6 +1028,7 @@ export class WrikeService {
             title: `SO #${salesOrder.txnNumber}: ${salesOrder.title}`,
             description: description,
             customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
+            customItemTypeId: 'IEADYYMRPIAFKUFH' // Sales Order Custom Item Type ID
         };
 
         // Validate request body before sending
