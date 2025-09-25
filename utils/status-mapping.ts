@@ -15,7 +15,7 @@ export interface StatusMapping {
 export const SHOPVOX_WRIKE_STATUS_MAPPING: StatusMapping[] = [
     {
         shopVoxStatusName: "draft",
-        wrikeStatusId: "IEADYYMRJMGGGFXI"
+        wrikeStatusId: "IEADYYMRJMGHKPXK"
     },
     {
         shopVoxStatusName: "expired",
@@ -52,9 +52,14 @@ export const SHOPVOX_WRIKE_STATUS_MAPPING: StatusMapping[] = [
 ];
 
 /**
+ * New status ID for newly created quotes (not from quote-updated events)
+ */
+export const NEW_WRIKE_STATUS_ID = "IEADYYMRJMGGGFXI";
+
+/**
  * Default fallback status (draft)
  */
-export const DEFAULT_WRIKE_STATUS_ID = "IEADYYMRJMGGGFXI";
+export const DEFAULT_WRIKE_STATUS_ID = "IEADYYMRJMGHKPXK";
 
 /**
  * Maps a ShopVox workflow status to a Wrike custom status ID

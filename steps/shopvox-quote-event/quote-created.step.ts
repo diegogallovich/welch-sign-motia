@@ -39,7 +39,7 @@ export const handler: Handlers["process-shopvox-quote-created"] = async (input, 
     
     try {
         logger.info("Creating Wrike task", { quoteId: quote.id, quoteTitle: quote.title, traceId });
-        const createResult = await wrikeService.createQuoteTask(quote);
+        const createResult = await wrikeService.createQuoteTask(quote, true); // Use "New" status for newly created quotes
         logger.info("Quote added to Wrike", { createResult, traceId });
         await emit({
             topic: "quote-created-in-wrike"

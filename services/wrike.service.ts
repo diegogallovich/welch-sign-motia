@@ -1,7 +1,7 @@
 import { ShopVoxQuote } from "../schemas/quote.schema";
 import { ShopVoxSalesOrder } from "../schemas/sales-order.schema";
 import { mapShopVoxToWrikeUserId } from "../utils/user-mapping";
-import { mapShopVoxToWrikeStatusId } from "../utils/status-mapping";
+import { mapShopVoxToWrikeStatusId, NEW_WRIKE_STATUS_ID } from "../utils/status-mapping";
 import { formatAddress, getInstallAddressFromQuote, WRIKE_ADDRESS_FIELD_IDS } from "../utils/address-formatter";
 import { shopvoxService } from "./shopvox.service";
 
@@ -836,8 +836,10 @@ export class WrikeService {
 
     /**
      * Creates a new task in Wrike from a ShopVox quote
+     * @param quote - The ShopVox quote to create a task for
+     * @param useNewStatus - If true, uses "New" status instead of mapping the workflow state
      */
-    async createQuoteTask(quote: ShopVoxQuote): Promise<WrikeTaskCreateResponse> {
+    async createQuoteTask(quote: ShopVoxQuote, useNewStatus: boolean = false): Promise<WrikeTaskCreateResponse> {
         // Validate required fields
         if (!quote.title || quote.title.trim() === '') {
             throw new Error('Quote title is required but was empty or undefined');
@@ -860,7 +862,7 @@ export class WrikeService {
             title: `QT #${quote.txnNumber}: ${quote.title}`,
             description: description,
             customFields: this.mapQuoteToCustomFields(quote),
-            customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
+            customStatus: useNewStatus ? NEW_WRIKE_STATUS_ID : mapShopVoxToWrikeStatusId(quote.workflowState),
         };
 
         // Validate request body before sending
@@ -976,8 +978,10 @@ export class WrikeService {
     /**
      * Creates or updates a quote task in Wrike
      * Returns the task ID and whether it was created or updated
+     * @param quote - The ShopVox quote to create or update a task for
+     * @param useNewStatus - If true, uses "New" status instead of mapping the workflow state for new tasks
      */
-    async createOrUpdateQuoteTask(quote: ShopVoxQuote): Promise<{ taskId: string; wasCreated: boolean }> {
+    async createOrUpdateQuoteTask(quote: ShopVoxQuote, useNewStatus: boolean = false): Promise<{ taskId: string; wasCreated: boolean }> {
         try {
         const searchResult = await this.findTaskByQuoteId(quote.id);
         
@@ -987,7 +991,7 @@ export class WrikeService {
             await this.updateQuoteTask(taskId, quote);
             return { taskId, wasCreated: false };
         } else {
-            const createResult = await this.createQuoteTask(quote);
+            const createResult = await this.createQuoteTask(quote, useNewStatus);
             const taskId = createResult.data[0].id;
             return { taskId, wasCreated: true };
             }

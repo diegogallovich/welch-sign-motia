@@ -34,7 +34,7 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (input, 
 
     // Create or update task in Wrike
     try {
-        const { taskId, wasCreated } = await wrikeService.createOrUpdateQuoteTask(quote);
+        const { taskId, wasCreated } = await wrikeService.createOrUpdateQuoteTask(quote, false); // Use proper status mapping for updated quotes
         
         if (wasCreated) {
             logger.info("Wrike task created for quote", { taskId });
