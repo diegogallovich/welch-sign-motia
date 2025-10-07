@@ -11,6 +11,7 @@ import {
   WRIKE_ADDRESS_FIELD_IDS,
 } from "../utils/address-formatter";
 import { shopvoxService } from "./shopvox.service";
+import { mapShopVoxUserIdToWrikeFolderMapping } from "utils/wrike-folder-mapping";
 
 export interface WrikeTask {
   id: string;
@@ -1030,14 +1031,24 @@ export class WrikeService {
     }
 
     const responsibles = [mapShopVoxToWrikeUserId(quote.createdBy.id)];
+    // const parents = [
+    //   mapShopVoxUserIdToWrikeFolderMapping(quote.createdBy.id)?.wrikeFolderId
+    //     .forQuotes,
+    // ];
+
     if (quote.primarySalesRep?.id) {
       responsibles.push(mapShopVoxToWrikeUserId(quote.primarySalesRep.id));
+      // parents.push(
+      //   mapShopVoxUserIdToWrikeFolderMapping(quote.primarySalesRep.id)
+      //     ?.wrikeFolderId.forQuotes
+      // );
     }
 
     const requestBody: any = {
       title: `QT #${quote.txnNumber}: ${quote.title}`,
       description: description,
       responsibles,
+      //parents,
       customFields: this.mapQuoteToCustomFields(quote),
       customStatus: useNewStatus
         ? NEW_WRIKE_STATUS_ID
@@ -1176,7 +1187,7 @@ export class WrikeService {
         return mapShopVoxToWrikeUserId(r);
       });
     }
-    
+
     if (newResponsibles) {
       requestBody.addResponsibles = newResponsibles.map((r) => {
         return mapShopVoxToWrikeUserId(r);
@@ -1223,7 +1234,7 @@ export class WrikeService {
     quote: ShopVoxQuote,
     useNewStatus: boolean = false,
     oldResponsibles?: string[],
-    newResponsibles?: string[],
+    newResponsibles?: string[]
   ): Promise<{ taskId: string; wasCreated: boolean }> {
     try {
       const searchResult = await this.findTaskByQuoteId(quote.id);
@@ -1231,7 +1242,12 @@ export class WrikeService {
       if (searchResult.data.length > 0) {
         // Task exists, update it
         const taskId = searchResult.data[0].id;
-        await this.updateQuoteTask(taskId, quote, oldResponsibles, newResponsibles);
+        await this.updateQuoteTask(
+          taskId,
+          quote,
+          oldResponsibles,
+          newResponsibles
+        );
         return { taskId, wasCreated: false };
       } else {
         const createResult = await this.createQuoteTask(quote, useNewStatus);

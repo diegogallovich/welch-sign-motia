@@ -118,3 +118,36 @@ export const SHOPVOX_WRIKE_FOLDER_MAPPING: WrikeFolderMapping[] = [
     },
   },
 ];
+
+/**
+ * Maps a ShopVox user ID to the corresponding Wrike folder mapping
+ * @param shopVoxUserId - The ShopVox user ID to map
+ * @returns The WrikeFolderMapping object if found, undefined otherwise
+ */
+export function mapShopVoxUserIdToWrikeFolderMapping(
+  shopVoxUserId: string
+): WrikeFolderMapping | undefined {
+  return SHOPVOX_WRIKE_FOLDER_MAPPING.find(
+    (mapping) => mapping.shopVoxUserId === shopVoxUserId
+  );
+}
+
+/**
+ * Gets the appropriate Wrike folder ID for a ShopVox user based on task type
+ * @param shopVoxUserId - The ShopVox user ID
+ * @param taskType - The type of task ('quotes' or 'wosos')
+ * @returns The Wrike folder ID if found, undefined otherwise
+ */
+export function getWrikeFolderIdForUser(
+  shopVoxUserId: string,
+  taskType: "quotes" | "wosos"
+): string | undefined {
+  const mapping = mapShopVoxUserIdToWrikeFolderMapping(shopVoxUserId);
+  if (!mapping) {
+    return undefined;
+  }
+
+  return taskType === "quotes"
+    ? mapping.wrikeFolderId.forQuotes
+    : mapping.wrikeFolderId.forWosos;
+}
