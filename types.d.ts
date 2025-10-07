@@ -12,15 +12,12 @@ declare module 'motia' {
   }
 
   interface Handlers {
-    'shopvox-webhook': ApiRouteHandler<{ event_object: string; event_action: string; timestamp: number; webhook_token: string; event: { id: string; name: string } }, unknown, { topic: 'sales_order:created'; data: { id: string; name: string } } | { topic: 'sales_order:updated'; data: { id: string; name: string } } | { topic: 'sales_order:deleted'; data: { id: string; name: string } } | { topic: 'quote:created'; data: { id: string; name: string } } | { topic: 'quote:updated'; data: { id: string; name: string } } | { topic: 'quote:deleted'; data: { id: string; name: string } } | { topic: 'work_order:created'; data: { id: string; name: string } } | { topic: 'work_order:updated'; data: { id: string; name: string } } | { topic: 'work_order:deleted'; data: { id: string; name: string } }>
-    'process-shopvox-work-order-updated': EventHandler<{ id: string; name: string }, never>
-    'process-shopvox-work-order-deleted': EventHandler<{ id: string; name: string }, never>
     'process-shopvox-work-order-created': EventHandler<{ id: string; name: string }, never>
-    'process-shopvox-sales-order-updated': EventHandler<{ id: string; name: string }, never>
-    'process-shopvox-sales-order-deleted': EventHandler<{ id: string; name: string }, never>
-    'process-shopvox-sales-order-created': EventHandler<{ id: string; name: string }, never>
-    'process-shopvox-quote-updated': EventHandler<{ id: string; name: string }, never>
-    'process-shopvox-quote-deleted': EventHandler<{ id: string; name: string }, never>
+    'shopvox-webhook': ApiRouteHandler<{ event_object: string; event_action: string; timestamp: number; webhook_token: string; event: { id: string; name: string } }, unknown, { topic: 'quote:created'; data: { id: string; name: string } } | { topic: 'quote:updated'; data: { id: string; name: string; changes?: Record<string, unknown[]> } } | { topic: 'quote:destroyed'; data: { id: string; name: string } } | { topic: 'work_order:created'; data: { id: string; name: string } } | { topic: 'work_order:updated'; data: { id: string; name: string; changes?: Record<string, unknown[]> } } | { topic: 'work_order:destroyed'; data: { id: string; name: string } }>
     'process-shopvox-quote-created': EventHandler<{ id: string; name: string }, never>
+    'process-shopvox-quote-destroyed': EventHandler<{ id: string; name: string }, never>
+    'process-shopvox-work-order-deleted': EventHandler<{ id: string; name: string }, never>
+    'process-shopvox-work-order-updated': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, never>
+    'process-shopvox-quote-updated': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, never>
   }
 }

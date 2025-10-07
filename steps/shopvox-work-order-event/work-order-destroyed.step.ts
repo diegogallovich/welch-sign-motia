@@ -6,18 +6,18 @@ export const config: EventConfig = {
     type: "event",
     name: "process-shopvox-work-order-deleted",
     description: "Processes a ShopVox work order deleted event",
-    subscribes: ["work_order:deleted"],
+    subscribes: ["work_order:destroyed"],
     emits: ["work-order-updated-in-wrike"],
     input: ShopVoxEventSchema,
     flows: ["shopvox-to-wrike"],
 }
 
 export const handler: Handlers["process-shopvox-work-order-deleted"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
-    logger.info("Processing work order updated event", { input, traceId });
+    logger.info("Processing work order updated event", { input });
     
     // prettify input and display fully
     const inputJson = JSON.stringify(input, null, 2);
-    logger.info("Work order deleted event", { inputJson, traceId });
+    logger.info("Work order deleted event", { inputJson });
 
     await emit({
         topic: "work-order-deleted-in-wrike"

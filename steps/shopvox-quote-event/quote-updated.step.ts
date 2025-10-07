@@ -16,6 +16,9 @@ export const config: EventConfig = {
 
 export const handler: Handlers["process-shopvox-quote-updated"] = async (input, { emit, logger, state, traceId}: FlowContext) => {
     logger.info("Processing quote updated event", { input });
+
+    const changes = input.changes;
+    logger.info("Quote updated changes:", { changes });
     
     let quote: ShopVoxQuote;
     try {
@@ -34,7 +37,15 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (input, 
 
     // Create or update task in Wrike
     try {
-        const { taskId, wasCreated } = await wrikeService.createOrUpdateQuoteTask(quote, false); // Use proper status mapping for updated quotes
+
+        const oldResponsibles: string[] = [];
+        const newResponsibles: string[] = [];
+
+        if (input.changes?.primary_sales_rep_id) {
+            oldResponsibles.push(input.changes.primary_sales_rep_id[0] as string);
+            newResponsibles.push(input.changes.primary_sales_rep_id[1] as string);
+        }
+        const { taskId, wasCreated } = await wrikeService.createOrUpdateQuoteTask(quote, false, oldResponsibles, newResponsibles); // Use proper status mapping for updated quotes
         
         if (wasCreated) {
             logger.info("Wrike task created for quote", { taskId });
