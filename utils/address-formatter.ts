@@ -4,7 +4,7 @@ import { ShopVoxQuote } from "../schemas/quote.schema";
 /**
  * Interface for address objects from ShopVox
  */
-interface ShopVoxAddress {
+export interface ShopVoxAddress {
   id: string;
   name: string;
   street: string;

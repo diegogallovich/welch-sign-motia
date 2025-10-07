@@ -1,13 +1,11 @@
 import { ShopVoxQuote } from "../schemas/quote.schema";
 import { ShopVoxSalesOrder } from "../schemas/sales-order.schema";
 import { mapShopVoxToWrikeUserId } from "../utils/user-mapping";
-import {
-  mapShopVoxToWrikeStatusId,
-  NEW_WRIKE_STATUS_ID,
-} from "../utils/status-mapping";
+import { mapShopVoxToWrikeStatusId } from "../utils/status-mapping";
 import {
   formatAddress,
   getInstallAddressFromQuote,
+  ShopVoxAddress,
   WRIKE_ADDRESS_FIELD_IDS,
 } from "../utils/address-formatter";
 import { shopvoxService } from "./shopvox.service";
@@ -570,6 +568,12 @@ export class WrikeService {
         id: "IEADYYMRJUAJJ6HA",
         value: this.createWorkOrderLinks(quote.salesOrders),
       },
+      {
+        id: WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS,
+        value: this.sanitizeWrikeCustomFieldValue(
+          formatAddress(quote.installingAddress as ShopVoxAddress)
+        ),
+      },
     ];
 
     // Add contact field mappings if the respective users exist in the quote
@@ -1004,9 +1008,7 @@ export class WrikeService {
    * @param quote - The ShopVox quote to create a task for
    * @param useNewStatus - If true, uses "New" status instead of mapping the workflow state
    */
-  async createQuoteTask(
-    quote: ShopVoxQuote,
-  ): Promise<WrikeTaskCreateResponse> {
+  async createQuoteTask(quote: ShopVoxQuote): Promise<WrikeTaskCreateResponse> {
     // Validate required fields
     if (!quote.title || quote.title.trim() === "") {
       throw new Error("Quote title is required but was empty or undefined");
