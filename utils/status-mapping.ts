@@ -15,7 +15,7 @@ export interface StatusMapping {
 export const SHOPVOX_WRIKE_STATUS_MAPPING: StatusMapping[] = [
     {
         shopVoxStatusName: "draft",
-        wrikeStatusId: "IEADYYMRJMGHKPXK"
+        wrikeStatusId: "IEADYYMRJMGGGFXI"
     },
     {
         shopVoxStatusName: "expired",

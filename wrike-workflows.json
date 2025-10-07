@@ -1,117 +1,977 @@
 {
-  "id": "IEADYYMRK4GGGFXI",
-  "name": "Quote Workflow",
-  "standard": false,
-  "hidden": false,
-  "customStatuses": [
+  "kind": "workflows",
+  "data": [
     {
-      "standardName": true,
-      "standard": false,
-      "id": "IEADYYMRJMGGGFXI",
-      "name": "New",
-      "color": "Purple",
-      "group": "Active",
-      "hidden": false
+      "id": "IEADYYMRK774HHTP",
+      "name": "Default Workflow",
+      "standard": true,
+      "hidden": false,
+      "customStatuses": [
+        {
+          "standardName": true,
+          "standard": true,
+          "id": "IEADYYMRJMAAAAAA",
+          "name": "New",
+          "color": "Indigo",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMBP5I5Q",
+          "name": "In Progress",
+          "color": "Turquoise",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVWYR6",
+          "name": "Production",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVW3NG",
+          "name": "With GC for Review",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMEXT4JW",
+          "name": "On Hold",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEXVHEK",
+          "name": "With GC for Review",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGHKFMC",
+          "name": "Ready for Install",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVW3NQ",
+          "name": "Revisions in Process",
+          "color": "Red",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEYTXBM",
+          "name": "Submittal Revisions",
+          "color": "Purple",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEYTXCA",
+          "name": "Install Scheduled",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJME3HMDK",
+          "name": "Deferred",
+          "color": "Brown",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVW3N2",
+          "name": "In Production",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJME3HMDA",
+          "name": "Partial Production",
+          "color": "YellowGreen",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGHKFMM",
+          "name": "Ready to Bill",
+          "color": "Red",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGHKPDU",
+          "name": "Partially Installed",
+          "color": "Yellow",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVW3OE",
+          "name": "Install in Process",
+          "color": "Green",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEYTXBW",
+          "name": "Production",
+          "color": "Yellow",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVXE6Q",
+          "name": "Punchlist",
+          "color": "Yellow",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEYTCBG",
+          "name": "Partially Installed",
+          "color": "Red",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVYKGW",
+          "name": "Request change order",
+          "color": "Turquoise",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMEVYKHA",
+          "name": "Change order received",
+          "color": "Indigo",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJME3HMJI",
+          "name": "Waiting for Authorization",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFEYK7M",
+          "name": "With Design",
+          "color": "Gray",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFEYK7W",
+          "name": "Punchlist",
+          "color": "DarkBlue",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": true,
+          "standard": true,
+          "id": "IEADYYMRJMAAAAAB",
+          "name": "Completed",
+          "color": "Green",
+          "group": "Completed",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": true,
+          "id": "IEADYYMRJMAAAAAC",
+          "name": "On Hold",
+          "color": "Gray",
+          "group": "Deferred",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": true,
+          "id": "IEADYYMRJMAAAAAD",
+          "name": "Void",
+          "color": "Gray",
+          "group": "Cancelled",
+          "hidden": false
+        }
+      ],
+      "description": "USE ONLY FOR SALES ORDERS"
     },
     {
-      "standardName": false,
+      "id": "IEADYYMRK4GGP22G",
+      "name": "Design workflow",
       "standard": false,
-      "id": "IEADYYMRJMGGGGLS",
-      "name": "Draft",
-      "color": "Orange",
-      "group": "Active",
-      "hidden": true
+      "hidden": false,
+      "customStatuses": [
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGP22G",
+          "name": "New",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGP22Q",
+          "name": "In Process",
+          "color": "Purple",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGP222",
+          "name": "Revisions",
+          "color": "YellowGreen",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGQHWC",
+          "name": "Customer Review",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGP23E",
+          "name": "Shops",
+          "color": "Purple",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGP22H",
+          "name": "Completed",
+          "color": "Green",
+          "group": "Completed",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGP24E",
+          "name": "On Hold",
+          "color": "Gray",
+          "group": "Deferred",
+          "hidden": true
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGP23R",
+          "name": "Cancelled",
+          "color": "DarkRed",
+          "group": "Cancelled",
+          "hidden": false
+        }
+      ],
+      "description": ""
     },
     {
-      "standardName": false,
+      "id": "IEADYYMRK4FB3LFY",
+      "name": "Install Workflow",
       "standard": false,
-      "id": "IEADYYMRJMGHKPXK",
-      "name": "Draft",
-      "color": "DarkBlue",
-      "group": "Active",
-      "hidden": false
+      "hidden": false,
+      "customStatuses": [
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFB3LFY",
+          "name": "Scheduled",
+          "color": "Green",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFB3LGC",
+          "name": "Pending Permit",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFB3LGM",
+          "name": "Pending Survey or VIFs",
+          "color": "Yellow",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMFB3LGW",
+          "name": "On Hold",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFB3LHA",
+          "name": "To be rescheduled",
+          "color": "Red",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFWUPRO",
+          "name": "Partial Install",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMFZQNSE",
+          "name": "Dig Safe",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGBOCZM",
+          "name": "Tentative",
+          "color": "YellowGreen",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGDELC6",
+          "name": "Pending Service Request",
+          "color": "Purple",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGG26PY",
+          "name": "Confirmed",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMFB3LFZ",
+          "name": "Completed",
+          "color": "Red",
+          "group": "Completed",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMFB3L4L",
+          "name": "Cancelled",
+          "color": "DarkRed",
+          "group": "Cancelled",
+          "hidden": false
+        }
+      ],
+      "description": ""
     },
     {
-      "standardName": false,
+      "id": "IEADYYMRK4GGS2M6",
+      "name": "PM Component",
       "standard": false,
-      "id": "IEADYYMRJMGGGFXS",
-      "name": "Customer Review",
-      "color": "Indigo",
-      "group": "Active",
-      "hidden": false
+      "hidden": false,
+      "customStatuses": [
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGS2M6",
+          "name": "Not Started",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGS2NI",
+          "name": "Initial Submittal",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGS2NS",
+          "name": "GC Review",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGS2N4",
+          "name": "Design",
+          "color": "Purple",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGS2OG",
+          "name": "Waiting for Authorization",
+          "color": "YellowGreen",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGS2M7",
+          "name": "Booked",
+          "color": "Green",
+          "group": "Completed",
+          "hidden": false
+        }
+      ],
+      "description": ""
     },
     {
-      "standardName": false,
+      "id": "IEADYYMRK4GGGHXK",
+      "name": "PM Workflow",
       "standard": false,
-      "id": "IEADYYMRJMGG5SXW",
-      "name": "Revise",
-      "color": "Red",
-      "group": "Active",
-      "hidden": true
+      "hidden": true,
+      "customStatuses": [
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHXK",
+          "name": "Not Started",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHXU",
+          "name": "Initial Submittal",
+          "color": "DarkCyan",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHX6",
+          "name": "With GC for Review",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHYI",
+          "name": "Submittal Revisions",
+          "color": "Purple",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHYS",
+          "name": "Partial Production",
+          "color": "YellowGreen",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHY4",
+          "name": "Production",
+          "color": "Yellow",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHZG",
+          "name": "Partially Installed",
+          "color": "Red",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHZQ",
+          "name": "Install",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHZ2",
+          "name": "Deferred",
+          "color": "Brown",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGH2E",
+          "name": "Waiting for Authorization",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGH2O",
+          "name": "With Design",
+          "color": "Gray",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGH2Y",
+          "name": "Punchlist",
+          "color": "DarkBlue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGGHXL",
+          "name": "Completed",
+          "color": "Green",
+          "group": "Completed",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGGH3E",
+          "name": "On Hold",
+          "color": "Gray",
+          "group": "Deferred",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGGH3P",
+          "name": "Cancelled",
+          "color": "Gray",
+          "group": "Cancelled",
+          "hidden": false
+        }
+      ],
+      "description": ""
     },
     {
-      "standardName": false,
+      "id": "IEADYYMRK4GGRGC4",
+      "name": "PM Workflow (1)",
       "standard": false,
-      "id": "IEADYYMRJMGG5SYK",
-      "name": "Revise",
-      "color": "Red",
-      "group": "Active",
-      "hidden": false
+      "hidden": true,
+      "customStatuses": [
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGC4",
+          "name": "Not Started",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGDG",
+          "name": "Initial Submittal",
+          "color": "DarkCyan",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGDQ",
+          "name": "With GC for Review",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGD2",
+          "name": "Submittal Revisions",
+          "color": "Purple",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGEE",
+          "name": "Partial Production",
+          "color": "YellowGreen",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGEO",
+          "name": "Production",
+          "color": "Yellow",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGEY",
+          "name": "Partially Installed",
+          "color": "Red",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGFC",
+          "name": "Install",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGFM",
+          "name": "Deferred",
+          "color": "Brown",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGFW",
+          "name": "Waiting for Authorization",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGGA",
+          "name": "With Design",
+          "color": "Gray",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGGK",
+          "name": "Punchlist",
+          "color": "DarkBlue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGC5",
+          "name": "Completed",
+          "color": "Green",
+          "group": "Completed",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGGW",
+          "name": "On Hold",
+          "color": "Gray",
+          "group": "Deferred",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGGRGHB",
+          "name": "Cancelled",
+          "color": "Gray",
+          "group": "Cancelled",
+          "hidden": false
+        }
+      ],
+      "description": ""
     },
     {
-      "standardName": false,
+      "id": "IEADYYMRK4GIC4AC",
+      "name": "Production Workflow",
       "standard": false,
-      "id": "IEADYYMRJMGGGFX4",
-      "name": "Approved",
-      "color": "Green",
-      "group": "Active",
-      "hidden": false
+      "hidden": false,
+      "customStatuses": [
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGIC4AC",
+          "name": "Not Started",
+          "color": "DarkRed",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGIC4AM",
+          "name": "In Process",
+          "color": "Turquoise",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGIC4AD",
+          "name": "Completed",
+          "color": "Green",
+          "group": "Completed",
+          "hidden": false
+        },
+        {
+          "standardName": true,
+          "standard": false,
+          "id": "IEADYYMRJMGIC4AY",
+          "name": "On Hold",
+          "color": "Gray",
+          "group": "Deferred",
+          "hidden": false
+        }
+      ],
+      "description": "Use for Production"
     },
     {
-      "standardName": false,
+      "id": "IEADYYMRK4GGGFXI",
+      "name": "Quote Workflow",
       "standard": false,
-      "id": "IEADYYMRJMGGGGL4",
-      "name": "Approved with changes",
-      "color": "Yellow",
-      "group": "Active",
-      "hidden": false
-    },
-    {
-      "standardName": false,
-      "standard": false,
-      "id": "IEADYYMRJMGGGFXJ",
-      "name": "Ordered",
-      "color": "Green",
-      "group": "Completed",
-      "hidden": false
-    },
-    {
-      "standardName": false,
-      "standard": false,
-      "id": "IEADYYMRJMGGGGMI",
-      "name": "Hold",
-      "color": "Gray",
-      "group": "Deferred",
-      "hidden": false
-    },
-    {
-      "standardName": false,
-      "standard": false,
-      "id": "IEADYYMRJMGGGFYJ",
-      "name": "Expired",
-      "color": "DarkRed",
-      "group": "Cancelled",
-      "hidden": false
-    },
-    {
-      "standardName": false,
-      "standard": false,
-      "id": "IEADYYMRJMGGGGNH",
-      "name": "Void",
-      "color": "DarkRed",
-      "group": "Cancelled",
-      "hidden": false
+      "hidden": false,
+      "customStatuses": [
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGFXI",
+          "name": "Draft",
+          "color": "Gray",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGFXS",
+          "name": "Customer Review",
+          "color": "Indigo",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGGLS",
+          "name": "Draft",
+          "color": "Orange",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGHKPXK",
+          "name": "Draft",
+          "color": "DarkBlue",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGG5SYK",
+          "name": "Revise",
+          "color": "Red",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGFX4",
+          "name": "Approved",
+          "color": "Green",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGG5SXW",
+          "name": "Revise",
+          "color": "Red",
+          "group": "Active",
+          "hidden": true
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGIGNA6",
+          "name": "Internally Approved",
+          "color": "Blue",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGGL4",
+          "name": "Approved with changes",
+          "color": "Yellow",
+          "group": "Active",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGFXJ",
+          "name": "Ordered",
+          "color": "Green",
+          "group": "Completed",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGGMI",
+          "name": "Hold",
+          "color": "Gray",
+          "group": "Deferred",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGFYJ",
+          "name": "Expired",
+          "color": "DarkRed",
+          "group": "Cancelled",
+          "hidden": false
+        },
+        {
+          "standardName": false,
+          "standard": false,
+          "id": "IEADYYMRJMGGGGNH",
+          "name": "Void",
+          "color": "DarkRed",
+          "group": "Cancelled",
+          "hidden": false
+        }
+      ],
+      "description": ""
     }
-  ],
-  "description": ""
+  ]
 }

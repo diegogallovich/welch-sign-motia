@@ -45,7 +45,7 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (input, 
             oldResponsibles.push(input.changes.primary_sales_rep_id[0] as string);
             newResponsibles.push(input.changes.primary_sales_rep_id[1] as string);
         }
-        const { taskId, wasCreated } = await wrikeService.createOrUpdateQuoteTask(quote, false, oldResponsibles, newResponsibles); // Use proper status mapping for updated quotes
+        const { taskId, wasCreated } = await wrikeService.createOrUpdateQuoteTask(quote, oldResponsibles, newResponsibles); // Use proper status mapping for updated quotes
         
         if (wasCreated) {
             logger.info("Wrike task created for quote", { taskId });

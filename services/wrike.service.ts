@@ -11,7 +11,7 @@ import {
   WRIKE_ADDRESS_FIELD_IDS,
 } from "../utils/address-formatter";
 import { shopvoxService } from "./shopvox.service";
-import { mapShopVoxUserIdToWrikeFolderMapping } from "utils/wrike-folder-mapping";
+// import { mapShopVoxUserIdToWrikeFolderMapping } from "utils/wrike-folder-mapping";
 
 export interface WrikeTask {
   id: string;
@@ -1006,7 +1006,6 @@ export class WrikeService {
    */
   async createQuoteTask(
     quote: ShopVoxQuote,
-    useNewStatus: boolean = false
   ): Promise<WrikeTaskCreateResponse> {
     // Validate required fields
     if (!quote.title || quote.title.trim() === "") {
@@ -1050,9 +1049,7 @@ export class WrikeService {
       responsibles,
       //parents,
       customFields: this.mapQuoteToCustomFields(quote),
-      customStatus: useNewStatus
-        ? NEW_WRIKE_STATUS_ID
-        : mapShopVoxToWrikeStatusId(quote.workflowState),
+      customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
       customItemTypeId: "IEADYYMRPIAFJ6UP", // Quote Custom Item Type ID
     };
 
@@ -1232,7 +1229,6 @@ export class WrikeService {
    */
   async createOrUpdateQuoteTask(
     quote: ShopVoxQuote,
-    useNewStatus: boolean = false,
     oldResponsibles?: string[],
     newResponsibles?: string[]
   ): Promise<{ taskId: string; wasCreated: boolean }> {
@@ -1250,7 +1246,7 @@ export class WrikeService {
         );
         return { taskId, wasCreated: false };
       } else {
-        const createResult = await this.createQuoteTask(quote, useNewStatus);
+        const createResult = await this.createQuoteTask(quote);
         const taskId = createResult.data[0].id;
         return { taskId, wasCreated: true };
       }
