@@ -45,34 +45,11 @@ export const handler: Handlers["shopvox-webhook"] = async (
 
   const eventString = `${event_object}:${event_action}`;
 
-  // switch case to capture invalid event strings
-  switch (eventString) {
-    case "quote:created":
-      break;
-    case "quote:updated":
-      break;
-    case "quote:destroyed":
-      break;
-    case "work_order:created":
-      break;
-    case "work_order:updated":
-      break;
-    case "work_order:destroyed":
-      break;
-    default:
-      logger.error("Invalid event string", { eventString });
-      return {
-        status: 400,
-        body: {
-          message: "Invalid event string",
-        },
-      };
-  }
-
   logger.info("ShopVox event queued for processing", { eventString });
 
   await emit({
-    topic: eventString,
+    // todo: remove as never - fix typing
+    topic: eventString as never,
     data: event,
   });
 

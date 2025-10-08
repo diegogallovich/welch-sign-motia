@@ -9,7 +9,7 @@ import {
   WRIKE_ADDRESS_FIELD_IDS,
 } from "../utils/address-formatter";
 import { shopvoxService } from "./shopvox.service";
-// import { mapShopVoxUserIdToWrikeFolderMapping } from "utils/wrike-folder-mapping";
+import { mapShopVoxUserIdToWrikeFolderMapping } from "../utils/wrike-folder-mapping";
 
 export interface WrikeTask {
   id: string;
@@ -1032,27 +1032,27 @@ export class WrikeService {
     }
 
     const responsibles = [mapShopVoxToWrikeUserId(quote.createdBy.id)];
-    // const parents = [
-    //   mapShopVoxUserIdToWrikeFolderMapping(quote.createdBy.id)?.wrikeFolderId
-    //     .forQuotes,
-    // ];
+    const parents = [
+      mapShopVoxUserIdToWrikeFolderMapping(quote.createdBy.id)?.wrikeFolderId
+        .forQuotes,
+    ];
 
     if (quote.primarySalesRep?.id) {
       responsibles.push(mapShopVoxToWrikeUserId(quote.primarySalesRep.id));
-      // parents.push(
-      //   mapShopVoxUserIdToWrikeFolderMapping(quote.primarySalesRep.id)
-      //     ?.wrikeFolderId.forQuotes
-      // );
+      parents.push(
+        mapShopVoxUserIdToWrikeFolderMapping(quote.primarySalesRep.id)
+          ?.wrikeFolderId.forQuotes
+      );
     }
 
     const requestBody: any = {
       title: `QT #${quote.txnNumber}: ${quote.title}`,
       description: description,
       responsibles,
-      //parents,
+      parents,
       customFields: this.mapQuoteToCustomFields(quote),
       customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
-      customItemTypeId: "IEADYYMRPIAFJ6UP", // Quote Custom Item Type ID
+      customItemTypeId: "IEADYYMRPIAFP7UJ", // Quote Custom Item Type ID
     };
 
     // Validate request body before sending
@@ -1169,6 +1169,7 @@ export class WrikeService {
     }
 
     const responsibles = [mapShopVoxToWrikeUserId(quote.createdBy.id)];
+
     if (quote.primarySalesRep?.id) {
       responsibles.push(mapShopVoxToWrikeUserId(quote.primarySalesRep.id));
     }
@@ -1185,11 +1186,19 @@ export class WrikeService {
       requestBody.removeResponsibles = oldResponsibles.map((r) => {
         return mapShopVoxToWrikeUserId(r);
       });
+
+      requestBody.removeParents = oldResponsibles.map((r) => {
+        return mapShopVoxUserIdToWrikeFolderMapping(r)?.wrikeFolderId.forQuotes;
+      });
     }
 
     if (newResponsibles) {
       requestBody.addResponsibles = newResponsibles.map((r) => {
         return mapShopVoxToWrikeUserId(r);
+      });
+
+      requestBody.addParents = newResponsibles.map((r) => {
+        return mapShopVoxUserIdToWrikeFolderMapping(r)?.wrikeFolderId.forQuotes;
       });
     }
 
@@ -1295,16 +1304,26 @@ export class WrikeService {
     }
 
     const responsibles = [mapShopVoxToWrikeUserId(salesOrder.createdBy.id)];
+    const parents = [
+      mapShopVoxUserIdToWrikeFolderMapping(salesOrder.createdBy.id)
+        ?.wrikeFolderId.forWosos,
+    ];
+
     if (salesOrder.projectManager?.id) {
       responsibles.push(mapShopVoxToWrikeUserId(salesOrder.projectManager.id));
+      parents.push(
+        mapShopVoxUserIdToWrikeFolderMapping(salesOrder.projectManager.id)
+          ?.wrikeFolderId.forWosos
+      );
     }
 
     const requestBody: any = {
       title: `SO #${salesOrder.txnNumber}: ${salesOrder.title}`,
       description: description,
       responsibles,
+      parents,
       customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
-      customItemTypeId: "IEADYYMRPIAFKUFH", // Sales Order Custom Item Type ID
+      customItemTypeId: "IEADYYMRPIAFP7OS", // Sales Order Custom Item Type ID
     };
 
     // Validate request body before sending
@@ -1435,11 +1454,19 @@ export class WrikeService {
       requestBody.removeResponsibles = oldResponsibles.map((r) => {
         return mapShopVoxToWrikeUserId(r);
       });
+
+      requestBody.removeParents = oldResponsibles.map((r) => {
+        return mapShopVoxUserIdToWrikeFolderMapping(r)?.wrikeFolderId.forWosos;
+      });
     }
 
     if (newResponsibles) {
       requestBody.addResponsibles = newResponsibles.map((r) => {
         return mapShopVoxToWrikeUserId(r);
+      });
+
+      requestBody.addParents = newResponsibles.map((r) => {
+        return mapShopVoxUserIdToWrikeFolderMapping(r)?.wrikeFolderId.forWosos;
       });
     }
 
