@@ -299,6 +299,41 @@ export class WrikeService {
   }
 
   /**
+   * Determines the fulfillment method based on line item names
+   * @param lineItems - Array of line items from quote or sales order
+   * @returns "Shipping" | "Install" | "Customer pickup" | "Conflict"
+   */
+  private determineFulfillmentMethod(lineItems: any[]): string {
+    if (!lineItems || lineItems.length === 0) {
+      return "";
+    }
+
+    let hasShipping = false;
+    let hasInstall = false;
+
+    for (const item of lineItems) {
+      const name = (item?.name || "").toLowerCase();
+
+      if (name.includes("shipping")) {
+        hasShipping = true;
+      }
+
+      if (name.includes("install") || name.includes("installation")) {
+        hasInstall = true;
+      }
+
+      // Early exit if both found
+      if (hasShipping && hasInstall) {
+        return "Conflict";
+      }
+    }
+
+    if (hasShipping) return "Shipping";
+    if (hasInstall) return "Install";
+    return "Customer pickup";
+  }
+
+  /**
    * Creates HTML anchor tags for ShopVox work orders from sales orders array
    */
   private createWorkOrderLinks(salesOrders: any[]): string {
@@ -574,6 +609,14 @@ export class WrikeService {
           formatAddress(quote.installingAddress as ShopVoxAddress)
         ),
       },
+      {
+        id: "IEADYYMRJUAJPRB6",
+        value: this.determineFulfillmentMethod(quote.lineItems),
+      },
+      {
+        id: "IEADYYMRJUAJKDIX", // Target Install Date
+        value: this.sanitizeWrikeCustomFieldValue(quote.dueDate),
+      },
     ];
 
     // Add contact field mappings if the respective users exist in the quote
@@ -696,7 +739,7 @@ export class WrikeService {
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.inHandDate),
       },
       {
-        id: "IEADYYMRJUAJKGSN",
+        id: "IEADYYMRJUAJKDIX", // Target Install Date
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
       },
       {
@@ -927,6 +970,10 @@ export class WrikeService {
         value: `<a href="${this.escapeHtml(
           `https://express.shopvox.com/transactions/sales-orders/${salesOrder.id}`
         )}" target="_blank">SO #${this.escapeHtml(salesOrder.txnNumber)}</a>`,
+      },
+      {
+        id: "IEADYYMRJUAJPRB6",
+        value: this.determineFulfillmentMethod(salesOrder.lineItems),
       },
     ];
 

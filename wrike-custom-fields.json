@@ -2,6 +2,202 @@
   "kind": "customfields",
   "data": [
     {
+      "id": "IEADYYMRJUAJFPZH",
+      "accountId": "IEADYYMR",
+      "title": "Total",
+      "type": "Currency",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": []
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 2,
+        "useThousandsSeparator": true,
+        "currency": "USD",
+        "aggregation": "Sum",
+        "readOnly": true,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSWF",
+      "accountId": "IEADYYMR",
+      "title": "Age",
+      "type": "Numeric",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": []
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "decimalPlaces": 0,
+        "useThousandsSeparator": false,
+        "aggregation": "Sum",
+        "readOnly": true,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFEN",
+      "accountId": "IEADYYMR",
+      "title": "Created By",
+      "type": "Contacts",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": []
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": true,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJFSXL",
+      "accountId": "IEADYYMR",
+      "title": "Sales Rep",
+      "type": "Contacts",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": []
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "contacts": [
+          "KUAIINDI",
+          "KUAUNR4P",
+          "KUATJHVJ",
+          "KUATISBM",
+          "KUAWBVMR",
+          "KUAUNFRL",
+          "KUAUVQGU"
+        ],
+        "readOnly": true,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJPRB6",
+      "accountId": "IEADYYMR",
+      "title": "Fulfillment Method",
+      "type": "DropDown",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": [
+          "KUAVYLX5"
+        ]
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "values": [
+          "Shipping",
+          "Install",
+          "Customer pickup",
+          "Conflict"
+        ],
+        "options": [
+          {
+            "value": "Shipping",
+            "color": "Turquoise"
+          },
+          {
+            "value": "Install",
+            "color": "Blue"
+          },
+          {
+            "value": "Customer pickup",
+            "color": "DarkBlue"
+          },
+          {
+            "value": "Conflict",
+            "color": "DarkRed"
+          }
+        ],
+        "optionColorsEnabled": true,
+        "allowOtherValues": false,
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJG7E4",
+      "accountId": "IEADYYMR",
+      "title": "ShopVox Quote Link",
+      "type": "Text",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": []
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": true,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFEE",
+      "accountId": "IEADYYMR",
+      "title": "Production Manager",
+      "type": "Contacts",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "contacts": [
+          "KUATJIS2",
+          "KUAWAUUX"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJKDIX",
+      "accountId": "IEADYYMR",
+      "title": "Target Install Date",
+      "type": "Date",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": [
+          "WorkItem"
+        ],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
       "id": "IEADYYMRJUAJFPCR",
       "accountId": "IEADYYMR",
       "title": "shopVoxId",
@@ -24,24 +220,6 @@
       "accountId": "IEADYYMR",
       "title": "active",
       "type": "Checkbox",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFPY5",
-      "accountId": "IEADYYMR",
-      "title": "Title",
-      "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
       "sharing": {},
@@ -116,29 +294,7 @@
     {
       "id": "IEADYYMRJUAJFPZF",
       "accountId": "IEADYYMR",
-      "title": "totalTaxInDollars",
-      "type": "Currency",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "decimalPlaces": 2,
-        "useThousandsSeparator": true,
-        "currency": "USD",
-        "aggregation": "Sum",
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFPZH",
-      "accountId": "IEADYYMR",
-      "title": "Total",
+      "title": "Tax",
       "type": "Currency",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -160,7 +316,7 @@
     {
       "id": "IEADYYMRJUAJFP2V",
       "accountId": "IEADYYMR",
-      "title": "Status",
+      "title": "SV Status",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -349,68 +505,9 @@
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJFQSJ",
-      "accountId": "IEADYYMR",
-      "title": "Tracking #",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
       "id": "IEADYYMRJUAJFQSL",
       "accountId": "IEADYYMR",
       "title": "Shipped Date",
-      "type": "Date",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFSVG",
-      "accountId": "IEADYYMR",
-      "title": "Date Created",
-      "type": "Date",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {
-        "writerIds": [
-          "KUAVYLX5",
-          "KUAIIJPC"
-        ]
-      },
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFSWB",
-      "accountId": "IEADYYMR",
-      "title": "Last Updated On",
       "type": "Date",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -438,26 +535,6 @@
         "applicableEntityTypes": [
           "WorkItem"
         ],
-        "readOnly": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFSWF",
-      "accountId": "IEADYYMR",
-      "title": "age",
-      "type": "Numeric",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "decimalPlaces": 0,
-        "useThousandsSeparator": false,
-        "aggregation": "Sum",
         "readOnly": false
       },
       "description": ""
@@ -550,24 +627,6 @@
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJFSWY",
-      "accountId": "IEADYYMR",
-      "title": "Booking Date",
-      "type": "Date",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
       "id": "IEADYYMRJUAJFSW5",
       "accountId": "IEADYYMR",
       "title": "createdBy",
@@ -602,60 +661,6 @@
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJFSXH",
-      "accountId": "IEADYYMR",
-      "title": "Primary Contact",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFSXI",
-      "accountId": "IEADYYMR",
-      "title": "Primary Contact email",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFSXJ",
-      "accountId": "IEADYYMR",
-      "title": "Primary Contact Phone",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
       "id": "IEADYYMRJUAJFSXK",
       "accountId": "IEADYYMR",
       "title": "primaryContact.id",
@@ -669,24 +674,6 @@
           "WorkItem"
         ],
         "readOnly": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFSXL",
-      "accountId": "IEADYYMR",
-      "title": "Sales Rep",
-      "type": "Contacts",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
       },
       "description": ""
     },
@@ -743,29 +730,6 @@
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJFSXR",
-      "accountId": "IEADYYMR",
-      "title": "Company Name",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {
-        "writerIds": [
-          "KUAVYLX5",
-          "KUAIIJPC"
-        ]
-      },
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
       "id": "IEADYYMRJUAJFSXV",
       "accountId": "IEADYYMR",
       "title": "company.phoneWithExt",
@@ -786,23 +750,6 @@
       "id": "IEADYYMRJUAJFSXW",
       "accountId": "IEADYYMR",
       "title": "leadSourceId",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFSX2",
-      "accountId": "IEADYYMR",
-      "title": "lineItems",
       "type": "Text",
       "spaceId": "MQAAAABm_ZEf",
       "sharedIds": [],
@@ -1733,321 +1680,6 @@
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJG7E4",
-      "accountId": "IEADYYMR",
-      "title": "ShopVox Quote Link",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJIFD5",
-      "accountId": "IEADYYMR",
-      "title": "Project Manager",
-      "type": "Contacts",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "contacts": [
-          "KUAIIJPC",
-          "KUAIIJ76",
-          "KUAIINDI",
-          "KUASSV4P",
-          "KUATEHED",
-          "KUATHPK4",
-          "KUATIDV4",
-          "KUATIEHY",
-          "KUATISBM",
-          "KUATJHVJ",
-          "KUATZFAN",
-          "KUAUNFRL",
-          "KUAUNR4P",
-          "KUAUVQGU"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJIFEE",
-      "accountId": "IEADYYMR",
-      "title": "Production Manager",
-      "type": "Contacts",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "contacts": [
-          "KUATJIS2"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJIFEM",
-      "accountId": "IEADYYMR",
-      "title": "Estimator",
-      "type": "Contacts",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {
-        "writerIds": [],
-        "spaceWriters": "Admin"
-      },
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJIFEN",
-      "accountId": "IEADYYMR",
-      "title": "Created By (ShopVox)",
-      "type": "Contacts",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {
-        "writerIds": [
-          "KUAVYLX5",
-          "KUAIIJPC"
-        ]
-      },
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJIG5N",
-      "accountId": "IEADYYMR",
-      "title": "Install Address",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {
-        "writerIds": [],
-        "spaceWriters": "Admin"
-      },
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJJC2C",
-      "accountId": "IEADYYMR",
-      "title": "Sign Types",
-      "type": "Multiple",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "values": [
-          "ADA",
-          "Environmental graphics",
-          "Dimensional Letters",
-          "Vinyl",
-          "Fabricated Letters",
-          "Channel letters",
-          "Building sign",
-          "Blade sign",
-          "Traffic sign",
-          "Wayfinding",
-          "Post & Panel",
-          "Monument sign",
-          "Pylon Sign",
-          "Other",
-          "EMC"
-        ],
-        "options": [
-          {
-            "value": "ADA",
-            "color": "Blue"
-          },
-          {
-            "value": "Environmental graphics",
-            "color": "Green"
-          },
-          {
-            "value": "Dimensional Letters",
-            "color": "Orange"
-          },
-          {
-            "value": "Vinyl",
-            "color": "DarkRed"
-          },
-          {
-            "value": "Fabricated Letters",
-            "color": "Indigo"
-          },
-          {
-            "value": "Channel letters",
-            "color": "Turquoise"
-          },
-          {
-            "value": "Building sign",
-            "color": "YellowGreen"
-          },
-          {
-            "value": "Blade sign",
-            "color": "Brown"
-          },
-          {
-            "value": "Traffic sign",
-            "color": "Red"
-          },
-          {
-            "value": "Wayfinding",
-            "color": "DarkBlue"
-          },
-          {
-            "value": "Post & Panel",
-            "color": "DarkCyan"
-          },
-          {
-            "value": "Monument sign",
-            "color": "Yellow"
-          },
-          {
-            "value": "Pylon Sign",
-            "color": "Gray"
-          },
-          {
-            "value": "Other",
-            "color": "Purple"
-          },
-          {
-            "value": "EMC",
-            "color": "Blue"
-          }
-        ],
-        "optionColorsEnabled": true,
-        "allowOtherValues": false,
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJJD5O",
-      "accountId": "IEADYYMR",
-      "title": "Drawing Type",
-      "type": "DropDown",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "values": [
-          "Proof",
-          "Photo Comp",
-          "Concept Package",
-          "Shops"
-        ],
-        "options": [
-          {
-            "value": "Proof",
-            "color": "Brown"
-          },
-          {
-            "value": "Photo Comp",
-            "color": "Red"
-          },
-          {
-            "value": "Concept Package",
-            "color": "DarkBlue"
-          },
-          {
-            "value": "Shops",
-            "color": "DarkCyan"
-          }
-        ],
-        "optionColorsEnabled": true,
-        "allowOtherValues": true,
-        "readOnly": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJJEVR",
-      "accountId": "IEADYYMR",
-      "title": "ShopVox Sales Order Link",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJJK6X",
-      "accountId": "IEADYYMR",
-      "title": "Due to Production",
-      "type": "Date",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
       "id": "IEADYYMRJUAJJ6HA",
       "accountId": "IEADYYMR",
       "title": "WoSo's",
@@ -2082,23 +1714,6 @@
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJJ7RA",
-      "accountId": "IEADYYMR",
-      "title": "Shipping Address",
-      "type": "Text",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false
-      },
-      "description": ""
-    },
-    {
       "id": "IEADYYMRJUAJJ7RD",
       "accountId": "IEADYYMR",
       "title": "Billing Address",
@@ -2112,24 +1727,6 @@
           "WorkItem"
         ],
         "readOnly": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJKDIX",
-      "accountId": "IEADYYMR",
-      "title": "Install Date",
-      "type": "Date",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
       },
       "description": ""
     },
