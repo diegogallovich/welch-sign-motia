@@ -184,11 +184,6 @@ export class WrikeService {
           error.message.includes("ENOTFOUND"));
 
       if (shouldRetry && retryCount < this.maxRetries) {
-        console.log(
-          `Request failed, retrying... (attempt ${retryCount + 1}/${
-            this.maxRetries
-          })`
-        );
         await new Promise((resolve) =>
           setTimeout(resolve, this.retryDelay * (retryCount + 1))
         );
@@ -489,7 +484,6 @@ export class WrikeService {
         [WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS]: installAddressText,
       };
     } catch (error) {
-      console.error("Error formatting sales order addresses:", error);
       // Return empty addresses if formatting fails
       return {
         [WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS]: "",
@@ -1157,13 +1151,9 @@ export class WrikeService {
       description = this.createWrikeQuoteTaskDescription(quote);
       // Wrike has a limit on description length, truncate if necessary
       if (description.length > 5000) {
-        console.warn(
-          `Description too long (${description.length} chars), truncating to 5000 chars`
-        );
         description = description.substring(0, 5000) + "...";
       }
     } catch (error) {
-      console.error("Error creating task description:", error);
       description = `<h2>📋 Quote Information</h2><p><strong>Quote ID:</strong> ${this.escapeHtml(
         quote.id
       )}</p><p><strong>Title:</strong> ${this.escapeHtml(quote.title)}</p>`;
@@ -1197,7 +1187,6 @@ export class WrikeService {
     try {
       JSON.stringify(requestBody);
     } catch (error) {
-      console.error("Request body is not serializable:", error);
       throw new Error(
         `Request body serialization failed: ${
           error instanceof Error ? error.message : "Unknown error"
@@ -1233,7 +1222,6 @@ export class WrikeService {
         null,
         2
       )}\nError response: ${errorDetails}`;
-      console.error("Wrike API Error:", errorMessage);
       throw new Error(errorMessage);
     }
 
@@ -1321,13 +1309,9 @@ export class WrikeService {
       description = this.createWrikeQuoteTaskDescription(quote);
       // Wrike has a limit on description length, truncate if necessary
       if (description.length > 5000) {
-        console.warn(
-          `Description too long (${description.length} chars), truncating to 5000 chars`
-        );
         description = description.substring(0, 5000) + "...";
       }
     } catch (error) {
-      console.error("Error creating task description:", error);
       description = `<h2>📋 Quote Information</h2><p><strong>Quote ID:</strong> ${this.escapeHtml(
         quote.id
       )}</p><p><strong>Title:</strong> ${this.escapeHtml(quote.title)}</p>`;
@@ -1390,7 +1374,6 @@ export class WrikeService {
         null,
         2
       )}\nError response: ${errorDetails}`;
-      console.error("Wrike API Error:", errorMessage);
       throw new Error(errorMessage);
     }
 
@@ -1427,10 +1410,6 @@ export class WrikeService {
         return { taskId, wasCreated: true };
       }
     } catch (error) {
-      console.error(
-        `Error in createOrUpdateQuoteTask for quote ${quote.id}:`,
-        error
-      );
       throw error;
     }
   }
@@ -1454,13 +1433,9 @@ export class WrikeService {
       description = this.createWosoTaskDescription(salesOrder);
       // Wrike has a limit on description length, truncate if necessary
       if (description.length > 5000) {
-        console.warn(
-          `Description too long (${description.length} chars), truncating to 5000 chars`
-        );
         description = description.substring(0, 5000) + "...";
       }
     } catch (error) {
-      console.error("Error creating task description:", error);
       description = `<h2>📋 Sales Order Information</h2><p><strong>Sales Order ID:</strong> ${this.escapeHtml(
         salesOrder.id
       )}</p><p><strong>Title:</strong> ${this.escapeHtml(
@@ -1495,7 +1470,6 @@ export class WrikeService {
     try {
       JSON.stringify(requestBody);
     } catch (error) {
-      console.error("Request body is not serializable:", error);
       throw new Error(
         `Request body serialization failed: ${
           error instanceof Error ? error.message : "Unknown error"
@@ -1531,7 +1505,6 @@ export class WrikeService {
         null,
         2
       )}\nError response: ${errorDetails}`;
-      console.error("Wrike API Error:", errorMessage);
       throw new Error(errorMessage);
     }
 
@@ -1595,13 +1568,9 @@ export class WrikeService {
       description = this.createWosoTaskDescription(salesOrder);
       // Wrike has a limit on description length, truncate if necessary
       if (description.length > 5000) {
-        console.warn(
-          `Description too long (${description.length} chars), truncating to 5000 chars`
-        );
         description = description.substring(0, 5000) + "...";
       }
     } catch (error) {
-      console.error("Error creating task description:", error);
       description = `<h2>📋 Sales Order Information</h2><p><strong>Sales Order ID:</strong> ${this.escapeHtml(
         salesOrder.id
       )}</p><p><strong>Title:</strong> ${this.escapeHtml(
@@ -1658,7 +1627,6 @@ export class WrikeService {
         null,
         2
       )}\nError response: ${errorDetails}`;
-      console.error("Wrike API Error:", errorMessage);
       throw new Error(errorMessage);
     }
 
@@ -1713,10 +1681,6 @@ export class WrikeService {
         return { taskId, wasCreated: true, customFields: mergedCustomFields };
       }
     } catch (error) {
-      console.error(
-        `Error in createOrUpdateWosoTask for sales order ${salesOrder.id}:`,
-        error
-      );
       throw error;
     }
   }
@@ -1728,7 +1692,6 @@ export class WrikeService {
     try {
       return this.createQuoteLineItemsTable(quote);
     } catch (error) {
-      console.error("Error creating quote task description:", error);
       // Fallback to a simple description if there's an error
       return `<h2>📋 Quote Information</h2><p><strong>Quote ID:</strong> ${this.escapeHtml(
         quote.id
@@ -1743,7 +1706,6 @@ export class WrikeService {
     try {
       return this.createSalesOrderLineItemsTable(salesOrder);
     } catch (error) {
-      console.error("Error creating sales order task description:", error);
       // Fallback to a simple description if there's an error
       return `<h2>📋 Sales Order Information</h2><p><strong>Sales Order ID:</strong> ${this.escapeHtml(
         salesOrder.id
@@ -1794,7 +1756,6 @@ export class WrikeService {
             ${tableRows}
         </table>`;
     } catch (error) {
-      console.error("Error processing line items table:", error);
       return "<h2>📦 Line Items</h2><p>Error processing line items</p>";
     }
   }
@@ -1806,7 +1767,7 @@ export class WrikeService {
     salesOrder: ShopVoxSalesOrder
   ): string {
     if (!salesOrder.lineItems || salesOrder.lineItems.length === 0) {
-      return "<h2>�� Line Items</h2><p>No line items</p>";
+      return "<h2>📦 Line Items</h2><p>No line items</p>";
     }
 
     try {
@@ -1840,7 +1801,6 @@ export class WrikeService {
             ${tableRows}
         </table>`;
     } catch (error) {
-      console.error("Error processing sales order line items table:", error);
       return "<h2>📦 Line Items</h2><p>Error processing line items</p>";
     }
   }

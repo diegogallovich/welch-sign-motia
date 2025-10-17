@@ -19,14 +19,17 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
   input,
   { emit, logger, state, traceId }: FlowContext
 ) => {
-  const inputJson = JSON.stringify(input, null, 2);
-  logger.info("Processing work order updated event", { inputJson });
+  logger.info("Processing work order updated event");
 
   let salesOrder: ShopVoxSalesOrder;
   try {
     salesOrder = await shopvoxService.getSalesOrder(input.id);
   } catch (error) {
-    logger.error("Error getting sales order from ShopVox", { error, traceId });
+    logger.error(
+      `Failed to retrieve sales order ID ${input.id} from ShopVox: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
     return;
   }
 
@@ -38,11 +41,7 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
 
     if (isOnlyDueDateChange) {
       logger.info(
-        "Detected dueDate-only change, checking if Wrike already has this value",
-        {
-          salesOrderId: salesOrder.id,
-          newDueDate: salesOrder.dueDate,
-        }
+        "Detected due date-only change, checking Wrike for loop prevention"
       );
 
       try {
@@ -66,33 +65,20 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
 
           if (shopvoxDueDate === wrikeDueDate) {
             logger.info(
-              "Skipping Wrike update - Target Install Date already matches",
-              {
-                salesOrderId: salesOrder.id,
-                dueDate: shopvoxDueDate,
-                wrikeTaskId: wrikeTask.id,
-              }
+              "Skipping Wrike update - due dates already match, preventing loop"
             );
             return; // Exit early to break the loop
           } else {
-            logger.info("Due dates don't match, proceeding with Wrike update", {
-              salesOrderId: salesOrder.id,
-              shopvoxDueDate,
-              wrikeDueDate,
-            });
+            logger.info("Due dates differ, proceeding with Wrike update");
           }
         } else {
-          logger.info("No existing Wrike task found, will create new one", {
-            salesOrderId: salesOrder.id,
-          });
+          logger.info("No existing Wrike task found, creating new one");
         }
       } catch (error) {
         logger.warn(
-          "Error checking Wrike task for loop detection, proceeding with update",
-          {
-            error: error instanceof Error ? error.message : String(error),
-            salesOrderId: salesOrder.id,
-          }
+          `Loop detection check failed, proceeding with normal update: ${
+            error instanceof Error ? error.message : String(error)
+          }`
         );
         // Continue with normal flow if loop detection fails
       }
@@ -115,7 +101,7 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
       oldResponsibles,
       newResponsibles
     );
-    logger.info("WoSo task processed in Wrike");
+    logger.info("Work order task processed in Wrike successfully");
 
     await emit({
       topic: "work-order-updated-in-wrike",
@@ -125,11 +111,11 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
       customFields: result.customFields,
     } as never);
   } catch (error) {
-    logger.error("Error creating/updating WoSo task in Wrike", {
-      error,
-      salesOrderId: salesOrder.id,
-      traceId,
-    });
+    logger.error(
+      `Failed to process work order in Wrike for sales order ID ${
+        salesOrder.id
+      }: ${error instanceof Error ? error.message : String(error)}`
+    );
     throw error;
   }
 };

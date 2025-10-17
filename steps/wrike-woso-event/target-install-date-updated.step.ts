@@ -17,9 +17,7 @@ export const config: EventConfig = {
 
 export const handler: Handlers["process-wrike-woso-target-install-date-changed"] =
   async (input, { emit, logger, state, traceId }: FlowContext) => {
-    logger.info("Processing Wrike WoSo target install date changed event", {
-      input,
-    });
+    logger.info("Processing target install date change from Wrike");
 
     try {
       // Update the sales order due date in ShopVox
@@ -28,20 +26,20 @@ export const handler: Handlers["process-wrike-woso-target-install-date-changed"]
         input.dueDate
       );
 
-      logger.info("Sales order due date updated in ShopVox", {
-        salesOrderId: input.shopVoxSalesOrderId,
-        dueDate: input.dueDate,
-      });
+      logger.info("Sales order due date updated in ShopVox successfully");
 
       await emit({
         topic: "updated-woso-due-date-in-shopvox",
         data: input,
       } as never);
     } catch (error) {
-      logger.error("Error updating sales order due date in ShopVox", {
-        error,
-        traceId,
-      });
+      logger.error(
+        `Failed to update sales order ID ${
+          input.shopVoxSalesOrderId
+        } due date in ShopVox: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
       return;
     }
   };

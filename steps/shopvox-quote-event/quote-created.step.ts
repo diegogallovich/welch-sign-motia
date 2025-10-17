@@ -18,48 +18,34 @@ export const handler: Handlers["process-shopvox-quote-created"] = async (
   input,
   { emit, logger, state, traceId }: FlowContext
 ) => {
-  logger.info("Processing quote created event", { input, traceId });
+  logger.info("Processing quote created event");
 
   let quote: ShopVoxQuote;
   try {
     quote = await shopvoxService.getQuote(input.id);
-    const quoteId = quote.id;
-    logger.info("Quote retrieved from ShopVox", { quoteId });
+    logger.info("Quote retrieved from ShopVox");
   } catch (error) {
-    logger.error("Error getting quote from ShopVox", {
-      error:
-        error instanceof Error
-          ? {
-              message: error.message,
-              stack: error.stack,
-              name: error.name,
-            }
-          : error,
-      quoteId: input.id,
-      input,
-      traceId,
-    });
+    logger.error(
+      `Failed to retrieve quote ID ${input.id} from ShopVox: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
     return;
   }
 
   try {
-    logger.info("Creating Wrike task", {
-      quoteId: quote.id,
-      quoteTitle: quote.title,
-      traceId,
-    });
+    logger.info("Creating Wrike task for quote");
     const createResult = await wrikeService.createQuoteTask(quote);
-    logger.info("Quote added to Wrike", { createResult, traceId });
+    logger.info("Quote task created in Wrike successfully");
     await emit({
       topic: "quote-created-in-wrike",
     } as never);
   } catch (error) {
-    logger.error("Error adding quote to Wrike", {
-      error: error instanceof Error ? error.message : String(error),
-      traceId,
-      quoteId: quote.id,
-      quoteTitle: quote.title,
-    });
+    logger.error(
+      `Failed to create Wrike task for quote ID ${quote.id}: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
     return;
   }
 };

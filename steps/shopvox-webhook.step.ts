@@ -45,7 +45,7 @@ export const handler: Handlers["shopvox-webhook"] = async (
 
   const eventString = `${event_object}:${event_action}`;
 
-  logger.info("ShopVox event queued for processing", { eventString });
+  logger.info(`ShopVox event received: ${eventString}`);
 
   await emit({
     // todo: remove as never - fix typing

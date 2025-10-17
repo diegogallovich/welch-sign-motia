@@ -29,10 +29,6 @@ export class ShopVoxService {
   async getQuote(quoteId: string): Promise<ShopVoxQuote> {
     const url = `${this.baseUrl}/quotes/${quoteId}?account_id=${this.accountId}&authToken=${this.authToken}`;
 
-    console.log(
-      `[ShopVoxService] Fetching quote ${quoteId} from: ${this.baseUrl}/quotes/${quoteId}`
-    );
-
     const response = await fetch(url, {
       method: "GET",
       headers: this.getHeaders(),
@@ -47,33 +43,12 @@ export class ShopVoxService {
         errorDetails = await response.text();
       }
 
-      console.error(
-        `[ShopVoxService] Failed to fetch quote ${quoteId}: ${response.status} ${response.statusText}`
-      );
       throw new Error(
         `Failed to fetch quote from ShopVox: ${response.status} ${response.statusText}\nQuote ID: ${quoteId}\nURL: ${url}\nError response: ${errorDetails}`
       );
     }
 
     const quote = await response.json();
-    console.log(`[ShopVoxService] Successfully fetched quote ${quoteId}`);
-    const dateFields = {
-      txnDate: quote.txnDate,
-      expiryDate: quote.expiryDate,
-      nextContactDate: quote.nextContactDate,
-      potentialClosingDate: quote.potentialClosingDate,
-      customerPoDate: quote.customerPoDate,
-      shippingDate: quote.shippingDate,
-      createdAt: quote.createdAt,
-      updatedAt: quote.updatedAt,
-      lastEmailedDate: quote.lastEmailedDate,
-      dueDate: quote.dueDate,
-      inHandDate: quote.inHandDate,
-    };
-    console.log(
-      `[ShopVoxService] Quote ${quoteId} date fields:`,
-      JSON.stringify(dateFields, null, 2)
-    );
     return quote;
   }
 
@@ -110,26 +85,7 @@ export class ShopVoxService {
       );
     }
 
-    const salesOrder = await response.json();
-    console.log(
-      `[ShopVoxService] Successfully fetched sales order ${salesOrderId}`
-    );
-    const dateFields = {
-      txnDate: salesOrder.txnDate,
-      dueDate: salesOrder.dueDate,
-      inHandDate: salesOrder.inHandDate,
-      shippingDate: salesOrder.shippingDate,
-      customerPoDate: salesOrder.customerPoDate,
-      lastInvoicedAt: salesOrder.lastInvoicedAt,
-      lastInvoicedOn: salesOrder.lastInvoicedOn,
-      createdAt: salesOrder.createdAt,
-      updatedAt: salesOrder.updatedAt,
-    };
-    console.log(
-      `[ShopVoxService] Sales order ${salesOrderId} date fields:`,
-      JSON.stringify(dateFields, null, 2)
-    );
-    return salesOrder;
+    return await response.json();
   }
 
   /**
@@ -154,10 +110,6 @@ export class ShopVoxService {
       },
     };
 
-    console.log(
-      `[ShopVoxService] Updating sales order ${salesOrderId} due date to ${dueDate}`
-    );
-
     const response = await fetch(url, {
       method: "PUT",
       headers: this.getHeaders(),
@@ -177,10 +129,6 @@ export class ShopVoxService {
         `Failed to update sales order in ShopVox: ${response.status} ${response.statusText}\nSales Order ID: ${salesOrderId}\nDue Date: ${dueDate}\nURL: ${url}\nError response: ${errorDetails}`
       );
     }
-
-    console.log(
-      `[ShopVoxService] Successfully updated sales order ${salesOrderId} due date`
-    );
   }
 }
 

@@ -30,43 +30,8 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
   req: any,
   { logger, emit }: any
 ) => {
-  // Log request details for debugging
-  logger.info("Wrike wosos webhook received", {
-    hasBody: !!req.body,
-    bodyType: typeof req.body,
-    hasRawBody: !!req.rawBody,
-    rawBodyType: typeof req.rawBody,
-    hasXHookSecret: !!req.headers["x-hook-secret"],
-    bodyLength:
-      typeof req.body === "string"
-        ? req.body.length
-        : JSON.stringify(req.body).length,
-    rawBodyLength: req.rawBody ? req.rawBody.length : 0,
-    eventCount: Array.isArray(req.body) ? req.body.length : 0,
-    isVerificationRequest:
-      req.body?.requestType === "WebHook secret verification",
-    firstEvent:
-      Array.isArray(req.body) && req.body.length > 0
-        ? {
-            eventType: req.body[0]?.eventType,
-            taskId: req.body[0]?.taskId,
-            customFieldId: req.body[0]?.customFieldId,
-          }
-        : null,
-  });
-
   // First, handle webhook verification - this has a different structure
   const verificationResult = wrikeService.verifyWebhookRequest(req);
-
-  // Log detailed verification information for debugging
-  logger.info("Wrike webhook verification details", {
-    isVerification: verificationResult.isVerification,
-    isValid: verificationResult.isValid,
-    hasError: !!verificationResult.error,
-    error: verificationResult.error,
-    rawBodyPreview: req.rawBody?.substring(0, 200),
-    receivedSignature: req.headers["x-hook-secret"]?.substring(0, 20) + "...",
-  });
 
   // 1. Handle Wrike's webhook secret verification request
   if (verificationResult.isVerification && verificationResult.isValid) {
@@ -96,28 +61,24 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
     }
   }
 
-  // Now validate body structure - should be an array of TaskCustomFieldChanged events
+  // Validate body structure - should be an array of TaskCustomFieldChanged events
   if (!Array.isArray(req.body)) {
-    logger.error("Invalid webhook body structure - expected array", {
-      body: req.body,
-    });
+    logger.warn("Webhook body is not an array, skipping processing");
     return {
-      status: 400,
-      body: {
-        message: "Invalid webhook body structure - expected array of events",
-      },
+      status: 200,
+      body: { message: "Webhook received but not processed" },
     };
   }
 
   // Validate each event has required fields
   for (const event of req.body) {
     if (!event.eventType || event.eventType !== "TaskCustomFieldChanged") {
-      logger.error("Invalid event type in webhook", { event });
+      logger.warn(
+        `Webhook event type ${event.eventType} not supported, skipping processing`
+      );
       return {
-        status: 400,
-        body: {
-          message: "Invalid event type - expected TaskCustomFieldChanged",
-        },
+        status: 200,
+        body: { message: "Webhook received but event type not supported" },
       };
     }
     if (
@@ -127,10 +88,10 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
       !event.eventAuthorId ||
       !event.lastUpdatedDate
     ) {
-      logger.error("Missing required fields in webhook event", { event });
+      logger.warn("Webhook event missing required fields, skipping processing");
       return {
-        status: 400,
-        body: { message: "Missing required fields in webhook event" },
+        status: 200,
+        body: { message: "Webhook received but event incomplete" },
       };
     }
   }
@@ -138,21 +99,21 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
   // Process validated webhook events
   const wrikeWebhookEvents = process.env.WRIKE_WEBHOOK_EVENTS?.split(",");
   if (!wrikeWebhookEvents) {
-    logger.error("Missing WRIKE_WEBHOOK_EVENTS in environment");
+    logger.warn("WRIKE_WEBHOOK_EVENTS not configured in environment");
   }
 
   for (const event of req.body) {
     if (!wrikeWebhookEvents?.includes(event.eventType)) {
-      logger.error("Wrike webhook event not in WRIKE_WEBHOOK_EVENTS", {
-        ["Event Name"]: event.eventType,
-      });
+      logger.warn(
+        `Event type ${event.eventType} not in WRIKE_WEBHOOK_EVENTS whitelist, skipping`
+      );
     } else {
       try {
         // Get the task from Wrike to extract custom fields
         const taskResult = await wrikeService.getTaskById(event.taskId);
 
         if (taskResult.data.length === 0) {
-          logger.error("Task not found in Wrike", { taskId: event.taskId });
+          logger.warn(`Task not found in Wrike for ID ${event.taskId}`);
           continue;
         }
 
@@ -165,10 +126,9 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
         const shopvoxId = shopvoxIdField?.value;
 
         if (!shopvoxId) {
-          logger.error("ShopVox ID not found in task custom fields", {
-            taskId: event.taskId,
-            customFields: task.customFields,
-          });
+          logger.warn(
+            `ShopVox ID not found in task custom fields for task ${event.taskId}`
+          );
           continue;
         }
 
@@ -180,14 +140,9 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
           // Extract the new value from the event (this is the updated due date)
           const newDueDate = event.value;
 
-          logger.info("Processing Target Install Date change for WoSo", {
-            eventType: event.eventType,
-            taskId: event.taskId,
-            customFieldId: event.customFieldId,
-            shopvoxId,
-            oldValue: event.oldValue,
-            newValue: newDueDate,
-          });
+          logger.info(
+            `Processing Target Install Date change for task ${event.taskId}`
+          );
 
           // Emit the event with the extracted data
           await emit({
@@ -198,16 +153,14 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
             },
           });
         } else {
-          logger.info("Ignoring non-Target Install Date custom field change", {
-            customFieldId: event.customFieldId,
-            taskId: event.taskId,
-          });
+          logger.info(`Ignoring non-Target Install Date custom field change`);
         }
       } catch (error) {
-        logger.error("Error processing Wrike webhook event", {
-          error: error instanceof Error ? error.message : String(error),
-          event,
-        });
+        logger.error(
+          `Error processing Wrike webhook event for task ${event.taskId}: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        );
       }
     }
   }
