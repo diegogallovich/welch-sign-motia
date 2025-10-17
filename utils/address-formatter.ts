@@ -1,5 +1,6 @@
 import { ShopVoxSalesOrder } from "../schemas/sales-order.schema";
 import { ShopVoxQuote } from "../schemas/quote.schema";
+import { WRIKE_CUSTOM_FIELDS } from "../constants/wrike-fields";
 
 /**
  * Interface for address objects from ShopVox
@@ -26,7 +27,9 @@ export interface ShopVoxAddress {
  * @param address - The address object from ShopVox
  * @returns Formatted address string
  */
-export function formatAddress(address: ShopVoxAddress | null | undefined): string {
+export function formatAddress(
+  address: ShopVoxAddress | null | undefined
+): string {
   if (!address) {
     return "";
   }
@@ -52,7 +55,7 @@ export function formatAddress(address: ShopVoxAddress | null | undefined): strin
   const cityStateZip = [address.city, address.state, address.zip]
     .filter(Boolean)
     .join(", ");
-  
+
   if (cityStateZip) {
     parts.push(cityStateZip);
   }
@@ -89,7 +92,7 @@ export async function getInstallAddressFromQuote(
 
     // Fetch the quote using the transaction ID
     const quote = await shopvoxService.getQuote(quoteTransaction.txnId);
-    
+
     if (!quote.installingAddress) {
       console.log("No installing address found in quote");
       return "";
@@ -104,9 +107,10 @@ export async function getInstallAddressFromQuote(
 
 /**
  * Wrike custom field IDs for addresses
+ * @deprecated Use WRIKE_CUSTOM_FIELDS from constants/wrike-fields.ts instead
  */
 export const WRIKE_ADDRESS_FIELD_IDS = {
-  SHIPPING_ADDRESS: "IEADYYMRJUAJJ7RA",
-  BILLING_ADDRESS: "IEADYYMRJUAJJ7RD", 
-  INSTALL_ADDRESS: "IEADYYMRJUAJIG5N"
+  SHIPPING_ADDRESS: WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS,
+  BILLING_ADDRESS: WRIKE_CUSTOM_FIELDS.BILLING_ADDRESS,
+  INSTALL_ADDRESS: WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS,
 } as const;

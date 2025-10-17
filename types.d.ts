@@ -12,6 +12,7 @@ declare module 'motia' {
   }
 
   interface Handlers {
+    'wrike-wosos-webhook': ApiRouteHandler<{ customFieldId: string; oldValue?: string; value?: string; taskId: string; webhookId: string; eventAuthorId: string; eventType: string; lastUpdatedDate: string }[], unknown, { topic: 'wrike-woso-target-install-date-changed'; data: { shopVoxSalesOrderId: string; dueDate: string } }>
     'shopvox-webhook': ApiRouteHandler<{ event_object: string; event_action: string; timestamp: number; webhook_token: string; event: { id: string; name: string } }, unknown, { topic: 'quote:created'; data: { id: string; name: string; changes?: Record<string, unknown[]> } } | { topic: 'quote:updated'; data: { id: string; name: string; changes?: Record<string, unknown[]> } } | { topic: 'quote:destroyed'; data: { id: string; name: string; changes?: Record<string, unknown[]> } } | { topic: 'work_order:created'; data: { id: string; name: string; changes?: Record<string, unknown[]> } } | { topic: 'work_order:updated'; data: { id: string; name: string; changes?: Record<string, unknown[]> } } | { topic: 'work_order:destroyed'; data: { id: string; name: string; changes?: Record<string, unknown[]> } }>
     'process-shopvox-work-order-updated': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, never>
     'process-shopvox-work-order-deleted': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, never>
@@ -19,5 +20,6 @@ declare module 'motia' {
     'process-shopvox-quote-updated': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, never>
     'process-shopvox-quote-destroyed': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, never>
     'process-shopvox-quote-created': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, never>
+    'process-wrike-woso-target-install-date-changed': EventHandler<{ shopVoxSalesOrderId: string; dueDate: string }, never>
   }
 }

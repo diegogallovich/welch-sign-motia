@@ -6,10 +6,14 @@ import {
   formatAddress,
   getInstallAddressFromQuote,
   ShopVoxAddress,
-  WRIKE_ADDRESS_FIELD_IDS,
 } from "../utils/address-formatter";
 import { shopvoxService } from "./shopvox.service";
 import { mapShopVoxUserIdToWrikeFolderMapping } from "../utils/wrike-folder-mapping";
+import {
+  WRIKE_CUSTOM_FIELDS,
+  WRIKE_ITEM_TYPES,
+} from "../constants/wrike-fields";
+import crypto from "crypto";
 
 export interface WrikeTask {
   id: string;
@@ -27,6 +31,13 @@ export interface WrikeTaskCreateResponse {
 
 export interface WrikeTaskUpdateResponse {
   data: WrikeTask[];
+}
+
+export interface WrikeWebhookVerificationResult {
+  isVerification: boolean;
+  isValid: boolean;
+  calculatedSecret?: string;
+  error?: string;
 }
 
 export class WrikeService {
@@ -55,6 +66,86 @@ export class WrikeService {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.authToken}`,
     };
+  }
+
+  /**
+   * Gets the Wrike webhook secret from environment variables
+   */
+  private getWrikeWebhookSecret(): string {
+    const secret = process.env.WRIKE_WEBHOOK_SECRET;
+    if (!secret) {
+      throw new Error("Missing WRIKE_WEBHOOK_SECRET in environment");
+    }
+    return secret;
+  }
+
+  /**
+   * Calculates HMAC-SHA256 signature
+   */
+  private hmacSha256(key: string, value: string): string {
+    return crypto.createHmac("sha256", key).update(value).digest("hex");
+  }
+
+  /**
+   * Verifies a Wrike webhook request
+   * @param req - The request object from the webhook handler
+   * @returns Verification result with status and any calculated values
+   */
+  verifyWebhookRequest(req: any): WrikeWebhookVerificationResult {
+    const wrikeSecret = this.getWrikeWebhookSecret();
+    const wrikeHookSecretHeader = req.headers["x-hook-secret"];
+
+    // 1. Handle Wrike's webhook secret verification request
+    if (
+      req.body &&
+      typeof req.body === "object" &&
+      req.body.requestType === "WebHook secret verification" &&
+      typeof wrikeHookSecretHeader === "string"
+    ) {
+      // Calculate the response value
+      const calculated = this.hmacSha256(wrikeSecret, wrikeHookSecretHeader);
+      return {
+        isVerification: true,
+        isValid: true,
+        calculatedSecret: calculated,
+      };
+    }
+
+    // 2. For all other webhook calls, verify the authenticity of the payload
+    if (typeof wrikeHookSecretHeader === "string") {
+      // Wrike sends webhooks with pretty-printed JSON (2 spaces), so we need to match that format
+      let bodyForSignature: string;
+
+      if (typeof req.rawBody === "string") {
+        // If we have raw body, use it directly
+        bodyForSignature = req.rawBody;
+      } else if (Buffer.isBuffer(req.rawBody)) {
+        bodyForSignature = req.rawBody.toString();
+      } else {
+        // Fallback: Recreate the body in the same format Wrike uses (pretty-printed with 2 spaces)
+        bodyForSignature = JSON.stringify(req.body, null, 2);
+      }
+
+      const expectedSig = this.hmacSha256(wrikeSecret, bodyForSignature);
+
+      if (expectedSig !== wrikeHookSecretHeader) {
+        return {
+          isVerification: false,
+          isValid: false,
+          error: `Invalid webhook signature. Expected: ${expectedSig}, Received: ${wrikeHookSecretHeader}, Body length: ${bodyForSignature.length}`,
+        };
+      }
+      return {
+        isVerification: false,
+        isValid: true,
+      };
+    } else {
+      return {
+        isVerification: false,
+        isValid: false,
+        error: "Missing webhook signature",
+      };
+    }
   }
 
   /**
@@ -393,17 +484,17 @@ export class WrikeService {
       );
 
       return {
-        [WRIKE_ADDRESS_FIELD_IDS.SHIPPING_ADDRESS]: shippingAddressText,
-        [WRIKE_ADDRESS_FIELD_IDS.BILLING_ADDRESS]: billingAddressText,
-        [WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS]: installAddressText,
+        [WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS]: shippingAddressText,
+        [WRIKE_CUSTOM_FIELDS.BILLING_ADDRESS]: billingAddressText,
+        [WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS]: installAddressText,
       };
     } catch (error) {
       console.error("Error formatting sales order addresses:", error);
       // Return empty addresses if formatting fails
       return {
-        [WRIKE_ADDRESS_FIELD_IDS.SHIPPING_ADDRESS]: "",
-        [WRIKE_ADDRESS_FIELD_IDS.BILLING_ADDRESS]: "",
-        [WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS]: "",
+        [WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS]: "",
+        [WRIKE_CUSTOM_FIELDS.BILLING_ADDRESS]: "",
+        [WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS]: "",
       };
     }
   }
@@ -414,207 +505,207 @@ export class WrikeService {
   private mapQuoteToCustomFields(quote: ShopVoxQuote) {
     const baseCustomFields = [
       {
-        id: "IEADYYMRJUAJFPCR",
+        id: WRIKE_CUSTOM_FIELDS.SHOPVOX_ID,
         value: this.sanitizeWrikeCustomFieldValue(quote.id),
       },
       {
-        id: "IEADYYMRJUAJFPY4",
+        id: WRIKE_CUSTOM_FIELDS.ACTIVE,
         value: this.sanitizeWrikeCustomFieldValue(quote.active),
       },
       {
-        id: "IEADYYMRJUAJFPY5",
+        id: WRIKE_CUSTOM_FIELDS.TITLE,
         value: this.sanitizeWrikeCustomFieldValue(quote.title),
       },
       {
-        id: "IEADYYMRJUAJFPZB",
+        id: WRIKE_CUSTOM_FIELDS.DESCRIPTION,
         value: this.sanitizeWrikeCustomFieldValue(quote.description),
       },
       {
-        id: "IEADYYMRJUAJFPZC",
+        id: WRIKE_CUSTOM_FIELDS.SO_CREATED_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.txnDate),
       },
       {
-        id: "IEADYYMRJUAJFP3B",
+        id: WRIKE_CUSTOM_FIELDS.TXN_NUMBER,
         value: this.sanitizeWrikeCustomFieldValue(quote.txnNumber),
       },
       {
-        id: "IEADYYMRJUAJFPZD",
+        id: WRIKE_CUSTOM_FIELDS.SO_SUBTOTAL,
         value: this.sanitizeWrikeCustomFieldValue(quote.totalPriceInDollars),
       },
       {
-        id: "IEADYYMRJUAJFPZF",
+        id: WRIKE_CUSTOM_FIELDS.TAX,
         value: this.sanitizeWrikeCustomFieldValue(quote.totalTaxInDollars),
       },
       {
-        id: "IEADYYMRJUAJFPZH",
+        id: WRIKE_CUSTOM_FIELDS.TOTAL_PRICE_WITH_TAX,
         value: this.sanitizeWrikeCustomFieldValue(
           quote.totalPriceWithTaxInDollars
         ),
       },
       {
-        id: "IEADYYMRJUAJFP2V",
+        id: WRIKE_CUSTOM_FIELDS.SV_STATUS,
         value: this.sanitizeWrikeCustomFieldValue(quote.workflowState),
       },
       {
-        id: "IEADYYMRJUAJFP27",
+        id: WRIKE_CUSTOM_FIELDS.EXPIRY_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.expiryDate),
       },
       {
-        id: "IEADYYMRJUAJFQR5",
+        id: WRIKE_CUSTOM_FIELDS.NEXT_CONTENT_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.nextContactDate),
       },
       {
-        id: "IEADYYMRJUAJFQR6",
+        id: WRIKE_CUSTOM_FIELDS.POTENTIAL_CLOSING_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.potentialClosingDate),
       },
       {
-        id: "IEADYYMRJUAJFQR7",
+        id: WRIKE_CUSTOM_FIELDS.CLOSING_POTENTIAL,
         value: this.sanitizeWrikeCustomFieldValue(quote.closingPotential),
       },
       {
-        id: "IEADYYMRJUAJFQSC",
+        id: WRIKE_CUSTOM_FIELDS.CUSTOMER_PO_NUMBER,
         value: this.sanitizeWrikeCustomFieldValue(quote.customerPoNumber),
       },
       {
-        id: "IEADYYMRJUAJFQSE",
+        id: WRIKE_CUSTOM_FIELDS.CUSTOMER_PO_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.customerPoDate),
       },
       {
-        id: "IEADYYMRJUAJFQSF",
+        id: WRIKE_CUSTOM_FIELDS.AUTO_EXPIRE,
         value: this.sanitizeWrikeCustomFieldValue(quote.autoExpire),
       },
       {
-        id: "IEADYYMRJUAJFQSH",
+        id: WRIKE_CUSTOM_FIELDS.DOWNPAYMENT_PERCENT,
         value: this.sanitizeWrikeCustomFieldValue(quote.downpaymentPercent),
       },
       {
-        id: "IEADYYMRJUAJFQSJ",
+        id: WRIKE_CUSTOM_FIELDS.SHIPPING_TRACKING,
         value: this.sanitizeWrikeCustomFieldValue(quote.shippingTracking),
       },
       {
-        id: "IEADYYMRJUAJFQSL",
+        id: WRIKE_CUSTOM_FIELDS.SHIPPED_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.shippingDate),
       },
       {
-        id: "IEADYYMRJUAJFSVG",
+        id: WRIKE_CUSTOM_FIELDS.CREATED_AT,
         value: this.sanitizeWrikeCustomFieldValue(quote.createdAt),
       },
       {
-        id: "IEADYYMRJUAJFSWB",
+        id: WRIKE_CUSTOM_FIELDS.UPDATED_AT,
         value: this.sanitizeWrikeCustomFieldValue(quote.updatedAt),
       },
       {
-        id: "IEADYYMRJUAJFSWE",
+        id: WRIKE_CUSTOM_FIELDS.LAST_NOTE,
         value: this.sanitizeWrikeCustomFieldValue(quote.lastNote),
       },
       {
-        id: "IEADYYMRJUAJFSWF",
+        id: WRIKE_CUSTOM_FIELDS.AGE,
         value: this.sanitizeWrikeCustomFieldValue(quote.age),
       },
       {
-        id: "IEADYYMRJUAJFSWJ",
+        id: WRIKE_CUSTOM_FIELDS.LAST_EMAILED_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.lastEmailedDate),
       },
       {
-        id: "IEADYYMRJUAJFSWM",
+        id: WRIKE_CUSTOM_FIELDS.QUOTE_FOR,
         value: this.sanitizeWrikeCustomFieldValue(quote.quoteFor),
       },
       {
-        id: "IEADYYMRJUAJFSWP",
+        id: WRIKE_CUSTOM_FIELDS.CUSTOMER_NOTE,
         value: this.sanitizeWrikeCustomFieldValue(quote.customerNote),
       },
       {
-        id: "IEADYYMRJUAJFSWW",
+        id: WRIKE_CUSTOM_FIELDS.SITE,
         value: this.sanitizeWrikeCustomFieldValue(quote.site),
       },
       {
-        id: "IEADYYMRJUAJFSWX",
+        id: WRIKE_CUSTOM_FIELDS.QUICK_QUOTE,
         value: this.sanitizeWrikeCustomFieldValue(quote.quickQuote),
       },
       {
-        id: "IEADYYMRJUAJFSWY",
+        id: WRIKE_CUSTOM_FIELDS.IN_HAND_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.inHandDate),
       },
       {
-        id: "IEADYYMRJUAJFSW5",
+        id: WRIKE_CUSTOM_FIELDS.CREATED_BY_ID,
         value: this.convertToPlainText(quote.createdBy),
       },
       {
-        id: "IEADYYMRJUAJFSXF",
+        id: WRIKE_CUSTOM_FIELDS.SALES_ORDERS,
         value: this.sanitizeWrikeCustomFieldValue(quote.salesOrders),
       },
       {
-        id: "IEADYYMRJUAJFSXH",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_NAME,
         value: this.sanitizeWrikeCustomFieldValue(quote.primaryContact?.name),
       },
       {
-        id: "IEADYYMRJUAJFSXI",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_EMAIL,
         value: this.sanitizeWrikeCustomFieldValue(
           quote.primaryContact?.primaryEmail
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXJ",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_PHONE,
         value: this.sanitizeWrikeCustomFieldValue(
           quote.primaryContact?.phoneWithExt
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXK",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_ID,
         value: this.sanitizeWrikeCustomFieldValue(quote.primaryContact?.id),
       },
       {
-        id: "IEADYYMRJUAJFSXM",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_SALES_REP_ID,
         value: this.sanitizeWrikeCustomFieldValue(quote.primarySalesRep?.id),
       },
       {
-        id: "IEADYYMRJUAJFSXO",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_SALES_REP_INITIALS,
         value: this.sanitizeWrikeCustomFieldValue(
           quote.primarySalesRep?.initials
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXP",
+        id: WRIKE_CUSTOM_FIELDS.COMPANY_ID,
         value: this.sanitizeWrikeCustomFieldValue(quote.company?.id),
       },
       {
-        id: "IEADYYMRJUAJFSXR",
+        id: WRIKE_CUSTOM_FIELDS.COMPANY_NAME,
         value: this.sanitizeWrikeCustomFieldValue(quote.company?.name),
       },
       {
-        id: "IEADYYMRJUAJFSXV",
+        id: WRIKE_CUSTOM_FIELDS.COMPANY_PHONE,
         value: this.sanitizeWrikeCustomFieldValue(quote.company?.phoneWithExt),
       },
       {
-        id: "IEADYYMRJUAJFSXW",
+        id: WRIKE_CUSTOM_FIELDS.LEAD_SOURCE_ID,
         value: this.sanitizeWrikeCustomFieldValue(quote.leadSourceId),
       },
       {
-        id: "IEADYYMRJUAJFSX2",
+        id: WRIKE_CUSTOM_FIELDS.LINE_ITEMS,
         value: this.convertToPlainText(quote.lineItems),
       },
       {
-        id: "IEADYYMRJUAJG7E4",
+        id: WRIKE_CUSTOM_FIELDS.SHOPVOX_QUOTE_LINK,
         value: `<a href="${this.escapeHtml(
           `https://express.shopvox.com/transactions/quotes/${quote.id}`
         )}" target="_blank">QT #${this.escapeHtml(quote.txnNumber)}</a>`,
       },
       {
-        id: "IEADYYMRJUAJJ6HA",
+        id: WRIKE_CUSTOM_FIELDS.WORK_ORDER_LINKS,
         value: this.createWorkOrderLinks(quote.salesOrders),
       },
       {
-        id: WRIKE_ADDRESS_FIELD_IDS.INSTALL_ADDRESS,
+        id: WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS,
         value: this.sanitizeWrikeCustomFieldValue(
           formatAddress(quote.installingAddress as ShopVoxAddress)
         ),
       },
       {
-        id: "IEADYYMRJUAJPRB6",
+        id: WRIKE_CUSTOM_FIELDS.FULFILLMENT_METHOD,
         value: this.determineFulfillmentMethod(quote.lineItems),
       },
       {
-        id: "IEADYYMRJUAJKDIX", // Target Install Date
+        id: WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.dueDate),
       },
     ];
@@ -622,41 +713,41 @@ export class WrikeService {
     // Add contact field mappings if the respective users exist in the quote
     const contactFields = [];
 
-    // Project Manager (IEADYYMRJUAJIFD5)
+    // Project Manager
     if (quote.projectManager?.id) {
       contactFields.push({
-        id: "IEADYYMRJUAJIFD5",
+        id: WRIKE_CUSTOM_FIELDS.PROJECT_MANAGER,
         value: mapShopVoxToWrikeUserId(quote.projectManager.id),
       });
     }
 
-    // Production Manager (IEADYYMRJUAJIFEE)
+    // Production Manager
     if (quote.pm?.id) {
       contactFields.push({
-        id: "IEADYYMRJUAJIFEE",
+        id: WRIKE_CUSTOM_FIELDS.PRODUCTION_MANAGER,
         value: mapShopVoxToWrikeUserId(quote.pm.id),
       });
     }
 
-    // Estimator (IEADYYMRJUAJIFEM)
+    // Estimator
     if (quote.estimator?.id) {
       contactFields.push({
-        id: "IEADYYMRJUAJIFEM",
+        id: WRIKE_CUSTOM_FIELDS.ESTIMATOR,
         value: mapShopVoxToWrikeUserId(quote.estimator.id),
       });
     }
 
-    // Sales Rep (IEADYYMRJUAJFSXL)
+    // Sales Rep
     if (quote.primarySalesRep?.id) {
       contactFields.push({
-        id: "IEADYYMRJUAJFSXL",
+        id: WRIKE_CUSTOM_FIELDS.SALES_REP,
         value: mapShopVoxToWrikeUserId(quote.primarySalesRep.id),
       });
     }
 
-    // Created By (IEADYYMRJUAJIFEN) - always present
+    // Created By - always present
     contactFields.push({
-      id: "IEADYYMRJUAJIFEN",
+      id: WRIKE_CUSTOM_FIELDS.CREATED_BY,
       value: mapShopVoxToWrikeUserId(quote.createdBy.id),
     });
 
@@ -673,306 +764,306 @@ export class WrikeService {
   ) {
     const baseCustomFields = [
       {
-        id: "IEADYYMRJUAJFPCR",
+        id: WRIKE_CUSTOM_FIELDS.SHOPVOX_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.id),
       },
       {
-        id: "IEADYYMRJUAJFPY4",
+        id: WRIKE_CUSTOM_FIELDS.ACTIVE,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.active),
       },
       {
-        id: "IEADYYMRJUAJFPY5",
+        id: WRIKE_CUSTOM_FIELDS.TITLE,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.title),
       },
       {
-        id: "IEADYYMRJUAJFPZB",
+        id: WRIKE_CUSTOM_FIELDS.DESCRIPTION,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.description),
       },
       {
-        id: "IEADYYMRJUAJFPZC",
+        id: WRIKE_CUSTOM_FIELDS.SO_CREATED_DATE,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.txnDate),
       },
       {
-        id: "IEADYYMRJUAJFP3B",
+        id: WRIKE_CUSTOM_FIELDS.TXN_NUMBER,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.txnNumber),
       },
       {
-        id: "IEADYYMRJUAJFPZD",
+        id: WRIKE_CUSTOM_FIELDS.SO_SUBTOTAL,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.totalPriceInDollars
         ),
       },
       {
-        id: "IEADYYMRJUAJFPZF",
+        id: WRIKE_CUSTOM_FIELDS.TAX,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.totalTaxInDollars),
       },
       {
-        id: "IEADYYMRJUAJFPZH",
+        id: WRIKE_CUSTOM_FIELDS.TOTAL_PRICE_WITH_TAX,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.totalPriceWithTaxInDollars
         ),
       },
       {
-        id: "IEADYYMRJUAJFP2V",
+        id: WRIKE_CUSTOM_FIELDS.SV_STATUS,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.workflowState),
       },
       {
-        id: "IEADYYMRJUAJFQSC",
+        id: WRIKE_CUSTOM_FIELDS.CUSTOMER_PO_NUMBER,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.customerPoNumber),
       },
       {
-        id: "IEADYYMRJUAJFQSE",
+        id: WRIKE_CUSTOM_FIELDS.CUSTOMER_PO_DATE,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.customerPoDate),
       },
       {
-        id: "IEADYYMRJUAJFQSH",
+        id: WRIKE_CUSTOM_FIELDS.DOWNPAYMENT_PERCENT,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.downpaymentPercent
         ),
       },
       {
-        id: "IEADYYMRJUAJFQSL",
+        id: WRIKE_CUSTOM_FIELDS.SHIPPED_DATE,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.shippingDate),
       },
       {
-        id: "IEADYYMRJUAJKGQJ",
+        id: WRIKE_CUSTOM_FIELDS.IN_HAND_DATE_SALES_ORDER,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.inHandDate),
       },
       {
-        id: "IEADYYMRJUAJKDIX", // Target Install Date
+        id: WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE, // Target Install Date
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.dueDate),
       },
       {
-        id: "IEADYYMRJUAJFSVG",
+        id: WRIKE_CUSTOM_FIELDS.CREATED_AT,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.createdAt),
       },
       {
-        id: "IEADYYMRJUAJFSWB",
+        id: WRIKE_CUSTOM_FIELDS.UPDATED_AT,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.updatedAt),
       },
       {
-        id: "IEADYYMRJUAJFSW5",
+        id: WRIKE_CUSTOM_FIELDS.CREATED_BY_ID,
         value: this.convertToPlainText(salesOrder.createdBy),
       },
       {
-        id: "IEADYYMRJUAJFSXH",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_NAME,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.primaryContact?.name
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXI",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_EMAIL,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.primaryContact?.email
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXJ",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_PHONE,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.primaryContact?.phoneWithExt
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXK",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_CONTACT_ID,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.primaryContact?.id
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXM",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_SALES_REP_ID,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.primarySalesRep?.id
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXO",
+        id: WRIKE_CUSTOM_FIELDS.PRIMARY_SALES_REP_INITIALS,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.primarySalesRep?.initials
         ),
       },
       {
-        id: "IEADYYMRJUAJFSXP",
+        id: WRIKE_CUSTOM_FIELDS.COMPANY_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.company?.id),
       },
       {
-        id: "IEADYYMRJUAJFSXR",
+        id: WRIKE_CUSTOM_FIELDS.COMPANY_NAME,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.company?.name),
       },
       {
-        id: "IEADYYMRJUAJFSXV",
+        id: WRIKE_CUSTOM_FIELDS.COMPANY_PHONE,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.company?.phoneWithExt
         ),
       },
       {
-        id: "IEADYYMRJUAJFSX2",
+        id: WRIKE_CUSTOM_FIELDS.LINE_ITEMS,
         value: this.convertToPlainText(salesOrder.lineItems),
       },
       // Sales Order specific fields
       {
-        id: "IEADYYMRJUAJFS26",
+        id: WRIKE_CUSTOM_FIELDS.PAYMENT_TOTAL,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.totalPaymentsInDollars
         ),
       },
       {
-        id: "IEADYYMRJUAJFS27",
+        id: WRIKE_CUSTOM_FIELDS.REMAINING_BALANCE,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.balanceInDollars),
       },
       {
-        id: "IEADYYMRJUAJFS3A",
+        id: WRIKE_CUSTOM_FIELDS.LAST_INVOICED_AT,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.lastInvoicedAt),
       },
       {
-        id: "IEADYYMRJUAJFS3F",
+        id: WRIKE_CUSTOM_FIELDS.LAST_INVOICED_ON,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.lastInvoicedOn),
       },
       {
-        id: "IEADYYMRJUAJFS3G",
+        id: WRIKE_CUSTOM_FIELDS.INVOICED,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.invoiced),
       },
       {
-        id: "IEADYYMRJUAJFS3H",
+        id: WRIKE_CUSTOM_FIELDS.FULLY_INVOICED,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.fullyInvoiced),
       },
       {
-        id: "IEADYYMRJUAJFS3J",
+        id: WRIKE_CUSTOM_FIELDS.BILLING_ADDRESS_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.billingAddressId),
       },
       {
-        id: "IEADYYMRJUAJFS3K",
+        id: WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.shippingAddressId),
       },
       {
-        id: "IEADYYMRJUAJFS3M",
+        id: WRIKE_CUSTOM_FIELDS.TERM_CODE_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.termCodeId),
       },
       {
-        id: "IEADYYMRJUAJFS3N",
+        id: WRIKE_CUSTOM_FIELDS.SALES_TAX_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.salesTaxId),
       },
       {
-        id: "IEADYYMRJUAJFS3Z",
+        id: WRIKE_CUSTOM_FIELDS.SHIPPING_METHOD_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.shippingMethodId),
       },
       {
-        id: "IEADYYMRJUAJFS37",
+        id: WRIKE_CUSTOM_FIELDS.PRODUCTION_MANAGER_ID,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.productionManagerId
         ),
       },
       {
-        id: "IEADYYMRJUAJFS4A",
+        id: WRIKE_CUSTOM_FIELDS.PROJECT_MANAGER_ID,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.projectManagerId),
       },
       {
-        id: "IEADYYMRJUAJFS4C",
+        id: WRIKE_CUSTOM_FIELDS.SETUP_CHARGES_IN_DOLLARS,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.setupChargesInDollars
         ),
       },
       {
-        id: "IEADYYMRJUAJFS4M",
+        id: WRIKE_CUSTOM_FIELDS.SETUP_CHARGES_TAXABLE,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.setupChargesTaxable
         ),
       },
       {
-        id: "IEADYYMRJUAJFS4R",
+        id: WRIKE_CUSTOM_FIELDS.SETUP_CHARGES_IS_PERCENT,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.setupChargesIsPercent
         ),
       },
       {
-        id: "IEADYYMRJUAJFS4U",
+        id: WRIKE_CUSTOM_FIELDS.SETUP_CHARGES_PERCENT,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.setupChargesPercent
         ),
       },
       {
-        id: "IEADYYMRJUAJFS4V",
+        id: WRIKE_CUSTOM_FIELDS.SETUP_CHARGES_TAX_IN_DOLLARS,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.setupChargesTaxInDollars
         ),
       },
       {
-        id: "IEADYYMRJUAJFS5C",
+        id: WRIKE_CUSTOM_FIELDS.MISC_CHARGES_TAXABLE,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.miscChargesTaxable
         ),
       },
       {
-        id: "IEADYYMRJUAJFS5G",
+        id: WRIKE_CUSTOM_FIELDS.MISC_CHARGES_LABEL,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.miscChargesLabel),
       },
       {
-        id: "IEADYYMRJUAJFS5J",
+        id: WRIKE_CUSTOM_FIELDS.MISC_CHARGES_IS_PERCENT,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.miscChargesIsPercent
         ),
       },
       {
-        id: "IEADYYMRJUAJFUCB",
+        id: WRIKE_CUSTOM_FIELDS.MISC_CHARGES_PERCENT,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.miscChargesPercent
         ),
       },
       {
-        id: "IEADYYMRJUAJFUCY",
+        id: WRIKE_CUSTOM_FIELDS.FINANCE_CHARGES_PERCENT,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.financeChargesPercent
         ),
       },
       {
-        id: "IEADYYMRJUAJFUC5",
+        id: WRIKE_CUSTOM_FIELDS.COMPANY_SPECIAL_NOTES,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.company?.specialNotes
         ),
       },
       {
-        id: "IEADYYMRJUAJFUDA",
+        id: WRIKE_CUSTOM_FIELDS.TERM_CODE_NAME,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.termCode?.name),
       },
       {
-        id: "IEADYYMRJUAJFUDE",
+        id: WRIKE_CUSTOM_FIELDS.TAX_NAME,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.tax?.name),
       },
       {
-        id: "IEADYYMRJUAJFUDW",
+        id: WRIKE_CUSTOM_FIELDS.UPDATED_BY,
         value: this.convertToPlainText(salesOrder.updatedBy),
       },
       {
-        id: "IEADYYMRJUAJFUDX",
+        id: WRIKE_CUSTOM_FIELDS.RELATED_TRANSACTIONS,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.relatedTransactions
         ),
       },
       {
-        id: "IEADYYMRJUAJFUDZ",
+        id: WRIKE_CUSTOM_FIELDS.ORDER_PAYMENTS,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.orderPayments),
       },
       {
-        id: "IEADYYMRJUAJFUD4",
+        id: WRIKE_CUSTOM_FIELDS.PURCHASE_ORDER_LINE_ITEMS_TOTAL_PRICE,
         value: this.sanitizeWrikeCustomFieldValue(
           salesOrder.purchaseOrderLineItemsTotalPriceInDollars
         ),
       },
       {
-        id: "IEADYYMRJUAJFUD6",
+        id: WRIKE_CUSTOM_FIELDS.PURCHASE_ORDERS,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.purchaseOrders),
       },
       {
-        id: "IEADYYMRJUAJFUED",
+        id: WRIKE_CUSTOM_FIELDS.SIGNATURES,
         value: this.sanitizeWrikeCustomFieldValue(salesOrder.signatures),
       },
       {
-        id: "IEADYYMRJUAJJEVR",
+        id: WRIKE_CUSTOM_FIELDS.SHOPVOX_SALES_ORDER_LINK,
         value: `<a href="${this.escapeHtml(
           `https://express.shopvox.com/transactions/sales-orders/${salesOrder.id}`
         )}" target="_blank">SO #${this.escapeHtml(salesOrder.txnNumber)}</a>`,
       },
       {
-        id: "IEADYYMRJUAJPRB6",
+        id: WRIKE_CUSTOM_FIELDS.FULFILLMENT_METHOD,
         value: this.determineFulfillmentMethod(salesOrder.lineItems),
       },
     ];
@@ -980,67 +1071,67 @@ export class WrikeService {
     // Add contact field mappings if the respective users exist in the sales order
     const contactFields = [];
 
-    // Project Manager (IEADYYMRJUAJIFD5)
+    // Project Manager
     if (salesOrder.projectManager?.id) {
       contactFields.push({
-        id: "IEADYYMRJUAJIFD5",
+        id: WRIKE_CUSTOM_FIELDS.PROJECT_MANAGER,
         value: mapShopVoxToWrikeUserId(salesOrder.projectManager.id),
       });
     }
 
-    // Production Manager (IEADYYMRJUAJIFEE)
+    // Production Manager
     if ((salesOrder as any).productionManager?.id) {
       contactFields.push({
-        id: "IEADYYMRJUAJIFEE",
+        id: WRIKE_CUSTOM_FIELDS.PRODUCTION_MANAGER,
         value: mapShopVoxToWrikeUserId(
           (salesOrder as any).productionManager.id
         ),
       });
     }
 
-    // Sales Rep (IEADYYMRJUAJFSXL)
+    // Sales Rep
     if (salesOrder.primarySalesRep?.id) {
       contactFields.push({
-        id: "IEADYYMRJUAJFSXL",
+        id: WRIKE_CUSTOM_FIELDS.SALES_REP,
         value: mapShopVoxToWrikeUserId(salesOrder.primarySalesRep.id),
       });
     }
 
-    // Created By (IEADYYMRJUAJIFEN) - always present
+    // Created By - always present
     contactFields.push({
-      id: "IEADYYMRJUAJIFEN",
+      id: WRIKE_CUSTOM_FIELDS.CREATED_BY,
       value: mapShopVoxToWrikeUserId(salesOrder.createdBy.id),
     });
 
     // Add address fields if provided
     const addressFields: any[] = [];
     if (customFields) {
-      // Shipping Address (IEADYYMRJUAJJ7RA)
-      if (customFields["IEADYYMRJUAJJ7RA"]) {
+      // Shipping Address
+      if (customFields[WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS]) {
         addressFields.push({
-          id: "IEADYYMRJUAJJ7RA",
+          id: WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS,
           value: this.sanitizeWrikeCustomFieldValue(
-            customFields["IEADYYMRJUAJJ7RA"]
+            customFields[WRIKE_CUSTOM_FIELDS.SHIPPING_ADDRESS]
           ),
         });
       }
 
-      // Billing Address (IEADYYMRJUAJJ7RD)
-      if (customFields["IEADYYMRJUAJJ7RD"]) {
+      // Billing Address
+      if (customFields[WRIKE_CUSTOM_FIELDS.BILLING_ADDRESS]) {
         addressFields.push({
-          id: "IEADYYMRJUAJJ7RD",
+          id: WRIKE_CUSTOM_FIELDS.BILLING_ADDRESS,
           value: this.sanitizeWrikeCustomFieldValue(
-            customFields["IEADYYMRJUAJJ7RD"]
+            customFields[WRIKE_CUSTOM_FIELDS.BILLING_ADDRESS]
           ),
         });
       }
 
-      // Install Address (IEADYYMRJUAJIG5N)
-      if (customFields["IEADYYMRJUAJIG5N"]) {
+      // Install Address
+      if (customFields[WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS]) {
         addressFields.push({
-          id: "IEADYYMRJUAJIG5N",
+          id: WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS,
           value: this.sanitizeWrikeCustomFieldValue(
-            customFields["IEADYYMRJUAJIG5N"]
+            customFields[WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS]
           ),
         });
       }
@@ -1099,7 +1190,7 @@ export class WrikeService {
       parents,
       customFields: this.mapQuoteToCustomFields(quote),
       customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
-      customItemTypeId: "IEADYYMRPIAFP7UJ", // Quote Custom Item Type ID
+      customItemTypeId: WRIKE_ITEM_TYPES.QUOTE, // Quote Custom Item Type ID
     };
 
     // Validate request body before sending
@@ -1150,13 +1241,40 @@ export class WrikeService {
   }
 
   /**
+   * Gets a task by its Wrike task ID
+   * @param taskId - The Wrike task ID
+   * @returns The task data including custom fields
+   */
+  async getTaskById(taskId: string): Promise<WrikeTaskSearchResult> {
+    const response = await this.makeRequest(`${this.baseUrl}/tasks/${taskId}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      let errorDetails = "";
+      try {
+        const errorResponse = await response.json();
+        errorDetails = JSON.stringify(errorResponse, null, 2);
+      } catch (e) {
+        errorDetails = await response.text();
+      }
+
+      throw new Error(
+        `Failed to get Wrike task: ${response.status} ${response.statusText}\nTask ID: ${taskId}\nError response: ${errorDetails}`
+      );
+    }
+
+    return await response.json();
+  }
+
+  /**
    * Searches for a task by ShopVox quote ID
    */
   async findTaskByQuoteId(quoteId: string): Promise<WrikeTaskSearchResult> {
     const params = new URLSearchParams({
       customFields: JSON.stringify([
         {
-          id: "IEADYYMRJUAJFPCR", // shopvoxId
+          id: WRIKE_CUSTOM_FIELDS.SHOPVOX_ID, // shopvoxId
           comparator: "EqualTo",
           value: quoteId,
         },
@@ -1370,7 +1488,7 @@ export class WrikeService {
       responsibles,
       parents,
       customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
-      customItemTypeId: "IEADYYMRPIAFP7OS", // Sales Order Custom Item Type ID
+      customItemTypeId: WRIKE_ITEM_TYPES.SALES_ORDER, // Sales Order Custom Item Type ID
     };
 
     // Validate request body before sending
@@ -1429,7 +1547,7 @@ export class WrikeService {
     const params = new URLSearchParams({
       customFields: JSON.stringify([
         {
-          id: "IEADYYMRJUAJFPCR", // shopvoxId
+          id: WRIKE_CUSTOM_FIELDS.SHOPVOX_ID, // shopvoxId
           comparator: "EqualTo",
           value: salesOrderId,
         },
