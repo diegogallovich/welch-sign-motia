@@ -50,10 +50,9 @@ export const handler: Handlers["process-wrike-woso-target-install-date-changed"]
         }
       );
 
-      await shopvoxService.updateSalesOrder(
-        input.shopVoxSalesOrderId,
-        input.dueDate
-      );
+      await shopvoxService.updateSalesOrder(input.shopVoxSalesOrderId, {
+        dueDate: input.dueDate,
+      });
 
       await addLogToState(
         state,

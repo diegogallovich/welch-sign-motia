@@ -9,7 +9,10 @@ export const config: ApiRouteConfig = {
   name: "wrike-wosos-webhook",
   path: "/api/webhooks/wrike/wosos",
   method: "POST",
-  emits: ["wrike-woso-target-install-date-changed"],
+  emits: [
+    "wrike-woso-target-install-date-changed",
+    "wrike-woso-user-field-changed",
+  ],
   flows: ["wrike-to-shopvox"],
   middleware: [rawBodyCaptureMiddleware],
   bodySchema: z.array(
@@ -132,42 +135,73 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
           continue;
         }
 
-        // Check if this is a Target Install Date change
-        const isTargetInstallDateChange =
-          event.customFieldId === WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE;
+        switch (event.customFieldId) {
+          case WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE: {
+            const newDueDate = event.value;
 
-        // Checkk if this is a Project Manager change
-        const isProjectManagerChange =
-          event.customFieldId === WRIKE_CUSTOM_FIELDS.PROJECT_MANAGER;
+            logger.info(
+              `Processing Target Install Date change for task ${event.taskId}`
+            );
 
-        // Check if it is a Sales Rep change
-        const isSalesRepChange =
-          event.customFieldId === WRIKE_CUSTOM_FIELDS.SALES_REP;
-
-        if (isTargetInstallDateChange) {
-          // Extract the new value from the event (this is the updated due date)
-          const newDueDate = event.value;
-
-          logger.info(
-            `Processing Target Install Date change for task ${event.taskId}`
-          );
-
-          // Emit the event with the extracted data
-          await emit({
-            topic: "wrike-woso-target-install-date-changed",
-            data: {
-              shopVoxSalesOrderId: shopvoxId,
-              dueDate: newDueDate,
-            },
-          });
-        } else if (isSalesRepChange) {
-          logger.info(`Sales rep change: ${event.value}`);
-          logger.info(JSON.stringify(event, null, 2));
-        } else if (isProjectManagerChange) {
-          logger.info(`Project manager change: ${event.value}`);
-          logger.info(JSON.stringify(event, null, 2));
-        } else {
-          logger.info(`Ignoring non-Target Install Date custom field change`);
+            // Emit the event with the extracted data
+            await emit({
+              topic: "wrike-woso-target-install-date-changed",
+              data: {
+                shopVoxSalesOrderId: shopvoxId,
+                dueDate: newDueDate,
+              },
+            });
+            break;
+          }
+          case WRIKE_CUSTOM_FIELDS.SALES_REP:
+            logger.info(`Sales rep change detected, emitting event`);
+            await emit({
+              topic: "wrike-woso-user-field-changed",
+              data: {
+                shopVoxSalesOrderId: shopvoxId,
+                fieldType: "salesRep",
+                apiV2Ids: event.value || "",
+              },
+            });
+            break;
+          case WRIKE_CUSTOM_FIELDS.PROJECT_MANAGER:
+            logger.info(`Project manager change detected, emitting event`);
+            await emit({
+              topic: "wrike-woso-user-field-changed",
+              data: {
+                shopVoxSalesOrderId: shopvoxId,
+                fieldType: "projectManager",
+                apiV2Ids: event.value || "",
+              },
+            });
+            break;
+          case WRIKE_CUSTOM_FIELDS.ESTIMATOR:
+            logger.info(`Estimator change detected, emitting event`);
+            await emit({
+              topic: "wrike-woso-user-field-changed",
+              data: {
+                shopVoxSalesOrderId: shopvoxId,
+                fieldType: "estimator",
+                apiV2Ids: event.value || "",
+              },
+            });
+            break;
+          case WRIKE_CUSTOM_FIELDS.PRODUCTION_MANAGER:
+            logger.info(`Production manager change detected, emitting event`);
+            await emit({
+              topic: "wrike-woso-user-field-changed",
+              data: {
+                shopVoxSalesOrderId: shopvoxId,
+                fieldType: "productionManager",
+                apiV2Ids: event.value || "",
+              },
+            });
+            break;
+          default:
+            logger.info(
+              `Ignoring non-supported custom field change: ${event.customFieldId}`
+            );
+            break;
         }
       } catch (error) {
         logger.error(

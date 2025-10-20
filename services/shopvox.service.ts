@@ -182,18 +182,35 @@ export class ShopVoxService {
   }
 
   /**
-   * Updates a sales order's due date in ShopVox
+   * Updates a sales order in ShopVox
    * @param salesOrderId - The sales order ID to update
-   * @param dueDate - The new due date (format: YYYY-MM-DD)
+   * @param updates - Object containing fields to update
    */
-  async updateSalesOrder(salesOrderId: string, dueDate: string): Promise<void> {
+  async updateSalesOrder(
+    salesOrderId: string,
+    updates: {
+      dueDate?: string;
+      estimatorId?: string;
+      primarySalesRepId?: string;
+      productionManagerId?: string;
+      projectManagerId?: string;
+    }
+  ): Promise<void> {
     const url = `${this.baseUrl}/sales_orders/${salesOrderId}?account_id=${this.accountId}&authToken=${this.authToken}`;
 
-    const requestBody = {
-      workOrder: {
-        dueDate: dueDate,
-      },
+    const requestBody: any = {
+      workOrder: {},
     };
+
+    if (updates.dueDate) requestBody.workOrder.dueDate = updates.dueDate;
+    if (updates.estimatorId)
+      requestBody.workOrder.estimatorId = updates.estimatorId;
+    if (updates.primarySalesRepId)
+      requestBody.workOrder.primarySalesRepId = updates.primarySalesRepId;
+    if (updates.productionManagerId)
+      requestBody.workOrder.productionManagerId = updates.productionManagerId;
+    if (updates.projectManagerId)
+      requestBody.workOrder.projectManagerId = updates.projectManagerId;
 
     try {
       await withRetry(
@@ -214,7 +231,13 @@ export class ShopVoxService {
             }
 
             throw new Error(
-              `Failed to update sales order in ShopVox: status ${response.status} ${response.statusText}\nSales Order ID: ${salesOrderId}\nDue Date: ${dueDate}\nURL: ${url}\nError response: ${errorDetails}`
+              `Failed to update sales order in ShopVox: status ${
+                response.status
+              } ${
+                response.statusText
+              }\nSales Order ID: ${salesOrderId}\nUpdates: ${JSON.stringify(
+                updates
+              )}\nURL: ${url}\nError response: ${errorDetails}`
             );
           }
         },

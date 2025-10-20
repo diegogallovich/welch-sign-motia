@@ -32,6 +32,8 @@ function getFlowNameFromStep(stepName?: string): string {
     "process-shopvox-work-order-updated": "ShopVox Work Order → Wrike",
     "process-shopvox-work-order-deleted": "ShopVox Work Order → Wrike",
     "process-wrike-woso-target-install-date-changed": "Wrike → ShopVox",
+    "process-wrike-woso-user-field-changed":
+      "Wrike User Field Update → ShopVox",
   };
 
   return flowMap[stepName] || "Motia Workflow";
@@ -51,6 +53,7 @@ export const config: EventConfig = {
     "finality:work-order-updated-success",
     "finality:work-order-destroyed-success",
     "finality:target-install-date-updated-success",
+    "finality:user-field-updated-success",
     // Error events
     "finality:error:quote-created",
     "finality:error:quote-updated",
@@ -59,6 +62,7 @@ export const config: EventConfig = {
     "finality:error:work-order-updated",
     "finality:error:work-order-destroyed",
     "finality:error:target-install-date-updated",
+    "finality:error:user-field-updated",
   ],
   emits: [],
   input: FinalityEventSchema,
