@@ -1,5 +1,6 @@
 import { ShopVoxQuote } from "../schemas/quote.schema";
 import { ShopVoxSalesOrder } from "../schemas/sales-order.schema";
+import { withRetry, getRetryMetadata } from "../utils/retry";
 
 export class ShopVoxService {
   private readonly baseUrl = "https://api.shopvox.com/v1";
@@ -29,27 +30,69 @@ export class ShopVoxService {
   async getQuote(quoteId: string): Promise<ShopVoxQuote> {
     const url = `${this.baseUrl}/quotes/${quoteId}?account_id=${this.accountId}&authToken=${this.authToken}`;
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: this.getHeaders(),
-    });
+    try {
+      return await withRetry(
+        async () => {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: this.getHeaders(),
+          });
 
-    if (!response.ok) {
-      let errorDetails = "";
-      try {
-        const errorResponse = await response.json();
-        errorDetails = JSON.stringify(errorResponse, null, 2);
-      } catch (e) {
-        errorDetails = await response.text();
+          if (!response.ok) {
+            let errorDetails = "";
+            try {
+              const errorResponse = await response.json();
+              errorDetails = JSON.stringify(errorResponse, null, 2);
+            } catch (e) {
+              errorDetails = await response.text();
+            }
+
+            throw new Error(
+              `Failed to fetch quote from ShopVox: status ${response.status} ${response.statusText}\nQuote ID: ${quoteId}\nURL: ${url}\nError response: ${errorDetails}`
+            );
+          }
+
+          const quote = await response.json();
+          return quote;
+        },
+        {
+          onRetry: (error, attempt, delayMs) => {
+            const errorMessage =
+              error instanceof Error ? error.message : String(error);
+            console.log(
+              `[ShopVox] Retry attempt ${attempt} for getQuote(${quoteId}) after ${delayMs}ms. Error: ${errorMessage}`
+            );
+          },
+        }
+      );
+    } catch (error) {
+      // Enhance error with retry metadata for better logging
+      const retryMetadata = getRetryMetadata(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      let enhancedMessage = errorMessage;
+      if (retryMetadata) {
+        enhancedMessage += `\nRetry attempts: ${retryMetadata.totalAttempts}`;
+        if (retryMetadata.delays.length > 0) {
+          enhancedMessage += `\nRetry delays: ${retryMetadata.delays.join(
+            "ms, "
+          )}ms`;
+        }
+        if (retryMetadata.errors.length > 1) {
+          enhancedMessage += `\nAll errors: ${retryMetadata.errors.join(
+            " | "
+          )}`;
+        }
       }
 
-      throw new Error(
-        `Failed to fetch quote from ShopVox: ${response.status} ${response.statusText}\nQuote ID: ${quoteId}\nURL: ${url}\nError response: ${errorDetails}`
-      );
+      const enhancedError = new Error(enhancedMessage);
+      if (error instanceof Error && error.stack) {
+        enhancedError.stack = error.stack;
+      }
+      (enhancedError as any).retryMetadata = retryMetadata;
+      throw enhancedError;
     }
-
-    const quote = await response.json();
-    return quote;
   }
 
   /**
@@ -66,26 +109,68 @@ export class ShopVoxService {
   async getSalesOrder(salesOrderId: string): Promise<ShopVoxSalesOrder> {
     const url = `${this.baseUrl}/sales_orders/${salesOrderId}?account_id=${this.accountId}&authToken=${this.authToken}`;
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: this.getHeaders(),
-    });
+    try {
+      return await withRetry(
+        async () => {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: this.getHeaders(),
+          });
 
-    if (!response.ok) {
-      let errorDetails = "";
-      try {
-        const errorResponse = await response.json();
-        errorDetails = JSON.stringify(errorResponse, null, 2);
-      } catch (e) {
-        errorDetails = await response.text();
+          if (!response.ok) {
+            let errorDetails = "";
+            try {
+              const errorResponse = await response.json();
+              errorDetails = JSON.stringify(errorResponse, null, 2);
+            } catch (e) {
+              errorDetails = await response.text();
+            }
+
+            throw new Error(
+              `Failed to fetch sales order from ShopVox: status ${response.status} ${response.statusText}\nSales Order ID: ${salesOrderId}\nURL: ${url}\nError response: ${errorDetails}`
+            );
+          }
+
+          return await response.json();
+        },
+        {
+          onRetry: (error, attempt, delayMs) => {
+            const errorMessage =
+              error instanceof Error ? error.message : String(error);
+            console.log(
+              `[ShopVox] Retry attempt ${attempt} for getSalesOrder(${salesOrderId}) after ${delayMs}ms. Error: ${errorMessage}`
+            );
+          },
+        }
+      );
+    } catch (error) {
+      // Enhance error with retry metadata for better logging
+      const retryMetadata = getRetryMetadata(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      let enhancedMessage = errorMessage;
+      if (retryMetadata) {
+        enhancedMessage += `\nRetry attempts: ${retryMetadata.totalAttempts}`;
+        if (retryMetadata.delays.length > 0) {
+          enhancedMessage += `\nRetry delays: ${retryMetadata.delays.join(
+            "ms, "
+          )}ms`;
+        }
+        if (retryMetadata.errors.length > 1) {
+          enhancedMessage += `\nAll errors: ${retryMetadata.errors.join(
+            " | "
+          )}`;
+        }
       }
 
-      throw new Error(
-        `Failed to fetch sales order from ShopVox: ${response.status} ${response.statusText}\nSales Order ID: ${salesOrderId}\nURL: ${url}\nError response: ${errorDetails}`
-      );
+      const enhancedError = new Error(enhancedMessage);
+      if (error instanceof Error && error.stack) {
+        enhancedError.stack = error.stack;
+      }
+      (enhancedError as any).retryMetadata = retryMetadata;
+      throw enhancedError;
     }
-
-    return await response.json();
   }
 
   /**
@@ -110,24 +195,66 @@ export class ShopVoxService {
       },
     };
 
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: this.getHeaders(),
-      body: JSON.stringify(requestBody),
-    });
+    try {
+      await withRetry(
+        async () => {
+          const response = await fetch(url, {
+            method: "PUT",
+            headers: this.getHeaders(),
+            body: JSON.stringify(requestBody),
+          });
 
-    if (!response.ok) {
-      let errorDetails = "";
-      try {
-        const errorResponse = await response.json();
-        errorDetails = JSON.stringify(errorResponse, null, 2);
-      } catch (e) {
-        errorDetails = await response.text();
+          if (!response.ok) {
+            let errorDetails = "";
+            try {
+              const errorResponse = await response.json();
+              errorDetails = JSON.stringify(errorResponse, null, 2);
+            } catch (e) {
+              errorDetails = await response.text();
+            }
+
+            throw new Error(
+              `Failed to update sales order in ShopVox: status ${response.status} ${response.statusText}\nSales Order ID: ${salesOrderId}\nDue Date: ${dueDate}\nURL: ${url}\nError response: ${errorDetails}`
+            );
+          }
+        },
+        {
+          onRetry: (error, attempt, delayMs) => {
+            const errorMessage =
+              error instanceof Error ? error.message : String(error);
+            console.log(
+              `[ShopVox] Retry attempt ${attempt} for updateSalesOrder(${salesOrderId}) after ${delayMs}ms. Error: ${errorMessage}`
+            );
+          },
+        }
+      );
+    } catch (error) {
+      // Enhance error with retry metadata for better logging
+      const retryMetadata = getRetryMetadata(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      let enhancedMessage = errorMessage;
+      if (retryMetadata) {
+        enhancedMessage += `\nRetry attempts: ${retryMetadata.totalAttempts}`;
+        if (retryMetadata.delays.length > 0) {
+          enhancedMessage += `\nRetry delays: ${retryMetadata.delays.join(
+            "ms, "
+          )}ms`;
+        }
+        if (retryMetadata.errors.length > 1) {
+          enhancedMessage += `\nAll errors: ${retryMetadata.errors.join(
+            " | "
+          )}`;
+        }
       }
 
-      throw new Error(
-        `Failed to update sales order in ShopVox: ${response.status} ${response.statusText}\nSales Order ID: ${salesOrderId}\nDue Date: ${dueDate}\nURL: ${url}\nError response: ${errorDetails}`
-      );
+      const enhancedError = new Error(enhancedMessage);
+      if (error instanceof Error && error.stack) {
+        enhancedError.stack = error.stack;
+      }
+      (enhancedError as any).retryMetadata = retryMetadata;
+      throw enhancedError;
     }
   }
 }

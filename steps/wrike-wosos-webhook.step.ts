@@ -136,6 +136,14 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
         const isTargetInstallDateChange =
           event.customFieldId === WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE;
 
+        // Checkk if this is a Project Manager change
+        const isProjectManagerChange =
+          event.customFieldId === WRIKE_CUSTOM_FIELDS.PROJECT_MANAGER;
+
+        // Check if it is a Sales Rep change
+        const isSalesRepChange =
+          event.customFieldId === WRIKE_CUSTOM_FIELDS.SALES_REP;
+
         if (isTargetInstallDateChange) {
           // Extract the new value from the event (this is the updated due date)
           const newDueDate = event.value;
@@ -152,6 +160,12 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
               dueDate: newDueDate,
             },
           });
+        } else if (isSalesRepChange) {
+          logger.info(`Sales rep change: ${event.value}`);
+          logger.info(JSON.stringify(event, null, 2));
+        } else if (isProjectManagerChange) {
+          logger.info(`Project manager change: ${event.value}`);
+          logger.info(JSON.stringify(event, null, 2));
         } else {
           logger.info(`Ignoring non-Target Install Date custom field change`);
         }
