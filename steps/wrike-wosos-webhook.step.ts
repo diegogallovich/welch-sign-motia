@@ -186,17 +186,17 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
               },
             });
             break;
-          case WRIKE_CUSTOM_FIELDS.PRODUCTION_MANAGER:
-            logger.info(`Production manager change detected, emitting event`);
-            await emit({
-              topic: "wrike-woso-user-field-changed",
-              data: {
-                shopVoxSalesOrderId: shopvoxId,
-                fieldType: "productionManager",
-                apiV2Ids: event.value || "",
-              },
-            });
-            break;
+          // case WRIKE_CUSTOM_FIELDS.PRODUCTION_MANAGER:
+          //   logger.info(`Production manager change detected, emitting event`);
+          //   await emit({
+          //     topic: "wrike-woso-user-field-changed",
+          //     data: {
+          //       shopVoxSalesOrderId: shopvoxId,
+          //       fieldType: "productionManager",
+          //       apiV2Ids: event.value || "",
+          //     },
+          //   });
+          //   break;
           default:
             logger.info(
               `Ignoring non-supported custom field change: ${event.customFieldId}`
