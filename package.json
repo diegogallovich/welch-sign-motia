@@ -8,7 +8,8 @@
     "generate-types": "motia generate-types",
     "build": "motia build",
     "clean": "rm -rf dist node_modules python_modules .motia .mermaid",
-    "start": "motia start"
+    "start": "motia start",
+    "ngrok": "ngrok http --url=welchsign.ngrok.app 3000"
   },
   "keywords": [
     "motia"
