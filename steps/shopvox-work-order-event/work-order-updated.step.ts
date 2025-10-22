@@ -242,7 +242,16 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
               const userCustomField = wrikeTask.customFields?.find(
                 (cf: any) => cf.id === fieldInfo.wrikeCustomFieldId
               );
-              const wrikeUserValue = userCustomField?.value;
+              const rawWrikeUserValue = userCustomField?.value;
+
+              // Clean and parse the Wrike value (remove quotes, split by comma)
+              const wrikeUserValue = rawWrikeUserValue
+                ?.replace(/^"/, "")
+                .replace(/"$/, "")
+                .trim();
+              const wrikeUserIds = wrikeUserValue
+                ? wrikeUserValue.split(",").map((id: string) => id.trim())
+                : [];
 
               // Get the new value from changes (second element of the tuple)
               const newShopVoxUserId = (input.changes as any)[
@@ -261,7 +270,9 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                   "info",
                   `Comparing Wrike ${fieldInfo.fieldName} value with ShopVox change`,
                   {
+                    rawWrikeUserValue,
                     wrikeUserValue,
+                    wrikeUserIds,
                     wrikeUserId,
                     wrikeApiV2Id,
                     newShopVoxUserId,
@@ -269,9 +280,10 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                 );
 
                 // Check if Wrike value matches either format
-                const matchesWrikeUserId = wrikeUserValue === wrikeUserId;
+                // Handle both single value and comma-separated list cases
+                const matchesWrikeUserId = wrikeUserIds.includes(wrikeUserId);
                 const matchesWrikeApiV2Id =
-                  wrikeApiV2Id && wrikeUserValue === wrikeApiV2Id;
+                  wrikeApiV2Id && wrikeUserIds.includes(wrikeApiV2Id);
 
                 if (matchesWrikeUserId || matchesWrikeApiV2Id) {
                   await addLogToState(
@@ -280,7 +292,10 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                     "info",
                     `Skipping Wrike update - ${fieldInfo.fieldName} already matches, preventing loop`,
                     {
-                      wrikeUserValue,
+                      wrikeUserIds,
+                      matchedId: matchesWrikeUserId
+                        ? wrikeUserId
+                        : wrikeApiV2Id,
                       matchedFormat: matchesWrikeUserId
                         ? "regular user ID"
                         : "API v2 ID",
@@ -309,7 +324,7 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                     traceId,
                     "info",
                     `${fieldInfo.fieldName} values differ, proceeding with Wrike update`,
-                    { wrikeUserValue, wrikeUserId, wrikeApiV2Id }
+                    { wrikeUserIds, wrikeUserId, wrikeApiV2Id }
                   );
                   logger.info(
                     `${fieldInfo.fieldName} values differ, proceeding with Wrike update`
