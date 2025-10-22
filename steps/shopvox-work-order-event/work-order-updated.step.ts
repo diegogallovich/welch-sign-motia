@@ -5,6 +5,10 @@ import { shopvoxService } from "../../services/shopvox.service";
 import { wrikeService } from "../../services/wrike.service";
 import { WRIKE_CUSTOM_FIELDS } from "../../constants/wrike-fields";
 import { addLogToState, addDataToState } from "../../utils/state-logger";
+import {
+  mapShopVoxToWrikeUserId,
+  mapShopVoxUserIdToWrikeApiV2Id,
+} from "../../utils/user-mapping";
 
 export const config: EventConfig = {
   type: "event",
@@ -177,6 +181,166 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
           });
           logger.warn(warnMessage);
           // Continue with normal flow if loop detection fails
+        }
+      }
+    }
+
+    // Loop detection: Check if only user field changed and if Wrike already has the correct value
+    if (input.changes) {
+      const changeKeys = Object.keys(input.changes);
+
+      // Check if exactly 2 properties changed (updated_at + one user field)
+      if (changeKeys.length === 2 && changeKeys.includes("updated_at")) {
+        const userFieldKey = changeKeys.find((key) => key !== "updated_at");
+        const userFieldMapping: Record<
+          string,
+          { wrikeCustomFieldId: string; fieldName: string }
+        > = {
+          estimator_id: {
+            wrikeCustomFieldId: WRIKE_CUSTOM_FIELDS.ESTIMATOR,
+            fieldName: "estimator",
+          },
+          primary_sales_rep_id: {
+            wrikeCustomFieldId: WRIKE_CUSTOM_FIELDS.SALES_REP,
+            fieldName: "sales rep",
+          },
+          project_manager_id: {
+            wrikeCustomFieldId: WRIKE_CUSTOM_FIELDS.PROJECT_MANAGER,
+            fieldName: "project manager",
+          },
+        };
+
+        if (userFieldKey && userFieldMapping[userFieldKey]) {
+          const fieldInfo = userFieldMapping[userFieldKey];
+          await addLogToState(
+            state,
+            traceId,
+            "info",
+            `Detected ${fieldInfo.fieldName}-only change, checking Wrike for loop prevention`,
+            { salesOrderId: salesOrder.id, userFieldKey }
+          );
+          logger.info(
+            `Detected ${fieldInfo.fieldName}-only change, checking Wrike for loop prevention`
+          );
+
+          try {
+            // Query the Wrike task to get current custom fields
+            const taskSearchResult = await wrikeService.findTaskBySalesOrderId(
+              salesOrder.id
+            );
+
+            if (taskSearchResult.data.length > 0) {
+              const wrikeTask = taskSearchResult.data[0];
+
+              // Extract the user custom field from Wrike
+              const userCustomField = wrikeTask.customFields?.find(
+                (cf: any) => cf.id === fieldInfo.wrikeCustomFieldId
+              );
+              const wrikeUserValue = userCustomField?.value;
+
+              // Get the new value from changes (second element of the tuple)
+              const newShopVoxUserId = (input.changes as any)[
+                userFieldKey
+              ]?.[1];
+
+              if (newShopVoxUserId) {
+                // Convert ShopVox user ID to both Wrike formats
+                const wrikeUserId = mapShopVoxToWrikeUserId(newShopVoxUserId);
+                const wrikeApiV2Id =
+                  mapShopVoxUserIdToWrikeApiV2Id(newShopVoxUserId);
+
+                await addLogToState(
+                  state,
+                  traceId,
+                  "info",
+                  `Comparing Wrike ${fieldInfo.fieldName} value with ShopVox change`,
+                  {
+                    wrikeUserValue,
+                    wrikeUserId,
+                    wrikeApiV2Id,
+                    newShopVoxUserId,
+                  }
+                );
+
+                // Check if Wrike value matches either format
+                const matchesWrikeUserId = wrikeUserValue === wrikeUserId;
+                const matchesWrikeApiV2Id =
+                  wrikeApiV2Id && wrikeUserValue === wrikeApiV2Id;
+
+                if (matchesWrikeUserId || matchesWrikeApiV2Id) {
+                  await addLogToState(
+                    state,
+                    traceId,
+                    "info",
+                    `Skipping Wrike update - ${fieldInfo.fieldName} already matches, preventing loop`,
+                    {
+                      wrikeUserValue,
+                      matchedFormat: matchesWrikeUserId
+                        ? "regular user ID"
+                        : "API v2 ID",
+                    }
+                  );
+                  logger.info(
+                    `Skipping Wrike update - ${fieldInfo.fieldName} already matches, preventing loop`
+                  );
+
+                  // Emit success finality event even though we skipped
+                  await emit({
+                    topic: "finality:work-order-updated-success",
+                    data: {
+                      traceId,
+                      salesOrderId: salesOrder.id,
+                      skipped: true,
+                      reason: "loop_prevention",
+                    },
+                  });
+                  return; // Exit early to break the loop
+                } else {
+                  await addLogToState(
+                    state,
+                    traceId,
+                    "info",
+                    `${fieldInfo.fieldName} values differ, proceeding with Wrike update`,
+                    { wrikeUserValue, wrikeUserId, wrikeApiV2Id }
+                  );
+                  logger.info(
+                    `${fieldInfo.fieldName} values differ, proceeding with Wrike update`
+                  );
+                }
+              } else {
+                await addLogToState(
+                  state,
+                  traceId,
+                  "warn",
+                  `Could not extract new ${fieldInfo.fieldName} value from changes`,
+                  { userFieldKey, changes: input.changes }
+                );
+                logger.warn(
+                  `Could not extract new ${fieldInfo.fieldName} value from changes`
+                );
+              }
+            } else {
+              await addLogToState(
+                state,
+                traceId,
+                "info",
+                "No existing Wrike task found, creating new one",
+                { salesOrderId: salesOrder.id }
+              );
+              logger.info("No existing Wrike task found, creating new one");
+            }
+          } catch (error) {
+            const warnMessage = `Loop detection check failed for ${
+              fieldInfo.fieldName
+            }, proceeding with normal update: ${
+              error instanceof Error ? error.message : String(error)
+            }`;
+            await addLogToState(state, traceId, "warn", warnMessage, {
+              salesOrderId: salesOrder.id,
+            });
+            logger.warn(warnMessage);
+            // Continue with normal flow if loop detection fails
+          }
         }
       }
     }

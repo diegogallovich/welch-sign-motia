@@ -263,3 +263,20 @@ export function mapWrikeApiV2IdToShopVoxUserId(wrikeApiV2Id: string): string {
 
   return "df6e9531-0157-49f2-b12d-df76393b452e"; // Diego's ShopVox ID
 }
+
+/**
+ * Maps a ShopVox user ID to a Wrike API v2 ID
+ * Returns undefined if no mapping is found
+ *
+ * @param shopVoxUserId - The ShopVox user ID to map
+ * @returns The corresponding Wrike API v2 ID or undefined if not found
+ */
+export function mapShopVoxUserIdToWrikeApiV2Id(
+  shopVoxUserId: string
+): string | undefined {
+  const mapping = SHOPVOX_WRIKE_USER_MAPPING.find(
+    (user) => user.shopVoxUserId === shopVoxUserId
+  );
+
+  return mapping?.wrikeApiV2Id;
+}

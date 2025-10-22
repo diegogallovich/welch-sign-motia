@@ -1,6 +1,6 @@
 import { EventConfig, FlowContext, Handlers } from "motia";
 import { z } from "zod";
-import { shopvoxService } from "../../services/shopvox.service";
+// import { shopvoxService } from "../../services/shopvox.service";
 import { addLogToState, addDataToState } from "../../utils/state-logger";
 import { mapWrikeApiV2IdToShopVoxUserId } from "../../utils/user-mapping";
 
@@ -9,10 +9,7 @@ export const config: EventConfig = {
   name: "process-wrike-woso-user-field-changed",
   description: "Processes a Wrike WoSo user field changed event",
   subscribes: ["wrike-woso-user-field-changed"],
-  emits: [
-    "finality:user-field-updated-success",
-    "finality:error:user-field-updated",
-  ],
+  emits: [],
   input: z.object({
     shopVoxSalesOrderId: z.string(),
     fieldType: z.enum([
@@ -27,7 +24,7 @@ export const config: EventConfig = {
 };
 
 export const handler: Handlers["process-wrike-woso-user-field-changed"] =
-  async (input, { emit, logger, state, traceId }: FlowContext) => {
+  async (input, { logger, state, traceId }: FlowContext) => {
     await addLogToState(
       state,
       traceId,
@@ -65,17 +62,6 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
         );
         logger.info("Empty value received, skipping update");
 
-        // Emit success even though we skipped - this is expected behavior
-        await emit({
-          topic: "finality:user-field-updated-success",
-          data: {
-            traceId,
-            shopVoxSalesOrderId: input.shopVoxSalesOrderId,
-            fieldType: input.fieldType,
-            skipped: true,
-            reason: "empty_value",
-          },
-        });
         return;
       }
 
@@ -98,18 +84,6 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
           `Expected exactly one user ID for ${input.fieldType}, got ${idArray.length}. Skipping update.`
         );
 
-        // Emit success even though we skipped - this is expected behavior
-        await emit({
-          topic: "finality:user-field-updated-success",
-          data: {
-            traceId,
-            shopVoxSalesOrderId: input.shopVoxSalesOrderId,
-            fieldType: input.fieldType,
-            skipped: true,
-            reason: "multiple_ids",
-            idCount: idArray.length,
-          },
-        });
         return;
       }
 
@@ -166,7 +140,7 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
       );
 
       // Update the sales order in ShopVox
-      await shopvoxService.updateSalesOrder(input.shopVoxSalesOrderId, updates);
+      // await shopvoxService.updateSalesOrder(input.shopVoxSalesOrderId, updates);
 
       await addLogToState(
         state,
@@ -180,18 +154,6 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
         }
       );
       logger.info(`${input.fieldType} updated in ShopVox successfully`);
-
-      // Emit success finality event
-      await emit({
-        topic: "finality:user-field-updated-success",
-        data: {
-          traceId,
-          shopVoxSalesOrderId: input.shopVoxSalesOrderId,
-          fieldType: input.fieldType,
-          shopVoxUserId,
-          wrikeApiV2Id,
-        },
-      });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -210,19 +172,5 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
         }
       );
       logger.error(`Failed to update ${input.fieldType}: ${errorMessage}`);
-
-      // Emit error finality event
-      await emit({
-        topic: "finality:error:user-field-updated",
-        data: {
-          traceId,
-          error: {
-            message: errorMessage,
-            stack: errorStack,
-            step: "process-wrike-woso-user-field-changed",
-          },
-          input,
-        },
-      });
     }
   };
