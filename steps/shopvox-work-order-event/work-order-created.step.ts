@@ -46,7 +46,7 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
       "Sales order retrieved from ShopVox",
       {
         salesOrderId: salesOrder.id,
-        salesOrderName: salesOrder.name,
+        salesOrderTitle: salesOrder.title,
       }
     );
     logger.info("Sales order retrieved from ShopVox");
@@ -78,11 +78,13 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
           message: `ShopVox API fetch failed: ${errorMessage}`,
           stack: errorStack,
           step: "process-shopvox-work-order-created",
+        },
+        result: {
           operation: "fetch_sales_order_from_shopvox",
         },
         input,
       },
-    });
+    } as never);
     return;
   }
 
@@ -109,8 +111,14 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
     // Emit success finality event
     await emit({
       topic: "finality:work-order-created-success",
-      data: { traceId, salesOrderId: salesOrder.id, taskId: result.taskId },
-    });
+      data: {
+        traceId,
+        result: {
+          salesOrderId: salesOrder.id,
+          taskId: result.taskId,
+        },
+      },
+    } as never);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -139,10 +147,12 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
           message: `Wrike API operation failed: ${errorMessage}`,
           stack: errorStack,
           step: "process-shopvox-work-order-created",
+        },
+        result: {
           operation: "create_or_update_woso_task",
         },
         input,
       },
-    });
+    } as never);
   }
 };

@@ -71,10 +71,12 @@ export const handler: Handlers["process-wrike-woso-target-install-date-changed"]
         topic: "finality:target-install-date-updated-success",
         data: {
           traceId,
-          shopVoxSalesOrderId: input.shopVoxSalesOrderId,
-          dueDate: input.dueDate,
+          result: {
+            shopVoxSalesOrderId: input.shopVoxSalesOrderId,
+            dueDate: input.dueDate,
+          },
         },
-      });
+      } as never);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -105,6 +107,6 @@ export const handler: Handlers["process-wrike-woso-target-install-date-changed"]
           },
           input,
         },
-      });
+      } as never);
     }
   };

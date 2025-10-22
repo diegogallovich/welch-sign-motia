@@ -40,6 +40,8 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
   );
   logger.info("Processing work order updated event");
 
+  logger.info("changes", input.changes);
+
   let salesOrder: ShopVoxSalesOrder;
   try {
     // Retrieve sales order from ShopVox
@@ -52,7 +54,7 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
       "Sales order retrieved from ShopVox",
       {
         salesOrderId: salesOrder.id,
-        salesOrderName: salesOrder.name,
+        salesOrderTitle: salesOrder.title,
       }
     );
   } catch (error) {
@@ -83,11 +85,13 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
           message: `ShopVox API fetch failed: ${errorMessage}`,
           stack: errorStack,
           step: "process-shopvox-work-order-updated",
+        },
+        result: {
           operation: "fetch_sales_order_from_shopvox",
         },
         input,
       },
-    });
+    } as never);
     return;
   }
 
@@ -146,11 +150,13 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                 topic: "finality:work-order-updated-success",
                 data: {
                   traceId,
-                  salesOrderId: salesOrder.id,
-                  skipped: true,
-                  reason: "loop_prevention",
+                  result: {
+                    salesOrderId: salesOrder.id,
+                    skipped: true,
+                    reason: "loop_prevention",
+                  },
                 },
-              });
+              } as never);
               return; // Exit early to break the loop
             } else {
               await addLogToState(
@@ -289,11 +295,13 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                     topic: "finality:work-order-updated-success",
                     data: {
                       traceId,
-                      salesOrderId: salesOrder.id,
-                      skipped: true,
-                      reason: "loop_prevention",
+                      result: {
+                        salesOrderId: salesOrder.id,
+                        skipped: true,
+                        reason: "loop_prevention",
+                      },
                     },
-                  });
+                  } as never);
                   return; // Exit early to break the loop
                 } else {
                   await addLogToState(
@@ -393,11 +401,13 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
       topic: "finality:work-order-updated-success",
       data: {
         traceId,
-        salesOrderId: salesOrder.id,
-        taskId: result.taskId,
-        wasCreated: result.wasCreated,
+        result: {
+          salesOrderId: salesOrder.id,
+          taskId: result.taskId,
+          wasCreated: result.wasCreated,
+        },
       },
-    });
+    } as never);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -426,10 +436,12 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
           message: `Wrike API operation failed: ${errorMessage}`,
           stack: errorStack,
           step: "process-shopvox-work-order-updated",
+        },
+        result: {
           operation: "create_or_update_woso_task",
         },
         input,
       },
-    });
+    } as never);
   }
 };

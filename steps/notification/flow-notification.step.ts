@@ -66,7 +66,7 @@ export const config: EventConfig = {
   ],
   emits: [],
   input: FinalityEventSchema,
-  flows: ["shopvox-to-wrike", "wrike-to-shopvox"],
+  flows: ["shopvox-to-wrike", "wrike-to-shopvox"]
 };
 
 export const handler: Handlers["flow-notification-handler"] = async (
