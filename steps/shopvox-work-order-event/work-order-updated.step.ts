@@ -100,7 +100,7 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
     if (input.changes) {
       const changeKeys = Object.keys(input.changes);
       const isOnlyDueDateChange =
-        changeKeys.length === 1 && changeKeys[0] === "dueDate";
+        changeKeys.length === 2 && changeKeys[1] === "due_date";
 
       if (isOnlyDueDateChange) {
         await addLogToState(
