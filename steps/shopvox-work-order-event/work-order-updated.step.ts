@@ -9,6 +9,7 @@ import {
   mapShopVoxToWrikeUserId,
   mapShopVoxUserIdToWrikeApiV2Id,
 } from "../../utils/user-mapping";
+import { normalizeDateForComparison } from "../../utils/date-normalizer";
 
 export const config: EventConfig = {
   type: "event",
@@ -100,7 +101,9 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
     if (input.changes) {
       const changeKeys = Object.keys(input.changes);
       const isOnlyDueDateChange =
-        changeKeys.length === 2 && changeKeys.includes("due_date") && changeKeys.includes("updated_at");
+        changeKeys.length === 2 &&
+        changeKeys.includes("due_date") &&
+        changeKeys.includes("updated_at");
 
       if (isOnlyDueDateChange) {
         await addLogToState(
@@ -130,10 +133,14 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
             const wrikeTargetInstallDate = targetInstallDateField?.value;
 
             // Compare dates (normalize to ensure accurate comparison)
-            const shopvoxDueDate = salesOrder.dueDate?.trim() || "";
-            const wrikeDueDate = wrikeTargetInstallDate?.trim() || "";
+            const shopvoxDueDate = normalizeDateForComparison(
+              salesOrder.dueDate
+            );
+            const wrikeDueDate = normalizeDateForComparison(
+              wrikeTargetInstallDate
+            );
 
-            if (shopvoxDueDate === wrikeDueDate) {
+            if (shopvoxDueDate === wrikeDueDate && shopvoxDueDate !== "") {
               await addLogToState(
                 state,
                 traceId,

@@ -2,6 +2,7 @@ import { EventConfig, FlowContext, Handlers } from "motia";
 import { z } from "zod";
 import { shopvoxService } from "../../services/shopvox.service";
 import { addLogToState, addDataToState } from "../../utils/state-logger";
+import { normalizeDateForComparison } from "../../utils/date-normalizer";
 
 export const config: EventConfig = {
   type: "event",
@@ -37,6 +38,73 @@ export const handler: Handlers["process-wrike-woso-target-install-date-changed"]
     try {
       // Store input data to state
       await addDataToState(state, traceId, "wrike", "dueDateUpdate", input);
+
+      // Loop prevention: Check if ShopVox already has the correct date
+      await addLogToState(
+        state,
+        traceId,
+        "info",
+        "Checking current ShopVox due date for loop prevention",
+        { salesOrderId: input.shopVoxSalesOrderId }
+      );
+
+      try {
+        const currentSalesOrder = await shopvoxService.getSalesOrder(
+          input.shopVoxSalesOrderId
+        );
+
+        // Normalize dates for comparison
+        const wrikeDueDate = normalizeDateForComparison(input.dueDate);
+        const shopvoxDueDate = normalizeDateForComparison(
+          currentSalesOrder.dueDate
+        );
+
+        if (wrikeDueDate === shopvoxDueDate && wrikeDueDate !== "") {
+          await addLogToState(
+            state,
+            traceId,
+            "info",
+            "Skipping ShopVox update - due dates already match, preventing loop",
+            { wrikeDueDate, shopvoxDueDate }
+          );
+          logger.info(
+            "Skipping ShopVox update - due dates already match, preventing loop"
+          );
+
+          // Emit success finality event even though we skipped
+          await emit({
+            topic: "finality:target-install-date-updated-success",
+            data: {
+              traceId,
+              result: {
+                shopVoxSalesOrderId: input.shopVoxSalesOrderId,
+                dueDate: input.dueDate,
+                skipped: true,
+                reason: "loop_prevention",
+              },
+            },
+          } as never);
+          return; // Exit early to break the loop
+        } else {
+          await addLogToState(
+            state,
+            traceId,
+            "info",
+            "Due dates differ, proceeding with ShopVox update",
+            { wrikeDueDate, shopvoxDueDate }
+          );
+          logger.info("Due dates differ, proceeding with ShopVox update");
+        }
+      } catch (error) {
+        const warnMessage = `Loop detection check failed, proceeding with normal update: ${
+          error instanceof Error ? error.message : String(error)
+        }`;
+        await addLogToState(state, traceId, "warn", warnMessage, {
+          salesOrderId: input.shopVoxSalesOrderId,
+        });
+        logger.warn(warnMessage);
+        // Continue with normal flow if loop detection fails
+      }
 
       // Update the sales order due date in ShopVox
       await addLogToState(
