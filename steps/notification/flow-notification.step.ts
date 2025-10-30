@@ -39,6 +39,28 @@ function getFlowNameFromStep(stepName?: string): string {
   return flowMap[stepName] || "Motia Workflow";
 }
 
+/**
+ * Extracts IDs from flow state for use in email subjects
+ */
+function extractFlowIds(flowState: any, stepName?: string) {
+  const ids: { shopVoxId?: string; wrikeTaskId?: string; itemType?: string } =
+    {};
+
+  // Extract from data
+  if (flowState.data?.shopvox) {
+    ids.shopVoxId =
+      flowState.data.shopvox.salesOrder?.id || flowState.data.shopvox.quote?.id;
+    ids.itemType = flowState.data.shopvox.salesOrder ? "SO" : "Quote";
+  }
+
+  if (flowState.data?.wrike) {
+    ids.wrikeTaskId =
+      flowState.data.wrike.task?.taskId || flowState.data.wrike.taskId;
+  }
+
+  return ids;
+}
+
 export const config: EventConfig = {
   type: "event",
   name: "flow-notification-handler",
@@ -66,7 +88,7 @@ export const config: EventConfig = {
   ],
   emits: [],
   input: FinalityEventSchema,
-  flows: ["shopvox-to-wrike", "wrike-to-shopvox"]
+  flows: ["shopvox-to-wrike", "wrike-to-shopvox"],
 };
 
 export const handler: Handlers["flow-notification-handler"] = async (
@@ -93,13 +115,28 @@ export const handler: Handlers["flow-notification-handler"] = async (
     // Get the flow name from the step name
     const flowName = getFlowNameFromStep(stepName);
 
+    // Extract IDs for unique email subjects
+    const ids = extractFlowIds(flowState, stepName);
+
     const recipientEmail = "welchandbailey.motia@unclogflows.com";
 
     if (isError) {
       // Send error notification
       logger.info("Sending error notification email", { traceId });
 
-      const subject = `🚨 ${flowName} - Error`;
+      // Create unique subject based on flow direction
+      let subject: string;
+      if (stepName?.includes("wrike-woso")) {
+        // Wrike to ShopVox flow
+        subject = `Wrike-to-ShopVox: ${traceId.substring(0, 8)} - ${
+          ids.wrikeTaskId || "N/A"
+        } - ${ids.shopVoxId || "N/A"} - ERROR`;
+      } else {
+        // ShopVox to Wrike flow
+        subject = `ShopVox-to-Wrike: ${traceId.substring(0, 8)} - ${
+          ids.shopVoxId || "N/A"
+        } - ${ids.wrikeTaskId || "N/A"} - ERROR`;
+      }
       const htmlContent = mailgunService.formatErrorEmail(
         traceId,
         flowName,
@@ -119,7 +156,19 @@ export const handler: Handlers["flow-notification-handler"] = async (
       // Send success notification
       logger.info("Sending success notification email", { traceId });
 
-      const subject = `✅ ${flowName} - Success`;
+      // Create unique subject based on flow direction
+      let subject: string;
+      if (stepName?.includes("wrike-woso")) {
+        // Wrike to ShopVox flow
+        subject = `Wrike-to-ShopVox: ${traceId.substring(0, 8)} - ${
+          ids.wrikeTaskId || "N/A"
+        } - ${ids.shopVoxId || "N/A"}`;
+      } else {
+        // ShopVox to Wrike flow
+        subject = `ShopVox-to-Wrike: ${traceId.substring(0, 8)} - ${
+          ids.shopVoxId || "N/A"
+        } - ${ids.wrikeTaskId || "N/A"}`;
+      }
       const htmlContent = mailgunService.formatSuccessEmail(
         traceId,
         flowName,

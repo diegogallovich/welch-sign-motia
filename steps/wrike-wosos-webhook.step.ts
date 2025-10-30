@@ -147,6 +147,7 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
             await emit({
               topic: "wrike-woso-target-install-date-changed",
               data: {
+                wrikeTaskId: event.taskId,
                 shopVoxSalesOrderId: shopvoxId,
                 dueDate: newDueDate,
               },
@@ -158,6 +159,7 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
             await emit({
               topic: "wrike-woso-user-field-changed",
               data: {
+                wrikeTaskId: event.taskId,
                 shopVoxSalesOrderId: shopvoxId,
                 fieldType: "salesRep",
                 apiV2Ids: event.value || "",
@@ -169,6 +171,7 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
             await emit({
               topic: "wrike-woso-user-field-changed",
               data: {
+                wrikeTaskId: event.taskId,
                 shopVoxSalesOrderId: shopvoxId,
                 fieldType: "projectManager",
                 apiV2Ids: event.value || "",
@@ -180,6 +183,7 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
             await emit({
               topic: "wrike-woso-user-field-changed",
               data: {
+                wrikeTaskId: event.taskId,
                 shopVoxSalesOrderId: shopvoxId,
                 fieldType: "estimator",
                 apiV2Ids: event.value || "",
@@ -191,6 +195,7 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
             await emit({
               topic: "wrike-woso-user-field-changed",
               data: {
+                wrikeTaskId: event.taskId,
                 shopVoxSalesOrderId: shopvoxId,
                 fieldType: "productionManager",
                 apiV2Ids: event.value || "",

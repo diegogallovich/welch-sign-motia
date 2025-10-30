@@ -123,6 +123,8 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
             salesOrder.id
           );
 
+          logger.info("Wrike task search result", taskSearchResult);
+
           if (taskSearchResult.data.length > 0) {
             const wrikeTask = taskSearchResult.data[0];
 

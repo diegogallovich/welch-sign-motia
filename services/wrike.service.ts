@@ -1230,6 +1230,8 @@ export class WrikeService {
 
   /**
    * Gets a task by its Wrike task ID
+   * Note: The /tasks/{id} endpoint does not support the fields parameter,
+   * but returns custom fields by default
    * @param taskId - The Wrike task ID
    * @returns The task data including custom fields
    */
@@ -1267,6 +1269,7 @@ export class WrikeService {
           value: quoteId,
         },
       ]),
+      fields: "[customFields]",
     });
 
     const response = await this.makeRequest(
@@ -1525,6 +1528,7 @@ export class WrikeService {
           value: salesOrderId,
         },
       ]),
+      fields: "[customFields]",
     });
 
     const response = await this.makeRequest(

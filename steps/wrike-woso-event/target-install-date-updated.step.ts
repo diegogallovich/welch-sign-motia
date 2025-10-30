@@ -14,6 +14,7 @@ export const config: EventConfig = {
     "finality:error:target-install-date-updated",
   ],
   input: z.object({
+    wrikeTaskId: z.string(),
     shopVoxSalesOrderId: z.string(),
     dueDate: z.string(),
   }),
@@ -38,6 +39,13 @@ export const handler: Handlers["process-wrike-woso-target-install-date-changed"]
     try {
       // Store input data to state
       await addDataToState(state, traceId, "wrike", "dueDateUpdate", input);
+      await addDataToState(
+        state,
+        traceId,
+        "wrike",
+        "taskId",
+        input.wrikeTaskId
+      );
 
       // Loop prevention: Check if ShopVox already has the correct date
       await addLogToState(

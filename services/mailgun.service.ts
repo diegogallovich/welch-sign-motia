@@ -88,6 +88,30 @@ class MailgunService {
     logs: any[],
     data: any
   ): string {
+    // Extract IDs for prominent display
+    const shopVoxId = data?.shopvox?.salesOrder?.id || data?.shopvox?.quote?.id;
+    const wrikeTaskId = data?.wrike?.task?.taskId || data?.wrike?.taskId;
+    const itemType = data?.shopvox?.salesOrder ? "Sales Order" : "Quote";
+
+    // Create ID section HTML
+    const idSectionHtml =
+      shopVoxId || wrikeTaskId
+        ? `
+      <div style="background: #d4edda; padding: 15px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid #28a745;">
+        ${
+          wrikeTaskId
+            ? `<p style="margin: 5px 0; font-family: 'Courier New', monospace; font-size: 14px;"><strong>Wrike Task ID:</strong> <span style="color: #155724;">${wrikeTaskId}</span></p>`
+            : ""
+        }
+        ${
+          shopVoxId
+            ? `<p style="margin: 5px 0; font-family: 'Courier New', monospace; font-size: 14px;"><strong>ShopVox ${itemType} ID:</strong> <span style="color: #155724;">${shopVoxId}</span></p>`
+            : ""
+        }
+      </div>
+    `
+        : "";
+
     const logsHtml = logs
       .map(
         (log) => `
@@ -136,9 +160,11 @@ class MailgunService {
         </div>
         
         <div style="background: white; padding: 30px; border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 8px 8px;">
-          <div style="background: #e7f5ec; padding: 15px; border-radius: 6px; margin-bottom: 25px;">
+          <div style="background: #e7f5ec; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
             <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 13px;"><strong>Trace ID:</strong> ${traceId}</p>
           </div>
+
+          ${idSectionHtml}
 
           <h3 style="color: #495057; border-bottom: 2px solid #28a745; padding-bottom: 8px;">Execution Logs</h3>
           ${logsHtml}
@@ -161,6 +187,30 @@ class MailgunService {
     logs: any[],
     data: any
   ): string {
+    // Extract IDs for prominent display
+    const shopVoxId = data?.shopvox?.salesOrder?.id || data?.shopvox?.quote?.id;
+    const wrikeTaskId = data?.wrike?.task?.taskId || data?.wrike?.taskId;
+    const itemType = data?.shopvox?.salesOrder ? "Sales Order" : "Quote";
+
+    // Create ID section HTML
+    const idSectionHtml =
+      shopVoxId || wrikeTaskId
+        ? `
+      <div style="background: #f8d7da; padding: 15px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid #dc3545;">
+        ${
+          wrikeTaskId
+            ? `<p style="margin: 5px 0; font-family: 'Courier New', monospace; font-size: 14px;"><strong>Wrike Task ID:</strong> <span style="color: #721c24;">${wrikeTaskId}</span></p>`
+            : ""
+        }
+        ${
+          shopVoxId
+            ? `<p style="margin: 5px 0; font-family: 'Courier New', monospace; font-size: 14px;"><strong>ShopVox ${itemType} ID:</strong> <span style="color: #721c24;">${shopVoxId}</span></p>`
+            : ""
+        }
+      </div>
+    `
+        : "";
+
     const logsHtml = logs
       .map((log) => {
         const isError = log.level === "error";
@@ -234,9 +284,11 @@ class MailgunService {
         </div>
         
         <div style="background: white; padding: 30px; border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 8px 8px;">
-          <div style="background: #fff3cd; padding: 15px; border-radius: 6px; margin-bottom: 25px; border-left: 4px solid #ffc107;">
+          <div style="background: #fff3cd; padding: 15px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
             <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 13px;"><strong>Trace ID:</strong> ${traceId}</p>
           </div>
+
+          ${idSectionHtml}
 
           ${errorDetailsHtml}
 

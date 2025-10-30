@@ -9,8 +9,12 @@ export const config: EventConfig = {
   name: "process-wrike-woso-user-field-changed",
   description: "Processes a Wrike WoSo user field changed event",
   subscribes: ["wrike-woso-user-field-changed"],
-  emits: [],
+  emits: [
+    "finality:user-field-updated-success",
+    "finality:error:user-field-updated",
+  ],
   input: z.object({
+    wrikeTaskId: z.string(),
     shopVoxSalesOrderId: z.string(),
     fieldType: z.enum([
       "estimator",
@@ -24,7 +28,7 @@ export const config: EventConfig = {
 };
 
 export const handler: Handlers["process-wrike-woso-user-field-changed"] =
-  async (input, { logger, state, traceId }: FlowContext) => {
+  async (input, { logger, state, traceId, emit }: FlowContext) => {
     await addLogToState(
       state,
       traceId,
@@ -42,6 +46,13 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
     try {
       // Store input data to state
       await addDataToState(state, traceId, "wrike", "userFieldUpdate", input);
+      await addDataToState(
+        state,
+        traceId,
+        "wrike",
+        "taskId",
+        input.wrikeTaskId
+      );
 
       // Parse the API v2 IDs from the value string
       // Wrike sends them as comma-separated string, possibly with quotes
@@ -154,6 +165,20 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
         }
       );
       logger.info(`${input.fieldType} updated in ShopVox successfully`);
+
+      // Emit success finality event
+      await emit({
+        topic: "finality:user-field-updated-success",
+        data: {
+          traceId,
+          result: {
+            salesOrderId: input.shopVoxSalesOrderId,
+            fieldType: input.fieldType,
+            shopVoxUserId,
+          },
+          input,
+        },
+      } as never);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -172,5 +197,19 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
         }
       );
       logger.error(`Failed to update ${input.fieldType}: ${errorMessage}`);
+
+      // Emit error finality event
+      await emit({
+        topic: "finality:error:user-field-updated",
+        data: {
+          traceId,
+          error: {
+            message: errorMessage,
+            stack: errorStack,
+            step: "process-wrike-woso-user-field-changed",
+          },
+          input,
+        },
+      } as never);
     }
   };
