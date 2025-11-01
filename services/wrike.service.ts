@@ -154,8 +154,12 @@ export class WrikeService {
   private async makeRequest(
     url: string,
     options: RequestInit = {},
-    retryCount: number = 0
+    retryCount: number = 0,
+    operation?: string,
+    traceId?: string,
+    stepName?: string
   ): Promise<Response> {
+    const apiCallStartTime = Date.now();
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
 
@@ -170,6 +174,24 @@ export class WrikeService {
       });
 
       clearTimeout(timeoutId);
+
+      // Log successful API call if traceId is available
+      if (traceId && stepName && operation) {
+        const durationMs = Date.now() - apiCallStartTime;
+        const { logExternalApiCall } = await import("../utils/reliability-logger");
+        const statusCode = response.status;
+        logExternalApiCall(
+          traceId,
+          stepName,
+          "wrike",
+          operation || url,
+          durationMs,
+          response.ok,
+          response.ok ? undefined : `HTTP ${statusCode}`,
+          statusCode.toString()
+        );
+      }
+
       return response;
     } catch (error) {
       clearTimeout(timeoutId);
@@ -187,7 +209,23 @@ export class WrikeService {
         await new Promise((resolve) =>
           setTimeout(resolve, this.retryDelay * (retryCount + 1))
         );
-        return this.makeRequest(url, options, retryCount + 1);
+        return this.makeRequest(url, options, retryCount + 1, operation, traceId, stepName);
+      }
+
+      // Log failed API call if traceId is available
+      if (traceId && stepName && operation) {
+        const durationMs = Date.now() - apiCallStartTime;
+        const { logExternalApiCall } = await import("../utils/reliability-logger");
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        logExternalApiCall(
+          traceId,
+          stepName,
+          "wrike",
+          operation || url,
+          durationMs,
+          false,
+          errorMessage
+        );
       }
 
       throw error;

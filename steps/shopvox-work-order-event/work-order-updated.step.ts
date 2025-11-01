@@ -6,6 +6,11 @@ import { wrikeService } from "../../services/wrike.service";
 import { WRIKE_CUSTOM_FIELDS } from "../../constants/wrike-fields";
 import { addLogToState, addDataToState } from "../../utils/state-logger";
 import {
+  logStepStart,
+  logStepComplete,
+  logStepError,
+} from "../../utils/reliability-logger";
+import {
   mapShopVoxToWrikeUserId,
   mapShopVoxUserIdToWrikeApiV2Id,
 } from "../../utils/user-mapping";
@@ -28,13 +33,22 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
   input,
   { emit, logger, state, traceId }: FlowContext
 ) => {
+  const stepStartTime = Date.now();
+  const stepName = "process-shopvox-work-order-updated";
+
+  // Log step start
+  logStepStart(traceId, stepName, {
+    salesOrderId: input.id,
+    changes: input.changes,
+  });
+
   await addLogToState(
     state,
     traceId,
     "info",
     "Processing work order updated event",
     {
-      step: "process-shopvox-work-order-updated",
+      step: stepName,
       salesOrderId: input.id,
       changes: input.changes,
     }
@@ -85,7 +99,7 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
         error: {
           message: `ShopVox API fetch failed: ${errorMessage}`,
           stack: errorStack,
-          step: "process-shopvox-work-order-updated",
+          step: stepName,
         },
         result: {
           operation: "fetch_sales_order_from_shopvox",
@@ -93,6 +107,13 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
         input,
       },
     } as never);
+
+    // Log step error
+    const durationMs = Date.now() - stepStartTime;
+    logStepError(traceId, stepName, error, durationMs, {
+      salesOrderId: input.id,
+      operation: "fetch_sales_order_from_shopvox",
+    });
     return;
   }
 
@@ -166,6 +187,14 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                   },
                 },
               } as never);
+
+              // Log step completion (success - skipped due to loop prevention)
+              const durationMs = Date.now() - stepStartTime;
+              logStepComplete(traceId, stepName, durationMs, {
+                salesOrderId: salesOrder.id,
+                skipped: true,
+                reason: "loop_prevention",
+              });
               return; // Exit early to break the loop
             } else {
               await addLogToState(
@@ -326,6 +355,14 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                       },
                     },
                   } as never);
+
+                  // Log step completion (success - skipped due to loop prevention)
+                  const durationMs = Date.now() - stepStartTime;
+                  logStepComplete(traceId, stepName, durationMs, {
+                    salesOrderId: salesOrder.id,
+                    skipped: true,
+                    reason: "loop_prevention",
+                  });
                   return; // Exit early to break the loop
                 } else {
                   await addLogToState(
@@ -432,6 +469,14 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
         },
       },
     } as never);
+
+    // Log step completion (success)
+    const durationMs = Date.now() - stepStartTime;
+    logStepComplete(traceId, stepName, durationMs, {
+      salesOrderId: salesOrder.id,
+      taskId: result.taskId,
+      wasCreated: result.wasCreated,
+    });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -459,7 +504,7 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
         error: {
           message: `Wrike API operation failed: ${errorMessage}`,
           stack: errorStack,
-          step: "process-shopvox-work-order-updated",
+          step: stepName,
         },
         result: {
           operation: "create_or_update_woso_task",
@@ -467,5 +512,12 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
         input,
       },
     } as never);
+
+    // Log step error
+    const durationMs = Date.now() - stepStartTime;
+    logStepError(traceId, stepName, error, durationMs, {
+      salesOrderId: salesOrder.id,
+      operation: "create_or_update_woso_task",
+    });
   }
 };

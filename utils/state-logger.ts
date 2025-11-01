@@ -1,4 +1,5 @@
 import { InternalStateManager } from "motia";
+import { logStepError } from "./reliability-logger";
 
 interface LogEntry {
   timestamp: string;
@@ -17,6 +18,7 @@ interface FlowState {
 
 /**
  * Adds a log entry to the state for a given trace
+ * Also logs to ClickHouse for reliability monitoring (non-blocking)
  */
 export async function addLogToState(
   state: InternalStateManager,
@@ -43,6 +45,14 @@ export async function addLogToState(
 
     // Store back to state
     await state.set(traceId, "logs.entries", existingLogs);
+
+    // Also log to ClickHouse for reliability monitoring (non-blocking, fire-and-forget)
+    if (level === "error" && metadata?.step) {
+      // Extract step name from metadata
+      const stepName = metadata.step;
+      // Log error to ClickHouse without blocking
+      logStepError(traceId, stepName, message, undefined, metadata);
+    }
   } catch (error) {
     console.error("Failed to add log to state:", error);
   }
