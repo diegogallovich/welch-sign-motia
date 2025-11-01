@@ -28,23 +28,100 @@ class ClickHouseService {
     const username = process.env.CLICKHOUSE_USER;
     const password = process.env.CLICKHOUSE_PASSWORD;
 
-    if (!url || !username || !password) {
+    if (!url) {
       console.warn(
-        "ClickHouse credentials not fully configured. Reliability logging will be disabled."
+        "CLICKHOUSE_URL not set. Reliability logging will be disabled."
       );
-      console.warn(
-        "Required: CLICKHOUSE_URL, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD"
+      return;
+    }
+
+    // Parse URL and extract credentials if needed
+    let normalizedHost: string;
+    let finalUsername: string;
+    let finalPassword: string;
+
+    try {
+      let normalizedUrl = url.trim();
+
+      // Remove trailing slash if present
+      normalizedUrl = normalizedUrl.replace(/\/$/, "");
+
+      // Handle clickhouse:// protocol (extracts username:password@host:port format)
+      if (normalizedUrl.startsWith("clickhouse://")) {
+        // Convert clickhouse:// to http:// for parsing
+        normalizedUrl = normalizedUrl.replace("clickhouse://", "http://");
+      }
+
+      // If URL doesn't have protocol, assume https for ClickHouse Cloud
+      if (
+        !normalizedUrl.startsWith("http://") &&
+        !normalizedUrl.startsWith("https://")
+      ) {
+        normalizedUrl = `https://${normalizedUrl}`;
+      }
+
+      // Parse URL to extract components
+      const urlObj = new URL(normalizedUrl);
+
+      // Extract username and password from URL if present
+      if (urlObj.username && urlObj.password) {
+        // Credentials are in the URL
+        finalUsername = decodeURIComponent(urlObj.username);
+        finalPassword = decodeURIComponent(urlObj.password);
+        // Remove credentials from URL for the host
+        normalizedHost = `${urlObj.protocol}//${urlObj.hostname}:${
+          urlObj.port || ""
+        }`;
+      } else {
+        // Use environment variables for credentials
+        finalUsername = username || "";
+        finalPassword = password || "";
+        normalizedHost = `${urlObj.protocol}//${urlObj.hostname}:${
+          urlObj.port || ""
+        }`;
+      }
+
+      // Remove port if it's empty to avoid double colons
+      normalizedHost = normalizedHost.replace(/:(?=\/\/|$)/, "");
+
+      // Set default ports if not specified
+      if (!urlObj.port) {
+        if (urlObj.protocol === "https:") {
+          normalizedHost = normalizedHost.replace(/:$/, ":8443");
+        } else {
+          normalizedHost = normalizedHost.replace(/:$/, ":8123");
+        }
+      }
+
+      // Validate that we have credentials
+      if (!finalUsername || !finalPassword) {
+        console.warn(
+          "ClickHouse credentials missing. Check CLICKHOUSE_URL or CLICKHOUSE_USER/CLICKHOUSE_PASSWORD."
+        );
+        this.client = null;
+        return;
+      }
+    } catch (urlError) {
+      console.error("Invalid CLICKHOUSE_URL format:", url);
+      console.error(
+        "Expected format: clickhouse://user:pass@host:port or https://host:port with CLICKHOUSE_USER/CLICKHOUSE_PASSWORD"
       );
+      this.client = null;
       return;
     }
 
     try {
       this.client = createClient({
-        url,
-        username,
-        password,
+        host: normalizedHost,
+        username: finalUsername,
+        password: finalPassword,
+        request_timeout: 30000,
+        application: "motia-reliability-monitoring",
       });
       this.isInitialized = true;
+      console.log(
+        `ClickHouse client initialized successfully (${normalizedHost})`
+      );
     } catch (error) {
       console.error("Failed to initialize ClickHouse client:", error);
       this.client = null;
@@ -63,7 +140,27 @@ class ClickHouseService {
       });
     } catch (error) {
       // Log but don't throw - reliability logging should never break execution
-      console.error("ClickHouse query failed:", error);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+
+      // Only log connection errors once to avoid spam
+      if (errorMsg.includes("ECONNREFUSED") || errorMsg.includes("ENOTFOUND")) {
+        // Connection issues - check configuration
+        const url = process.env.CLICKHOUSE_URL;
+        if (url) {
+          console.error(
+            "ClickHouse connection failed. Check CLICKHOUSE_URL:",
+            url.substring(0, 50) + "..."
+          );
+          console.error("Error:", errorMsg);
+        } else {
+          console.error(
+            "ClickHouse connection failed. CLICKHOUSE_URL is not set."
+          );
+        }
+      } else {
+        // Other errors (query syntax, etc.)
+        console.error("ClickHouse query failed:", errorMsg);
+      }
     }
   }
 
@@ -111,10 +208,7 @@ class ClickHouseService {
     });
   }
 
-  async logExecutionStart(
-    traceId: string,
-    flowName: string
-  ): Promise<void> {
+  async logExecutionStart(traceId: string, flowName: string): Promise<void> {
     await this.logEvent({
       traceId,
       flowName,
@@ -139,8 +233,8 @@ class ClickHouseService {
       stepName: "",
       eventType: success ? "execution_completed" : "execution_failed",
       status: success ? "success" : "failed",
-      errorCategory: success ? null : (errorCategory || "unknown"),
-      errorMessage: success ? null : (errorMessage || "Execution failed"),
+      errorCategory: success ? null : errorCategory || "unknown",
+      errorMessage: success ? null : errorMessage || "Execution failed",
       durationMs: durationMs || null,
       eventTimestamp: new Date(),
     });
@@ -163,9 +257,9 @@ class ClickHouseService {
       stepName,
       eventType,
       status,
-      errorCategory: status === "failed" ? (errorCategory || "unknown") : null,
-      errorMessage: status === "failed" ? (errorMessage || "Step failed") : null,
-      errorCode: status === "failed" ? (errorCode || null) : null,
+      errorCategory: status === "failed" ? errorCategory || "unknown" : null,
+      errorMessage: status === "failed" ? errorMessage || "Step failed" : null,
+      errorCode: status === "failed" ? errorCode || null : null,
       durationMs: durationMs || null,
       eventTimestamp: new Date(),
     });
@@ -189,8 +283,8 @@ class ClickHouseService {
       eventType: "api_call",
       status: success ? "success" : "failed",
       errorCategory: success ? null : "api_error",
-      errorMessage: success ? null : (errorMessage || "API call failed"),
-      errorCode: success ? null : (errorCode || null),
+      errorMessage: success ? null : errorMessage || "API call failed",
+      errorCode: success ? null : errorCode || null,
       metadata: JSON.stringify({ operation, externalService }),
       durationMs,
       externalService,
@@ -206,4 +300,3 @@ class ClickHouseService {
 }
 
 export const clickHouseService = new ClickHouseService();
-
