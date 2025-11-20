@@ -114,10 +114,10 @@ SELECT
     COUNT(*) as total_calls,
     COUNT(CASE WHEN status = 'success' THEN 1 END) as successful_calls,
     COUNT(CASE WHEN status = 'failed' THEN 1 END) as failed_calls,
-    ROUND(AVG(duration_ms), 2) as avg_duration_ms,
-    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY duration_ms), 2) as p50_duration_ms,
-    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY duration_ms), 2) as p95_duration_ms,
-    ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY duration_ms), 2) as p99_duration_ms,
+    ROUND(AVG(duration_ms)::numeric, 2) as avg_duration_ms,
+    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY duration_ms)::numeric, 2) as p50_duration_ms,
+    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY duration_ms)::numeric, 2) as p95_duration_ms,
+    ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY duration_ms)::numeric, 2) as p99_duration_ms,
     MAX(duration_ms) as max_duration_ms
 FROM external_api_calls
 WHERE called_at > NOW() - INTERVAL '24 hours'
@@ -132,10 +132,10 @@ SELECT
     COUNT(*) as total_executions,
     COUNT(CASE WHEN status = 'success' THEN 1 END) as successful_executions,
     COUNT(CASE WHEN status = 'failed' THEN 1 END) as failed_executions,
-    ROUND(100.0 * COUNT(CASE WHEN status = 'success' THEN 1 END) / COUNT(*), 2) as success_rate_percent,
-    ROUND(AVG(duration_ms), 2) as avg_duration_ms,
-    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY duration_ms), 2) as p50_duration_ms,
-    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY duration_ms), 2) as p95_duration_ms
+    ROUND((100.0 * COUNT(CASE WHEN status = 'success' THEN 1 END) / COUNT(*))::numeric, 2) as success_rate_percent,
+    ROUND(AVG(duration_ms)::numeric, 2) as avg_duration_ms,
+    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY duration_ms)::numeric, 2) as p50_duration_ms,
+    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY duration_ms)::numeric, 2) as p95_duration_ms
 FROM flow_executions
 WHERE started_at > NOW() - INTERVAL '24 hours'
     AND status IN ('success', 'failed')
