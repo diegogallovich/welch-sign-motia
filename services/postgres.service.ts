@@ -237,12 +237,13 @@ class PostgresService {
     }
 
     const query = `
-      INSERT INTO step_executions (execution_id, step_name, status, metadata, started_at)
-      VALUES ($1, $2, 'started', $3, NOW())
+      INSERT INTO step_executions (trace_id, execution_id, step_name, status, metadata, started_at)
+      VALUES ($1, $2, $3, 'started', $4, NOW())
       RETURNING id
     `;
 
     const result = await this.executeQuery<{ id: string }[]>(query, [
+      traceId,
       executionId,
       stepName,
       metadata ? JSON.stringify(metadata) : null,
@@ -335,13 +336,14 @@ class PostgresService {
     const errorMessage = error instanceof Error ? error.message : error;
     const query = `
       INSERT INTO external_api_calls (
-        execution_id, step_execution_id, service, operation,
+        trace_id, execution_id, step_execution_id, service, operation,
         status, http_status, duration_ms, error_message, called_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
     `;
 
     await this.executeQuery(query, [
+      traceId,
       executionId,
       stepExecutionId || null,
       service,

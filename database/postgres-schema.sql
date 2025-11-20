@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS flow_executions (
 -- Individual step tracking within a flow execution
 CREATE TABLE IF NOT EXISTS step_executions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    trace_id VARCHAR(255) NOT NULL,
     execution_id UUID NOT NULL REFERENCES flow_executions(id) ON DELETE CASCADE,
     step_name VARCHAR(255) NOT NULL,
     status VARCHAR(50) NOT NULL CHECK (status IN ('started', 'success', 'failed', 'skipped')),
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS step_executions (
 -- Tracking all external service interactions for performance and reliability monitoring
 CREATE TABLE IF NOT EXISTS external_api_calls (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    trace_id VARCHAR(255) NOT NULL,
     execution_id UUID NOT NULL REFERENCES flow_executions(id) ON DELETE CASCADE,
     step_execution_id UUID REFERENCES step_executions(id) ON DELETE CASCADE,
     service VARCHAR(100) NOT NULL CHECK (service IN ('wrike', 'shopvox', 'mailgun', 'other')),
@@ -70,12 +72,14 @@ CREATE INDEX IF NOT EXISTS idx_flow_executions_status_started ON flow_executions
 CREATE INDEX IF NOT EXISTS idx_flow_executions_flow_type ON flow_executions(flow_type);
 
 -- Step Executions Indexes
+CREATE INDEX IF NOT EXISTS idx_step_executions_trace_id ON step_executions(trace_id);
 CREATE INDEX IF NOT EXISTS idx_step_executions_execution_id ON step_executions(execution_id);
 CREATE INDEX IF NOT EXISTS idx_step_executions_step_name ON step_executions(step_name);
 CREATE INDEX IF NOT EXISTS idx_step_executions_status ON step_executions(status);
 CREATE INDEX IF NOT EXISTS idx_step_executions_started_at ON step_executions(started_at DESC);
 
 -- External API Calls Indexes
+CREATE INDEX IF NOT EXISTS idx_api_calls_trace_id ON external_api_calls(trace_id);
 CREATE INDEX IF NOT EXISTS idx_api_calls_execution_id ON external_api_calls(execution_id);
 CREATE INDEX IF NOT EXISTS idx_api_calls_step_execution_id ON external_api_calls(step_execution_id);
 CREATE INDEX IF NOT EXISTS idx_api_calls_service ON external_api_calls(service);

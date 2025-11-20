@@ -27,8 +27,8 @@ export const handler: Handlers["process-shopvox-quote-destroyed"] = async (
   const stepName = "process-shopvox-quote-destroyed";
 
   // Log flow and step start
-  logFlowStart(traceId, stepName, input);
-  logStepStart(traceId, stepName, { quoteId: input.id });
+  await logFlowStart(traceId, stepName, input);
+  await logStepStart(traceId, stepName, { quoteId: input.id });
 
   await addLogToState(
     state,
@@ -55,8 +55,8 @@ export const handler: Handlers["process-shopvox-quote-destroyed"] = async (
 
     // Log success
     const durationMs = Date.now() - stepStartTime;
-    logStepComplete(traceId, stepName, durationMs, { quoteId: input.id });
-    logFlowComplete(traceId, stepName, true, durationMs);
+    await logStepComplete(traceId, stepName, durationMs, { quoteId: input.id });
+    await logFlowComplete(traceId, stepName, true, durationMs);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -90,7 +90,7 @@ export const handler: Handlers["process-shopvox-quote-destroyed"] = async (
 
     // Log error
     const durationMs = Date.now() - stepStartTime;
-    logStepError(traceId, stepName, error, durationMs, { quoteId: input.id });
-    logFlowComplete(traceId, stepName, false, durationMs, error);
+    await logStepError(traceId, stepName, error, durationMs, { quoteId: input.id });
+    await logFlowComplete(traceId, stepName, false, durationMs, error);
   }
 };

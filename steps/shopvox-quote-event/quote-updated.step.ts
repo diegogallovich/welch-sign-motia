@@ -30,8 +30,8 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (
   const stepName = "process-shopvox-quote-updated";
 
   // Log flow and step start
-  logFlowStart(traceId, stepName, input);
-  logStepStart(traceId, stepName, { quoteId: input.id, changes: input.changes });
+  await logFlowStart(traceId, stepName, input);
+  await logStepStart(traceId, stepName, { quoteId: input.id, changes: input.changes });
 
   await addLogToState(
     state,
@@ -98,11 +98,11 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (
 
     // Log error
     const durationMs = Date.now() - stepStartTime;
-    logStepError(traceId, stepName, error, durationMs, {
+    await logStepError(traceId, stepName, error, durationMs, {
       quoteId: input.id,
       operation: "fetch_quote_from_shopvox",
     });
-    logFlowComplete(traceId, stepName, false, durationMs, error);
+    await logFlowComplete(traceId, stepName, false, durationMs, error);
     return;
   }
 
@@ -160,12 +160,12 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (
 
     // Log success
     const durationMs = Date.now() - stepStartTime;
-    logStepComplete(traceId, stepName, durationMs, {
+    await logStepComplete(traceId, stepName, durationMs, {
       quoteId: quote.id,
       taskId,
       wasCreated,
     });
-    logFlowComplete(traceId, stepName, true, durationMs);
+    await logFlowComplete(traceId, stepName, true, durationMs);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -202,10 +202,10 @@ export const handler: Handlers["process-shopvox-quote-updated"] = async (
 
     // Log error
     const durationMs = Date.now() - stepStartTime;
-    logStepError(traceId, stepName, error, durationMs, {
+    await logStepError(traceId, stepName, error, durationMs, {
       quoteId: quote.id,
       operation: "create_or_update_wrike_task",
     });
-    logFlowComplete(traceId, stepName, false, durationMs, error);
+    await logFlowComplete(traceId, stepName, false, durationMs, error);
   }
 };

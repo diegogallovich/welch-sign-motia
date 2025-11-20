@@ -97,8 +97,8 @@ export const handler = async (
   logger.info("Processing flow error notification", { traceId });
 
   // Log flow start for observability
-  logFlowStart(traceId, stepName, input);
-  logStepStart(traceId, stepName);
+  await logFlowStart(traceId, stepName, input);
+  await logStepStart(traceId, stepName);
 
   try {
     // Retrieve all logs and data from state
@@ -156,8 +156,8 @@ export const handler = async (
 
     // Log successful notification
     const durationMs = Date.now() - executionStartTime;
-    logStepComplete(traceId, stepName, durationMs);
-    logFlowComplete(traceId, stepName, true, durationMs);
+    await logStepComplete(traceId, stepName, durationMs);
+    await logFlowComplete(traceId, stepName, true, durationMs);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error("Failed to send notification email", {
@@ -168,8 +168,8 @@ export const handler = async (
 
     // Log failed notification
     const durationMs = Date.now() - executionStartTime;
-    logStepError(traceId, stepName, error, durationMs);
-    logFlowComplete(traceId, stepName, false, durationMs, error);
+    await logStepError(traceId, stepName, error, durationMs);
+    await logFlowComplete(traceId, stepName, false, durationMs, error);
 
     // Don't throw - we don't want notification failures to break the flow
   }

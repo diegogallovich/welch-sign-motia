@@ -98,52 +98,53 @@ function extractInputSummary(input: any): Record<string, any> | undefined {
 }
 
 /**
- * Logs flow execution start event (non-blocking)
+ * Logs flow execution start event
+ * IMPORTANT: Should be awaited to ensure execution ID is cached before logging steps
  */
-export function logFlowStart(
+export async function logFlowStart(
   traceId: string,
   stepName: string,
   input?: any
-): void {
+): Promise<void> {
   const flowName = getFlowNameFromStep(stepName);
   const flowType = getFlowTypeFromStep(stepName);
   const inputSummary = extractInputSummary(input);
 
-  postgresService
-    .logFlowStart(traceId, flowName, flowType, inputSummary)
-    .catch((err) =>
-      console.warn("PostgreSQL flow start logging failed:", err?.message)
-    );
+  try {
+    await postgresService.logFlowStart(traceId, flowName, flowType, inputSummary);
+  } catch (err: any) {
+    console.warn("PostgreSQL flow start logging failed:", err?.message);
+  }
 }
 
 /**
- * Logs flow execution completion event (non-blocking)
+ * Logs flow execution completion event
  */
-export function logFlowComplete(
+export async function logFlowComplete(
   traceId: string,
   stepName: string,
   success: boolean,
   durationMs?: number,
   error?: Error | string | unknown
-): void {
+): Promise<void> {
   const status = success ? "success" : "failed";
   const errorCategory = error ? categorizeError(error) : undefined;
 
-  postgresService
-    .logFlowComplete(traceId, status, durationMs, error as any, errorCategory)
-    .catch((err) =>
-      console.warn("PostgreSQL flow complete logging failed:", err?.message)
-    );
+  try {
+    await postgresService.logFlowComplete(traceId, status, durationMs, error as any, errorCategory);
+  } catch (err: any) {
+    console.warn("PostgreSQL flow complete logging failed:", err?.message);
+  }
 }
 
 /**
- * Logs step start event (non-blocking)
+ * Logs step start event
  */
-export function logStepStart(
+export async function logStepStart(
   traceId: string,
   stepName: string,
   metadata?: any
-): void {
+): Promise<void> {
   // Extract only essential metadata (IDs and key identifiers)
   const lightMetadata = metadata
     ? {
@@ -154,22 +155,22 @@ export function logStepStart(
       }
     : undefined;
 
-  postgresService
-    .logStepStart(traceId, stepName, lightMetadata)
-    .catch((err) =>
-      console.warn("PostgreSQL step start logging failed:", err?.message)
-    );
+  try {
+    await postgresService.logStepStart(traceId, stepName, lightMetadata);
+  } catch (err: any) {
+    console.warn("PostgreSQL step start logging failed:", err?.message);
+  }
 }
 
 /**
- * Logs step completion event (non-blocking)
+ * Logs step completion event
  */
-export function logStepComplete(
+export async function logStepComplete(
   traceId: string,
   stepName: string,
   durationMs: number,
   metadata?: any
-): void {
+): Promise<void> {
   // Extract only essential metadata
   const lightMetadata = metadata
     ? {
@@ -186,8 +187,8 @@ export function logStepComplete(
 
   const skipReason = metadata?.skipped ? metadata.reason : undefined;
 
-  postgresService
-    .logStepComplete(
+  try {
+    await postgresService.logStepComplete(
       traceId,
       stepName,
       metadata?.skipped ? "skipped" : "success",
@@ -196,22 +197,22 @@ export function logStepComplete(
       undefined,
       skipReason,
       lightMetadata
-    )
-    .catch((err) =>
-      console.warn("PostgreSQL step complete logging failed:", err?.message)
     );
+  } catch (err: any) {
+    console.warn("PostgreSQL step complete logging failed:", err?.message);
+  }
 }
 
 /**
- * Logs step error event (non-blocking)
+ * Logs step error event
  */
-export function logStepError(
+export async function logStepError(
   traceId: string,
   stepName: string,
   error: Error | string | unknown,
   durationMs?: number,
   metadata?: any
-): void {
+): Promise<void> {
   const errorCategory = categorizeError(error);
 
   // Extract only essential metadata
@@ -224,8 +225,8 @@ export function logStepError(
       }
     : undefined;
 
-  postgresService
-    .logStepComplete(
+  try {
+    await postgresService.logStepComplete(
       traceId,
       stepName,
       "failed",
@@ -234,16 +235,16 @@ export function logStepError(
       errorCategory,
       undefined,
       lightMetadata
-    )
-    .catch((err) =>
-      console.warn("PostgreSQL step error logging failed:", err?.message)
     );
+  } catch (err: any) {
+    console.warn("PostgreSQL step error logging failed:", err?.message);
+  }
 }
 
 /**
- * Logs external API call event (non-blocking)
+ * Logs external API call event
  */
-export function logApiCall(
+export async function logApiCall(
   traceId: string,
   stepName: string | null,
   service: "wrike" | "shopvox" | "mailgun" | "other",
@@ -252,15 +253,15 @@ export function logApiCall(
   success: boolean,
   httpStatus?: number,
   error?: Error | string | unknown
-): void {
+): Promise<void> {
   const status = success
     ? "success"
     : error?.toString().includes("timeout")
     ? "timeout"
     : "failed";
 
-  postgresService
-    .logApiCall(
+  try {
+    await postgresService.logApiCall(
       traceId,
       stepName,
       service,
@@ -269,9 +270,9 @@ export function logApiCall(
       status,
       httpStatus,
       error as any
-    )
-    .catch((err) =>
-      console.warn("PostgreSQL API call logging failed:", err?.message)
     );
+  } catch (err: any) {
+    console.warn("PostgreSQL API call logging failed:", err?.message);
+  }
 }
 
