@@ -1,13 +1,20 @@
 import { EventConfig, Handlers, FlowContext } from "motia";
 import { ShopVoxEventSchema } from "../../schemas/shopvox-event.schema";
 import { addLogToState } from "../../utils/state-logger";
+import {
+  logFlowStart,
+  logFlowComplete,
+  logStepStart,
+  logStepComplete,
+  logStepError,
+} from "../../utils/observability-logger";
 
 export const config: EventConfig = {
   type: "event",
   name: "process-shopvox-quote-destroyed",
   description: "Processes a ShopVox quote deleted event",
   subscribes: ["quote:destroyed"],
-  emits: ["finality:quote-destroyed-success", "finality:error:quote-destroyed"],
+  emits: ["finality:error:quote-destroyed"],
   input: ShopVoxEventSchema,
   flows: ["shopvox-to-wrike"],
 };
@@ -16,19 +23,26 @@ export const handler: Handlers["process-shopvox-quote-destroyed"] = async (
   input,
   { emit, logger, state, traceId }: FlowContext
 ) => {
+  const stepStartTime = Date.now();
+  const stepName = "process-shopvox-quote-destroyed";
+
+  // Log flow and step start
+  logFlowStart(traceId, stepName, input);
+  logStepStart(traceId, stepName, { quoteId: input.id });
+
   await addLogToState(
     state,
     traceId,
     "info",
     "Processing quote destroyed event",
     {
-      step: "process-shopvox-quote-destroyed",
+      step: stepName,
       quoteId: input.id,
     }
   );
   logger.info("Processing quote destroyed event");
 
-  try {
+  try{
     // TODO: Mark quote as void in Wrike
     await addLogToState(
       state,
@@ -39,11 +53,10 @@ export const handler: Handlers["process-shopvox-quote-destroyed"] = async (
     );
     logger.info("Quote voided in Wrike");
 
-    // Emit success finality event
-    await emit({
-      topic: "finality:quote-destroyed-success",
-      data: { traceId, quoteId: input.id },
-    } as never);
+    // Log success
+    const durationMs = Date.now() - stepStartTime;
+    logStepComplete(traceId, stepName, durationMs, { quoteId: input.id });
+    logFlowComplete(traceId, stepName, true, durationMs);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -69,10 +82,15 @@ export const handler: Handlers["process-shopvox-quote-destroyed"] = async (
         error: {
           message: errorMessage,
           stack: errorStack,
-          step: "process-shopvox-quote-destroyed",
+          step: stepName,
         },
         input,
       },
     } as never);
+
+    // Log error
+    const durationMs = Date.now() - stepStartTime;
+    logStepError(traceId, stepName, error, durationMs, { quoteId: input.id });
+    logFlowComplete(traceId, stepName, false, durationMs, error);
   }
 };

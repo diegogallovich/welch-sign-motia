@@ -16,5 +16,5 @@ COPY . .
 # Expose outside access to the motia project
 EXPOSE 3000
 
-# Run your application
-CMD ["npm", "run", "start"]
+# Run migration then start application
+CMD ["sh", "-c", "npm run migrate && npm run start"]

@@ -4,16 +4,20 @@ import { shopvoxService } from "../../services/shopvox.service";
 import { wrikeService } from "../../services/wrike.service";
 import { ShopVoxSalesOrder } from "../../schemas/sales-order.schema";
 import { addLogToState, addDataToState } from "../../utils/state-logger";
+import {
+  logFlowStart,
+  logFlowComplete,
+  logStepStart,
+  logStepComplete,
+  logStepError,
+} from "../../utils/observability-logger";
 
 export const config: EventConfig = {
   type: "event",
   name: "process-shopvox-work-order-created",
   description: "Processes a ShopVox work order created event",
   subscribes: ["work_order:created"],
-  emits: [
-    "finality:work-order-created-success",
-    "finality:error:work-order-created",
-  ],
+  emits: ["finality:error:work-order-created"],
   input: ShopVoxEventSchema,
   flows: ["shopvox-to-wrike"],
 };
@@ -22,13 +26,20 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
   input,
   { emit, logger, state, traceId }: FlowContext
 ) => {
+  const stepStartTime = Date.now();
+  const stepName = "process-shopvox-work-order-created";
+
+  // Log flow and step start
+  logFlowStart(traceId, stepName, input);
+  logStepStart(traceId, stepName, { salesOrderId: input.id });
+
   await addLogToState(
     state,
     traceId,
     "info",
     "Processing work order created event",
     {
-      step: "process-shopvox-work-order-created",
+      step: stepName,
       salesOrderId: input.id,
     }
   );
@@ -77,7 +88,7 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
         error: {
           message: `ShopVox API fetch failed: ${errorMessage}`,
           stack: errorStack,
-          step: "process-shopvox-work-order-created",
+          step: stepName,
         },
         result: {
           operation: "fetch_sales_order_from_shopvox",
@@ -85,6 +96,14 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
         input,
       },
     } as never);
+
+    // Log error
+    const durationMs = Date.now() - stepStartTime;
+    logStepError(traceId, stepName, error, durationMs, {
+      salesOrderId: input.id,
+      operation: "fetch_sales_order_from_shopvox",
+    });
+    logFlowComplete(traceId, stepName, false, durationMs, error);
     return;
   }
 
@@ -108,17 +127,14 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
     );
     logger.info("Work order task processed in Wrike successfully");
 
-    // Emit success finality event
-    await emit({
-      topic: "finality:work-order-created-success",
-      data: {
-        traceId,
-        result: {
-          salesOrderId: salesOrder.id,
-          taskId: result.taskId,
-        },
-      },
-    } as never);
+    // Log success
+    const durationMs = Date.now() - stepStartTime;
+    logStepComplete(traceId, stepName, durationMs, {
+      salesOrderId: salesOrder.id,
+      taskId: result.taskId,
+      wasCreated: result.wasCreated,
+    });
+    logFlowComplete(traceId, stepName, true, durationMs);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -146,7 +162,7 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
         error: {
           message: `Wrike API operation failed: ${errorMessage}`,
           stack: errorStack,
-          step: "process-shopvox-work-order-created",
+          step: stepName,
         },
         result: {
           operation: "create_or_update_woso_task",
@@ -154,5 +170,13 @@ export const handler: Handlers["process-shopvox-work-order-created"] = async (
         input,
       },
     } as never);
+
+    // Log error
+    const durationMs = Date.now() - stepStartTime;
+    logStepError(traceId, stepName, error, durationMs, {
+      salesOrderId: salesOrder.id,
+      operation: "create_or_update_woso_task",
+    });
+    logFlowComplete(traceId, stepName, false, durationMs, error);
   }
 };

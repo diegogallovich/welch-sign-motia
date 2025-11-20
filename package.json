@@ -9,7 +9,8 @@
     "build": "motia build",
     "clean": "rm -rf dist node_modules python_modules .motia .mermaid",
     "start": "motia start",
-    "ngrok": "ngrok http --url=welchsign.ngrok.app 3000"
+    "ngrok": "ngrok http --url=welchsign.ngrok.app 3000",
+    "migrate": "node scripts/migrate.js"
   },
   "keywords": [
     "motia"
@@ -18,10 +19,12 @@
     "dotenv": "^17.2.3",
     "motia": "^0.6.1-beta.124",
     "openai": "^5.19.1",
+    "pg": "^8.11.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {
     "@types/node": "^24.8.0",
+    "@types/pg": "^8.10.0",
     "@types/react": "^18.3.18",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"

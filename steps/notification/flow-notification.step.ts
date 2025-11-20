@@ -2,6 +2,13 @@ import { EventConfig, Handlers, FlowContext } from "motia";
 import { z } from "zod";
 import { mailgunService } from "../../services/mailgun.service";
 import { getFlowState, clearFlowState } from "../../utils/state-logger";
+import {
+  logFlowStart,
+  logFlowComplete,
+  logStepStart,
+  logStepComplete,
+  logStepError,
+} from "../../utils/observability-logger";
 
 // Define input schema for finality events
 const FinalityEventSchema = z.object({
@@ -64,17 +71,9 @@ export const config: EventConfig = {
   type: "event",
   name: "flow-notification-handler",
   description:
-    "Handles flow completion and error notifications via email using Mailgun",
+    "Handles flow error notifications via email using Mailgun (success notifications are logged to database only)",
   subscribes: [
-    // Success events
-    "finality:quote-created-success",
-    "finality:quote-updated-success",
-    "finality:quote-destroyed-success",
-    "finality:work-order-created-success",
-    "finality:work-order-updated-success",
-    "finality:work-order-destroyed-success",
-    "finality:user-field-updated-success",
-    // Error events
+    // Error events only - success events are logged to PostgreSQL
     "finality:error:quote-created",
     "finality:error:quote-updated",
     "finality:error:quote-destroyed",
@@ -88,45 +87,42 @@ export const config: EventConfig = {
   flows: ["shopvox-to-wrike", "wrike-to-shopvox"],
 };
 
-export const handler: Handlers["flow-notification-handler"] = async (
-  input,
+export const handler = async (
+  input: z.infer<typeof FinalityEventSchema>,
   { logger, state, traceId }: FlowContext
 ) => {
   const executionStartTime = Date.now();
-  logger.info("Processing flow finality notification", { traceId });
+  const stepName = "flow-notification-handler";
 
-  let stepName: string | undefined;
+  logger.info("Processing flow error notification", { traceId });
+
+  // Log flow start for observability
+  logFlowStart(traceId, stepName, input);
+  logStepStart(traceId, stepName);
 
   try {
     // Retrieve all logs and data from state
     const flowState = await getFlowState(state, traceId);
 
-    // Determine if this is an error or success
-    const isError = !!input.error;
-
-    // Get the step name from error or from first log entry
-    stepName = input.error?.step;
-    if (!stepName && flowState.logs.length > 0) {
-      // Extract step name from first log's metadata
-      const firstLog = flowState.logs[0];
-      stepName = firstLog.metadata?.step;
-    }
+    // Get the step name from error
+    const errorStepName = input.error?.step;
 
     // Get the flow name from the step name
-    const flowName = getFlowNameFromStep(stepName);
+    const flowName = getFlowNameFromStep(errorStepName);
 
     // Extract IDs for unique email subjects
-    const ids = extractFlowIds(flowState, stepName);
+    const ids = extractFlowIds(flowState, errorStepName);
 
     const recipientEmail = "welchandbailey.motia@unclogflows.com";
 
-    if (isError) {
+    // Only handle error notifications (success events are no longer subscribed)
+    if (input.error) {
       // Send error notification
       logger.info("Sending error notification email", { traceId });
 
       // Create unique subject based on flow direction
       let subject: string;
-      if (stepName?.includes("wrike-woso")) {
+      if (errorStepName?.includes("wrike-woso")) {
         // Wrike to ShopVox flow
         subject = `Wrike-to-ShopVox: ${traceId.substring(0, 8)} - ${
           ids.wrikeTaskId || "N/A"
@@ -152,42 +148,16 @@ export const handler: Handlers["flow-notification-handler"] = async (
       });
 
       logger.info("Error notification email sent successfully", { traceId });
-    } else {
-      // Send success notification
-      logger.info("Sending success notification email", { traceId });
-
-      // Create unique subject based on flow direction
-      let subject: string;
-      if (stepName?.includes("wrike-woso")) {
-        // Wrike to ShopVox flow
-        subject = `Wrike-to-ShopVox: ${traceId.substring(0, 8)} - ${
-          ids.wrikeTaskId || "N/A"
-        } - ${ids.shopVoxId || "N/A"}`;
-      } else {
-        // ShopVox to Wrike flow
-        subject = `ShopVox-to-Wrike: ${traceId.substring(0, 8)} - ${
-          ids.shopVoxId || "N/A"
-        } - ${ids.wrikeTaskId || "N/A"}`;
-      }
-      const htmlContent = mailgunService.formatSuccessEmail(
-        traceId,
-        flowName,
-        flowState.logs,
-        flowState.data
-      );
-
-      await mailgunService.sendEmail({
-        to: recipientEmail,
-        subject,
-        html: htmlContent,
-      });
-
-      logger.info("Success notification email sent successfully", { traceId });
     }
 
     // Optional: Clear state after notification to free memory
     await clearFlowState(state, traceId);
     logger.info("Flow state cleared", { traceId });
+
+    // Log successful notification
+    const durationMs = Date.now() - executionStartTime;
+    logStepComplete(traceId, stepName, durationMs);
+    logFlowComplete(traceId, stepName, true, durationMs);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error("Failed to send notification email", {
@@ -195,6 +165,12 @@ export const handler: Handlers["flow-notification-handler"] = async (
       error: errorMessage,
       stack: error instanceof Error ? error.stack : undefined,
     });
+
+    // Log failed notification
+    const durationMs = Date.now() - executionStartTime;
+    logStepError(traceId, stepName, error, durationMs);
+    logFlowComplete(traceId, stepName, false, durationMs, error);
+
     // Don't throw - we don't want notification failures to break the flow
   }
 };

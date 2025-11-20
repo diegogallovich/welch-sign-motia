@@ -6,6 +6,13 @@ import { wrikeService } from "../../services/wrike.service";
 import { WRIKE_CUSTOM_FIELDS } from "../../constants/wrike-fields";
 import { addLogToState, addDataToState } from "../../utils/state-logger";
 import {
+  logFlowStart,
+  logFlowComplete,
+  logStepStart,
+  logStepComplete,
+  logStepError,
+} from "../../utils/observability-logger";
+import {
   mapShopVoxToWrikeUserId,
   mapShopVoxUserIdToWrikeApiV2Id,
 } from "../../utils/user-mapping";
@@ -16,10 +23,7 @@ export const config: EventConfig = {
   name: "process-shopvox-work-order-updated",
   description: "Processs a ShopVox work order updated event",
   subscribes: ["work_order:updated"],
-  emits: [
-    "finality:work-order-updated-success",
-    "finality:error:work-order-updated",
-  ],
+  emits: ["finality:error:work-order-updated"],
   input: ShopVoxEventSchema,
   flows: ["shopvox-to-wrike"],
 };
@@ -28,7 +32,12 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
   input,
   { emit, logger, state, traceId }: FlowContext
 ) => {
+  const stepStartTime = Date.now();
   const stepName = "process-shopvox-work-order-updated";
+
+  // Log flow and step start
+  logFlowStart(traceId, stepName, input);
+  logStepStart(traceId, stepName, { salesOrderId: input.id, changes: input.changes });
 
   await addLogToState(
     state,
@@ -96,6 +105,13 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
       },
     } as never);
 
+    // Log error
+    const durationMs = Date.now() - stepStartTime;
+    logStepError(traceId, stepName, error, durationMs, {
+      salesOrderId: input.id,
+      operation: "fetch_sales_order_from_shopvox",
+    });
+    logFlowComplete(traceId, stepName, false, durationMs, error);
     return;
   }
 
@@ -157,18 +173,14 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                 "Skipping Wrike update - due dates already match, preventing loop"
               );
 
-              // Emit success finality event even though we skipped
-              await emit({
-                topic: "finality:work-order-updated-success",
-                data: {
-                  traceId,
-                  result: {
-                    salesOrderId: salesOrder.id,
-                    skipped: true,
-                    reason: "loop_prevention",
-                  },
-                },
-              } as never);
+              // Log skipped step
+              const durationMs = Date.now() - stepStartTime;
+              logStepComplete(traceId, stepName, durationMs, {
+                salesOrderId: salesOrder.id,
+                skipped: true,
+                reason: "loop_prevention",
+              });
+              logFlowComplete(traceId, stepName, true, durationMs);
 
               return; // Exit early to break the loop
             } else {
@@ -318,18 +330,14 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
                     `Skipping Wrike update - ${fieldInfo.fieldName} already matches, preventing loop`
                   );
 
-                  // Emit success finality event even though we skipped
-                  await emit({
-                    topic: "finality:work-order-updated-success",
-                    data: {
-                      traceId,
-                      result: {
-                        salesOrderId: salesOrder.id,
-                        skipped: true,
-                        reason: "loop_prevention",
-                      },
-                    },
-                  } as never);
+                  // Log skipped step
+                  const durationMs = Date.now() - stepStartTime;
+                  logStepComplete(traceId, stepName, durationMs, {
+                    salesOrderId: salesOrder.id,
+                    skipped: true,
+                    reason: "loop_prevention",
+                  });
+                  logFlowComplete(traceId, stepName, true, durationMs);
 
                   return; // Exit early to break the loop
                 } else {
@@ -425,18 +433,14 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
     );
     logger.info("Work order task processed in Wrike successfully");
 
-    // Emit success finality event
-    await emit({
-      topic: "finality:work-order-updated-success",
-      data: {
-        traceId,
-        result: {
-          salesOrderId: salesOrder.id,
-          taskId: result.taskId,
-          wasCreated: result.wasCreated,
-        },
-      },
-    } as never);
+    // Log success
+    const durationMs = Date.now() - stepStartTime;
+    logStepComplete(traceId, stepName, durationMs, {
+      salesOrderId: salesOrder.id,
+      taskId: result.taskId,
+      wasCreated: result.wasCreated,
+    });
+    logFlowComplete(traceId, stepName, true, durationMs);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
@@ -472,5 +476,13 @@ export const handler: Handlers["process-shopvox-work-order-updated"] = async (
         input,
       },
     } as never);
+
+    // Log error
+    const durationMs = Date.now() - stepStartTime;
+    logStepError(traceId, stepName, error, durationMs, {
+      salesOrderId: salesOrder.id,
+      operation: "create_or_update_woso_task",
+    });
+    logFlowComplete(traceId, stepName, false, durationMs, error);
   }
 };
