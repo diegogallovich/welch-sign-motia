@@ -7,4 +7,3 @@ venv
 dist
 *.pyc
 .env
-scripts/
