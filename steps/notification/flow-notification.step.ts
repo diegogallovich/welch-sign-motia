@@ -2,10 +2,6 @@ import { EventConfig, Handlers, FlowContext } from "motia";
 import { z } from "zod";
 import { mailgunService } from "../../services/mailgun.service";
 import { getFlowState, clearFlowState } from "../../utils/state-logger";
-import {
-  logExecutionStart,
-  logExecutionComplete,
-} from "../../utils/reliability-logger";
 
 // Define input schema for finality events
 const FinalityEventSchema = z.object({
@@ -116,11 +112,6 @@ export const handler: Handlers["flow-notification-handler"] = async (
       stepName = firstLog.metadata?.step;
     }
 
-    // Log execution start if we have a step name
-    if (stepName) {
-      logExecutionStart(traceId, stepName);
-    }
-
     // Get the flow name from the step name
     const flowName = getFlowNameFromStep(stepName);
 
@@ -197,14 +188,7 @@ export const handler: Handlers["flow-notification-handler"] = async (
     // Optional: Clear state after notification to free memory
     await clearFlowState(state, traceId);
     logger.info("Flow state cleared", { traceId });
-
-    // Log execution completion (success)
-    const durationMs = Date.now() - executionStartTime;
-    if (stepName) {
-      logExecutionComplete(traceId, stepName, true, durationMs);
-    }
   } catch (error) {
-    const durationMs = Date.now() - executionStartTime;
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error("Failed to send notification email", {
       traceId,
@@ -212,10 +196,5 @@ export const handler: Handlers["flow-notification-handler"] = async (
       stack: error instanceof Error ? error.stack : undefined,
     });
     // Don't throw - we don't want notification failures to break the flow
-
-    // Log execution completion (failure)
-    if (stepName) {
-      logExecutionComplete(traceId, stepName, false, durationMs, error);
-    }
   }
 };

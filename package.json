@@ -15,7 +15,6 @@
     "motia"
   ],
   "dependencies": {
-    "@clickhouse/client": "^0.2.9",
     "dotenv": "^17.2.3",
     "motia": "^0.6.1-beta.124",
     "openai": "^5.19.1",
