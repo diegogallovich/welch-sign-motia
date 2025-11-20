@@ -43,6 +43,22 @@ CREATE TABLE IF NOT EXISTS step_executions (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+-- Add trace_id column if it doesn't exist (for existing tables)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'step_executions' AND column_name = 'trace_id'
+    ) THEN
+        ALTER TABLE step_executions ADD COLUMN trace_id VARCHAR(255);
+        UPDATE step_executions se 
+        SET trace_id = fe.trace_id 
+        FROM flow_executions fe 
+        WHERE se.execution_id = fe.id;
+        ALTER TABLE step_executions ALTER COLUMN trace_id SET NOT NULL;
+    END IF;
+END $$;
+
 -- External API Calls Table
 -- Tracking all external service interactions for performance and reliability monitoring
 CREATE TABLE IF NOT EXISTS external_api_calls (
@@ -59,6 +75,22 @@ CREATE TABLE IF NOT EXISTS external_api_calls (
     called_at TIMESTAMP NOT NULL DEFAULT NOW(),
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+-- Add trace_id column if it doesn't exist (for existing tables)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'external_api_calls' AND column_name = 'trace_id'
+    ) THEN
+        ALTER TABLE external_api_calls ADD COLUMN trace_id VARCHAR(255);
+        UPDATE external_api_calls eac 
+        SET trace_id = fe.trace_id 
+        FROM flow_executions fe 
+        WHERE eac.execution_id = fe.id;
+        ALTER TABLE external_api_calls ALTER COLUMN trace_id SET NOT NULL;
+    END IF;
+END $$;
 
 -- =============================================================================
 -- INDEXES FOR PERFORMANCE
