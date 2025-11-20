@@ -35,7 +35,6 @@ function getFlowNameFromStep(stepName?: string): string {
     "process-shopvox-work-order-created": "ShopVox Work Order → Wrike",
     "process-shopvox-work-order-updated": "ShopVox Work Order → Wrike",
     "process-shopvox-work-order-deleted": "ShopVox Work Order → Wrike",
-    "process-wrike-woso-target-install-date-changed": "Wrike → ShopVox",
     "process-wrike-woso-user-field-changed":
       "Wrike User Field Update → ShopVox",
   };
@@ -78,7 +77,6 @@ export const config: EventConfig = {
     "finality:work-order-created-success",
     "finality:work-order-updated-success",
     "finality:work-order-destroyed-success",
-    "finality:target-install-date-updated-success",
     "finality:user-field-updated-success",
     // Error events
     "finality:error:quote-created",
@@ -87,7 +85,6 @@ export const config: EventConfig = {
     "finality:error:work-order-created",
     "finality:error:work-order-updated",
     "finality:error:work-order-destroyed",
-    "finality:error:target-install-date-updated",
     "finality:error:user-field-updated",
   ],
   emits: [],
@@ -102,6 +99,8 @@ export const handler: Handlers["flow-notification-handler"] = async (
   const executionStartTime = Date.now();
   logger.info("Processing flow finality notification", { traceId });
 
+  let stepName: string | undefined;
+
   try {
     // Retrieve all logs and data from state
     const flowState = await getFlowState(state, traceId);
@@ -110,7 +109,7 @@ export const handler: Handlers["flow-notification-handler"] = async (
     const isError = !!input.error;
 
     // Get the step name from error or from first log entry
-    let stepName = input.error?.step;
+    stepName = input.error?.step;
     if (!stepName && flowState.logs.length > 0) {
       // Extract step name from first log's metadata
       const firstLog = flowState.logs[0];

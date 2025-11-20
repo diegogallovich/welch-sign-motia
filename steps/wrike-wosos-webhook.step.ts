@@ -9,10 +9,7 @@ export const config: ApiRouteConfig = {
   name: "wrike-wosos-webhook",
   path: "/api/webhooks/wrike/wosos",
   method: "POST",
-  emits: [
-    "wrike-woso-target-install-date-changed",
-    "wrike-woso-user-field-changed",
-  ],
+  emits: ["wrike-woso-user-field-changed"],
   flows: ["wrike-to-shopvox"],
   middleware: [rawBodyCaptureMiddleware],
   bodySchema: z.array(
@@ -136,24 +133,6 @@ export const handler: Handlers["wrike-wosos-webhook"] = async (
         }
 
         switch (event.customFieldId) {
-          case WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE: {
-            const newDueDate = event.value;
-
-            logger.info(
-              `Processing Target Install Date change for task ${event.taskId}`
-            );
-
-            // Emit the event with the extracted data
-            await emit({
-              topic: "wrike-woso-target-install-date-changed",
-              data: {
-                wrikeTaskId: event.taskId,
-                shopVoxSalesOrderId: shopvoxId,
-                dueDate: newDueDate,
-              },
-            });
-            break;
-          }
           case WRIKE_CUSTOM_FIELDS.SALES_REP:
             logger.info(`Sales rep change detected, emitting event`);
             await emit({

@@ -14,7 +14,6 @@ function getFlowNameFromStep(stepName?: string): string {
     "process-shopvox-work-order-created": "ShopVox Work Order → Wrike",
     "process-shopvox-work-order-updated": "ShopVox Work Order → Wrike",
     "process-shopvox-work-order-deleted": "ShopVox Work Order → Wrike",
-    "process-wrike-woso-target-install-date-changed": "Wrike → ShopVox",
     "process-wrike-woso-user-field-changed": "Wrike User Field Update → ShopVox",
   };
 
