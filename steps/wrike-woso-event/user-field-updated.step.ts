@@ -1,6 +1,6 @@
 import { EventConfig, FlowContext, Handlers } from "motia";
 import { z } from "zod";
-// import { shopvoxService } from "../../services/shopvox.service";
+import { shopvoxService } from "../../services/shopvox.service";
 import { addLogToState, addDataToState } from "../../utils/state-logger";
 import { mapWrikeApiV2IdToShopVoxUserId } from "../../utils/user-mapping";
 
@@ -16,12 +16,7 @@ export const config: EventConfig = {
   input: z.object({
     wrikeTaskId: z.string(),
     shopVoxSalesOrderId: z.string(),
-    fieldType: z.enum([
-      "estimator",
-      "salesRep",
-      "projectManager",
-      "productionManager",
-    ]),
+    fieldType: z.enum(["estimator", "salesRep", "projectManager"]),
     apiV2Ids: z.string(), // Comma-separated string from Wrike
   }),
   flows: ["wrike-to-shopvox"],
@@ -119,7 +114,6 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
       const updates: {
         estimatorId?: string;
         primarySalesRepId?: string;
-        productionManagerId?: string;
         projectManagerId?: string;
       } = {};
 
@@ -132,9 +126,6 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
           break;
         case "projectManager":
           updates.projectManagerId = shopVoxUserId;
-          break;
-        case "productionManager":
-          updates.productionManagerId = shopVoxUserId;
           break;
       }
 
@@ -151,7 +142,7 @@ export const handler: Handlers["process-wrike-woso-user-field-changed"] =
       );
 
       // Update the sales order in ShopVox
-      // await shopvoxService.updateSalesOrder(input.shopVoxSalesOrderId, updates);
+      await shopvoxService.updateSalesOrder(input.shopVoxSalesOrderId, updates);
 
       await addLogToState(
         state,
