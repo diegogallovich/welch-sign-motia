@@ -51,12 +51,13 @@ class PostgresService {
   private isInitialized: boolean = false;
   private executionIdCache: Map<string, string> = new Map(); // traceId -> executionId
   private stepExecutionCache: Map<string, string> = new Map(); // traceId:stepName -> stepExecutionId
+  private initPromise: Promise<void> | null = null; // Initialization promise
 
   constructor() {
-    this.initializePool();
+    this.initPromise = this.initializePool();
   }
 
-  private initializePool(): void {
+  private async initializePool(): Promise<void> {
     const host = process.env.POSTGRESQL_HOST;
     const port = parseInt(process.env.POSTGRESQL_PORT || "5432");
     const database = process.env.POSTGRESQL_DB;
@@ -89,18 +90,11 @@ class PostgresService {
         },
       });
 
-      // Test connection
-      this.pool
-        .connect()
-        .then((client) => {
-          console.log("PostgreSQL connection pool initialized successfully (SSL enabled)");
-          client.release();
-          this.isInitialized = true;
-        })
-        .catch((error) => {
-          console.error("Failed to initialize PostgreSQL pool:", error.message);
-          this.pool = null;
-        });
+      // Test connection and wait for it
+      const client = await this.pool.connect();
+      console.log("PostgreSQL connection pool initialized successfully (SSL enabled)");
+      client.release();
+      this.isInitialized = true;
 
       // Handle pool errors gracefully
       this.pool.on("error", (err) => {
@@ -110,6 +104,16 @@ class PostgresService {
       console.error("Failed to create PostgreSQL pool:", error);
       this.pool = null;
     }
+  }
+
+  /**
+   * Wait for pool initialization to complete
+   */
+  private async waitForInit(): Promise<boolean> {
+    if (this.initPromise) {
+      await this.initPromise;
+    }
+    return this.isInitialized && this.pool !== null;
   }
 
   /**
@@ -155,6 +159,8 @@ class PostgresService {
     flowType: string,
     inputSummary?: Record<string, any>
   ): Promise<string | null> {
+    if (!(await this.waitForInit())) return null;
+
     const query = `
       INSERT INTO flow_executions (trace_id, flow_name, flow_type, status, input_summary, started_at)
       VALUES ($1, $2, $3, 'running', $4, NOW())
@@ -187,6 +193,8 @@ class PostgresService {
     error?: Error | string,
     errorCategory?: "api_error" | "validation_error" | "timeout" | "unknown"
   ): Promise<void> {
+    if (!(await this.waitForInit())) return;
+
     const errorMessage = error instanceof Error ? error.message : error;
     const query = `
       UPDATE flow_executions
@@ -218,6 +226,8 @@ class PostgresService {
     stepName: string,
     metadata?: Record<string, any>
   ): Promise<string | null> {
+    if (!(await this.waitForInit())) return null;
+
     const executionId = this.executionIdCache.get(traceId);
     if (!executionId) {
       console.warn(
@@ -260,6 +270,8 @@ class PostgresService {
     skipReason?: string,
     metadata?: Record<string, any>
   ): Promise<void> {
+    if (!(await this.waitForInit())) return;
+
     const stepExecutionId = this.stepExecutionCache.get(`${traceId}:${stepName}`);
     if (!stepExecutionId) {
       console.warn(
@@ -308,6 +320,8 @@ class PostgresService {
     httpStatus?: number,
     error?: Error | string
   ): Promise<void> {
+    if (!(await this.waitForInit())) return;
+
     const executionId = this.executionIdCache.get(traceId);
     if (!executionId) {
       // If we don't have an execution ID, skip API call logging
