@@ -1472,6 +1472,14 @@ export class WrikeService {
       );
     }
 
+    if (salesOrder.primarySalesRep?.id) {
+      responsibles.push(mapShopVoxToWrikeUserId(salesOrder.primarySalesRep.id));
+      parents.push(
+        mapShopVoxUserIdToWrikeFolderMapping(salesOrder.primarySalesRep.id)
+          ?.wrikeFolderId.forWosos
+      );
+    }
+
     const requestBody: any = {
       title: `SO #${salesOrder.txnNumber}: ${salesOrder.title}`,
       description: description,
