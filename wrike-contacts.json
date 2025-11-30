@@ -44,6 +44,7 @@
       "locale": "en",
       "deleted": false,
       "memberIds": [
+        "KUAWAUU5",
         "KUASXTCX",
         "KUAUVQGU"
       ]
@@ -57,8 +58,8 @@
         {
           "accountId": "IEADYYMR",
           "email": "asinnett@welchsign.com",
-          "role": "Collaborator",
-          "external": true,
+          "role": "User",
+          "external": false,
           "admin": false,
           "owner": false,
           "active": true
@@ -72,6 +73,29 @@
       "primaryEmail": "asinnett@welchsign.com"
     },
     {
+      "id": "KUAWGG4A",
+      "firstName": "Amy",
+      "lastName": "",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "amc2010@yahoo.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//A9/0C/Box_ffd81b60_65-77_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Lead Assembler",
+      "primaryEmail": "amc2010@yahoo.com"
+    },
+    {
       "id": "KUAWAU6Z",
       "firstName": "Andy",
       "lastName": "Dennis",
@@ -80,8 +104,8 @@
         {
           "accountId": "IEADYYMR",
           "email": "andy@welchsign.com",
-          "role": "Collaborator",
-          "external": true,
+          "role": "User",
+          "external": false,
           "admin": false,
           "owner": false,
           "active": true
@@ -188,6 +212,29 @@
       "primaryEmail": "buddy@welchsign.com"
     },
     {
+      "id": "KUAWFIPF",
+      "firstName": "Chris",
+      "lastName": "Carey",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "ccarey@welchsign.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//34/5F/Box_ff8e24aa_67-67_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Supervisor",
+      "primaryEmail": "ccarey@welchsign.com"
+    },
+    {
       "id": "KUAUD3MM",
       "firstName": "Chris",
       "lastName": "Sanborn",
@@ -249,6 +296,29 @@
       "primaryEmail": "cself@baileysign.com"
     },
     {
+      "id": "KUAWERVJ",
+      "firstName": "Dan",
+      "lastName": "Bennett",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "dan@welchsign.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//34/F5/Box_ff8e24aa_68-66_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Arts and Crafts Professional",
+      "primaryEmail": "dan@welchsign.com"
+    },
+    {
       "id": "KUAUD3ML",
       "firstName": "Dana",
       "lastName": "Banks",
@@ -262,6 +332,29 @@
       "timezone": "US/Pacific",
       "locale": "en",
       "deleted": true
+    },
+    {
+      "id": "KUAWKEER",
+      "firstName": "Dave",
+      "lastName": "Corkery",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "exteriorpaint035@gmail.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//2D/27/Box_ff00acc1_68-67_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Pastor",
+      "primaryEmail": "exteriorpaint035@gmail.com"
     },
     {
       "id": "KUATIDV4",
@@ -306,9 +399,33 @@
       "locale": "en",
       "deleted": false,
       "memberIds": [
+        "KUAWAU6Z",
         "KUASNFLS",
         "KUATWBUA"
       ]
+    },
+    {
+      "id": "KUAWKGZA",
+      "firstName": "Devin",
+      "lastName": "Heskett",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "dheskett2001@gmail.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//EC/7D/Box_ff64b5f6_68-72_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Production",
+      "primaryEmail": "dheskett2001@gmail.com"
     },
     {
       "id": "KUAVYLX5",
@@ -333,6 +450,29 @@
       "me": true,
       "title": "Developer",
       "primaryEmail": "diego@vitaliti.world"
+    },
+    {
+      "id": "KUAWFBCR",
+      "firstName": "Emily",
+      "lastName": "Pitzi",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "emily@welchsign.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//99/6C/Box_ffd81b60_69-80_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Fabrication",
+      "primaryEmail": "emily@welchsign.com"
     },
     {
       "id": "KUAVBSCT",
@@ -461,6 +601,7 @@
       "locale": "en",
       "deleted": false,
       "memberIds": [
+        "KUAUHKGF",
         "KUAUMHWR",
         "KUAVI3U2",
         "KUATHPK4"
@@ -559,6 +700,28 @@
       "primaryEmail": "jmosco@baileysign.com"
     },
     {
+      "id": "KUAM5ZOO",
+      "firstName": "John",
+      "lastName": "Trott",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "johntrott@gmail.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//6E/00/Box_ff81c784_74-84_v1.png",
+      "timezone": "US/Pacific",
+      "locale": "en",
+      "deleted": false,
+      "primaryEmail": "johntrott@gmail.com"
+    },
+    {
       "id": "KUATTPIQ",
       "firstName": "Kate",
       "lastName": "Pataro",
@@ -572,6 +735,29 @@
       "timezone": "US/Pacific",
       "locale": "en",
       "deleted": true
+    },
+    {
+      "id": "KUAWEXVQ",
+      "firstName": "Kristin",
+      "lastName": "Fontaine",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "kfontaine@welchsign.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//F5/AC/Box_ffe53935_75-70_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Supervisor",
+      "primaryEmail": "kfontaine@welchsign.com"
     },
     {
       "id": "KUATISBM",
@@ -643,6 +829,29 @@
       "primaryEmail": "lwhite@welchsign.com"
     },
     {
+      "id": "KUAWKD5J",
+      "firstName": "Leo",
+      "lastName": "Thorne",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "exteriorfabrication@gmail.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//0E/EA/Box_ffe57373_76-84_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Welder",
+      "primaryEmail": "exteriorfabrication@gmail.com"
+    },
+    {
       "id": "KUATLCPV",
       "firstName": "Lissa",
       "lastName": "Jacobson",
@@ -704,6 +913,29 @@
       "primaryEmail": "mhead@welchsign.com"
     },
     {
+      "id": "KUAWGHOW",
+      "firstName": "Michael",
+      "lastName": "Lamare",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "mike@welchsign.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//53/21/Box_ffba68c8_77-76_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Digital Designer",
+      "primaryEmail": "mike@welchsign.com"
+    },
+    {
       "id": "KUAIIJ76",
       "firstName": "Morgan",
       "lastName": "Foote",
@@ -747,6 +979,9 @@
       "deleted": false,
       "memberIds": [
         "KUAIIJ76",
+        "KUAWAU6Z",
+        "KUATJIS2",
+        "KUATWBUA",
         "KUASSV4P",
         "KUASSV4S",
         "KUAIJNAD",
@@ -794,27 +1029,19 @@
       "primaryEmail": "nbertan@welchsign.com"
     },
     {
-      "id": "KUAWAUUX",
+      "id": "KUAWTRHM",
       "firstName": "Neill",
       "lastName": "Ewing-Wegmann",
       "type": "Person",
       "profiles": [
         {
-          "accountId": "IEADYYMR",
-          "email": "neill@welchsign.com",
-          "role": "Collaborator",
-          "external": true,
-          "admin": false,
-          "owner": false,
-          "active": true
+          "accountId": "IEADYYMR"
         }
       ],
-      "avatarUrl": "https://www.wrike.com/avatars//DE/EF/Box_ffafb42b_78-69_v1.png",
-      "timezone": "America/New_York",
+      "avatarUrl": "https://www.wrike.com/avatars/default/deleted.png",
+      "timezone": "US/Pacific",
       "locale": "en",
-      "deleted": false,
-      "title": "Production Manager",
-      "primaryEmail": "neill@welchsign.com"
+      "deleted": true
     },
     {
       "id": "KUASSVR2",
@@ -855,7 +1082,7 @@
           "active": true
         }
       ],
-      "avatarUrl": "https://www.wrike.com/avatars//77/5B/Box_ffafb42b_78-77_v1.png",
+      "avatarUrl": "https://www.wrike.com/avatars//1F/16/9qoBDjkGXAcG.png",
       "timezone": "US/Pacific",
       "locale": "en",
       "deleted": false,
@@ -889,6 +1116,28 @@
       ]
     },
     {
+      "id": "KUAWSPNT",
+      "firstName": "Persistent Calculations",
+      "lastName": "Bot",
+      "type": "Robot",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "robot3957137persistentcalculations@wrike-robot.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//88/7C/Box_ff8e24aa_80-67_v1.png",
+      "timezone": "US/Eastern",
+      "locale": "en",
+      "deleted": false,
+      "primaryEmail": "robot3957137persistentcalculations@wrike-robot.com"
+    },
+    {
       "id": "KX7XLYUM",
       "firstName": "Production",
       "lastName": "",
@@ -908,6 +1157,18 @@
       "locale": "en",
       "deleted": false,
       "memberIds": [
+        "KUAWERVJ",
+        "KUAWEXVQ",
+        "KUAWFBCR",
+        "KUAWFIPF",
+        "KUAM5ZOO",
+        "KUAWKD5J",
+        "KUAWGGSI",
+        "KUAWKEER",
+        "KUAWGG4A",
+        "KUAWGHOW",
+        "KUAWAVEQ",
+        "KUAWKGZA",
         "KUATLCPV",
         "KUAVVI5X",
         "KUATJIS2"
@@ -961,6 +1222,8 @@
       "deleted": false,
       "memberIds": [
         "KUAWBVMR",
+        "KUAUNR4P",
+        "KUAUD4IS",
         "KUATEHED",
         "KUATISBM",
         "KUATIDV4",
@@ -1049,8 +1312,8 @@
         {
           "accountId": "IEADYYMR",
           "email": "theskett@welchsign.com",
-          "role": "Collaborator",
-          "external": true,
+          "role": "User",
+          "external": false,
           "admin": false,
           "owner": false,
           "active": true
@@ -1077,6 +1340,29 @@
       "timezone": "US/Pacific",
       "locale": "en",
       "deleted": true
+    },
+    {
+      "id": "KUAWGGSI",
+      "firstName": "Walter",
+      "lastName": "Carrillo",
+      "type": "Person",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "walt@welchsign.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//11/3E/Box_ffd81b60_87-67_v1.png",
+      "timezone": "America/New_York",
+      "locale": "en",
+      "deleted": false,
+      "title": "Technician",
+      "primaryEmail": "walt@welchsign.com"
     },
     {
       "id": "KUAUMHWR",
@@ -1232,6 +1518,28 @@
       "locale": "en",
       "deleted": false,
       "primaryEmail": "robot3957137welcome@wrike-robot.com"
+    },
+    {
+      "id": "KUAWERVT",
+      "firstName": "Wrike",
+      "lastName": "Bot",
+      "type": "Robot",
+      "profiles": [
+        {
+          "accountId": "IEADYYMR",
+          "email": "robot3957137solutiontemplatebotextended@wrike-robot.com",
+          "role": "Collaborator",
+          "external": true,
+          "admin": false,
+          "owner": false,
+          "active": true
+        }
+      ],
+      "avatarUrl": "https://www.wrike.com/avatars//78/06/Box_ff3949ab_87-66_v1.png",
+      "timezone": "US/Eastern",
+      "locale": "en",
+      "deleted": false,
+      "primaryEmail": "robot3957137solutiontemplatebotextended@wrike-robot.com"
     }
   ]
 }

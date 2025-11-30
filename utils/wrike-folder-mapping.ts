@@ -117,6 +117,30 @@ export const SHOPVOX_WRIKE_FOLDER_MAPPING: WrikeFolderMapping[] = [
       forQuotes: "MQAAAABpTjjU",
     },
   },
+  {
+    name: "Sarah Coggeshall",
+    shopVoxUserId: "ab74aebb-5b8e-43e9-96c3-72aacfd70033",
+    wrikeFolderId: {
+      forWosos: "MQAAAAEAtydW",
+      forQuotes: "MQAAAAEAtydW",
+    },
+  },
+  {
+    name: "Lance Rogers",
+    shopVoxUserId: "03ec37ee-1247-499f-b8a5-23d06a1dbe7f",
+    wrikeFolderId: {
+      forWosos: "MQAAAAEBMKim",
+      forQuotes: "MQAAAAEBMKhc",
+    },
+  },
+  {
+    name: "Beth Williams",
+    shopVoxUserId: "9625ed25-07c9-4d80-9803-c2b9558f2f70",
+    wrikeFolderId: {
+      forWosos: "MQAAAAEAtydW",
+      forQuotes: "MQAAAAEAtydW",
+    },
+  },
 ];
 
 /**
