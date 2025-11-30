@@ -470,6 +470,127 @@ export class WrikeService {
   }
 
   /**
+   * Creates a Wrike task link URL
+   * @param taskId - The Wrike task ID
+   * @returns The full URL to open the task in Wrike
+   */
+  private createWrikeTaskLink(taskId: string): string {
+    return `https://www.wrike.com/open.htm?id=${taskId}`;
+  }
+
+  /**
+   * Finds Wrike tasks for related quotes and creates HTML links
+   * @param relatedTransactions - Array of related transactions from a sales order
+   * @returns HTML string with links to related quote tasks
+   */
+  private async findAndLinkQuoteTasks(
+    relatedTransactions: any[]
+  ): Promise<string> {
+    if (!relatedTransactions || relatedTransactions.length === 0) {
+      return "";
+    }
+
+    // Filter for Quote transactions only
+    const quoteTransactions = relatedTransactions.filter(
+      (txn) => txn.txnType === "Quote"
+    );
+
+    if (quoteTransactions.length === 0) {
+      return "";
+    }
+
+    const links: string[] = [];
+
+    for (const quoteTxn of quoteTransactions) {
+      try {
+        // Find the Wrike task by quote ID
+        const searchResult = await this.findTaskByQuoteId(quoteTxn.txnId);
+
+        if (searchResult.data && searchResult.data.length > 0) {
+          const task = searchResult.data[0];
+          const permalink = task.permalink;
+          const title = task.title || `QT #${quoteTxn.txnNumber || "N/A"}`;
+
+          if (permalink) {
+            const link = `<a href="${this.escapeHtml(
+              permalink
+            )}" target="_blank">${this.escapeHtml(title)}</a>`;
+            links.push(link);
+          }
+        }
+      } catch (error) {
+        // If task not found, skip it silently
+        console.warn(
+          `Could not find Wrike task for quote ${quoteTxn.txnId}:`,
+          error
+        );
+      }
+    }
+
+    return links.join("<br />");
+  }
+
+  /**
+   * Finds Wrike tasks for related sales orders and creates HTML links
+   * @param salesOrders - Array of sales order IDs or objects from a quote
+   * @returns HTML string with links to related sales order tasks
+   */
+  private async findAndLinkSalesOrderTasks(
+    salesOrders: any[]
+  ): Promise<string> {
+    if (!salesOrders || salesOrders.length === 0) {
+      return "";
+    }
+
+    const links: string[] = [];
+
+    for (const salesOrder of salesOrders) {
+      try {
+        // Extract ID - handle both string IDs and objects with id property
+        const salesOrderId =
+          typeof salesOrder === "string" ? salesOrder : salesOrder.id;
+
+        if (!salesOrderId) {
+          console.warn("Sales order missing ID:", salesOrder);
+          continue;
+        }
+
+        // Get txnNumber from the object if available, otherwise we'll get it from Wrike
+        const txnNumberFromOrder =
+          typeof salesOrder === "object" ? salesOrder.txnNumber : null;
+
+        // Find the Wrike task by sales order ID
+        const searchResult = await this.findTaskBySalesOrderId(salesOrderId);
+
+        if (searchResult.data && searchResult.data.length > 0) {
+          const task = searchResult.data[0];
+          const permalink = task.permalink;
+          const title = task.title || `SO #${txnNumberFromOrder || "N/A"}`;
+
+          if (permalink) {
+            const link = `<a href="${this.escapeHtml(
+              permalink
+            )}" target="_blank">${this.escapeHtml(title)}</a>`;
+            links.push(link);
+          }
+        }
+      } catch (error) {
+        // If task not found, skip it silently
+        const salesOrderId =
+          typeof salesOrder === "string"
+            ? salesOrder
+            : salesOrder?.id || "unknown";
+        console.warn(
+          `Could not find Wrike task for sales order ${salesOrderId}:`,
+          error
+        );
+      }
+    }
+
+    return links.join("<br />");
+  }
+
+  /**
    * Formats addresses for a sales order and returns them as custom field data
    * @param salesOrder - The sales order to format addresses for
    * @returns Promise<Record<string, string>> - Custom field data with formatted addresses
@@ -508,7 +629,7 @@ export class WrikeService {
   /**
    * Maps a ShopVox quote to Wrike custom fields
    */
-  private mapQuoteToCustomFields(quote: ShopVoxQuote) {
+  private async mapQuoteToCustomFields(quote: ShopVoxQuote) {
     const baseCustomFields = [
       {
         id: WRIKE_CUSTOM_FIELDS.SHOPVOX_ID,
@@ -701,6 +822,10 @@ export class WrikeService {
         value: this.createWorkOrderLinks(quote.salesOrders),
       },
       {
+        id: WRIKE_CUSTOM_FIELDS.LINKED_ORDERS,
+        value: await this.findAndLinkSalesOrderTasks(quote.salesOrders || []),
+      },
+      {
         id: WRIKE_CUSTOM_FIELDS.INSTALL_ADDRESS,
         value: this.sanitizeWrikeCustomFieldValue(
           formatAddress(quote.installingAddress as ShopVoxAddress)
@@ -764,7 +889,7 @@ export class WrikeService {
   /**
    * Maps a ShopVox sales order to Wrike custom fields
    */
-  private mapSalesOrderToCustomFields(
+  private async mapSalesOrderToCustomFields(
     salesOrder: ShopVoxSalesOrder,
     customFields?: Record<string, string>
   ) {
@@ -1069,6 +1194,12 @@ export class WrikeService {
         )}" target="_blank">SO #${this.escapeHtml(salesOrder.txnNumber)}</a>`,
       },
       {
+        id: WRIKE_CUSTOM_FIELDS.LINKED_QUOTE,
+        value: await this.findAndLinkQuoteTasks(
+          salesOrder.relatedTransactions || []
+        ),
+      },
+      {
         id: WRIKE_CUSTOM_FIELDS.FULFILLMENT_METHOD,
         value: this.determineFulfillmentMethod(salesOrder.lineItems),
       },
@@ -1190,7 +1321,7 @@ export class WrikeService {
       description: description,
       responsibles,
       parents,
-      customFields: this.mapQuoteToCustomFields(quote),
+      customFields: await this.mapQuoteToCustomFields(quote),
       customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
       customItemTypeId: WRIKE_ITEM_TYPES.QUOTE, // Quote Custom Item Type ID
     };
@@ -1342,7 +1473,7 @@ export class WrikeService {
       title: `QT #${quote.txnNumber}: ${quote.title}`,
       description: description,
       addResponsibles: responsibles,
-      customFields: this.mapQuoteToCustomFields(quote),
+      customFields: await this.mapQuoteToCustomFields(quote),
       customStatus: mapShopVoxToWrikeStatusId(quote.workflowState),
     };
 
@@ -1485,7 +1616,10 @@ export class WrikeService {
       description: description,
       responsibles,
       parents,
-      customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
+      customFields: await this.mapSalesOrderToCustomFields(
+        salesOrder,
+        customFields
+      ),
       customItemTypeId: WRIKE_ITEM_TYPES.SALES_ORDER, // Sales Order Custom Item Type ID
     };
 
@@ -1605,7 +1739,10 @@ export class WrikeService {
     const requestBody: any = {
       title: `SO #${salesOrder.txnNumber}: ${salesOrder.title}`,
       description: description,
-      customFields: this.mapSalesOrderToCustomFields(salesOrder, customFields),
+      customFields: await this.mapSalesOrderToCustomFields(
+        salesOrder,
+        customFields
+      ),
     };
 
     if (oldResponsibles) {

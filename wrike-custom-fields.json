@@ -2,24 +2,37 @@
   "kind": "customfields",
   "data": [
     {
+      "id": "IEADYYMRJUAJKDIX",
+      "accountId": "IEADYYMR",
+      "title": "Target Install Date",
+      "type": "Date",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
       "id": "IEADYYMRJUAJFPZH",
       "accountId": "IEADYYMR",
       "title": "Total",
       "type": "Currency",
       "sharedIds": [],
       "sharing": {
-        "writerIds": []
+        "writerIds": ["KUAIIJPC", "KUAVYLX5"]
       },
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
         "aggregation": "Sum",
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -31,17 +44,15 @@
       "type": "Numeric",
       "sharedIds": [],
       "sharing": {
-        "writerIds": []
+        "writerIds": ["KUAVYLX5"]
       },
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "useThousandsSeparator": false,
         "aggregation": "Sum",
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -53,14 +64,12 @@
       "type": "Contacts",
       "sharedIds": [],
       "sharing": {
-        "writerIds": []
+        "writerIds": ["KUAVYLX5"]
       },
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": true,
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -71,14 +80,10 @@
       "title": "Sales Rep",
       "type": "Contacts",
       "sharedIds": [],
-      "sharing": {
-        "writerIds": []
-      },
+      "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "contacts": [
           "KUAIINDI",
           "KUAUNR4P",
@@ -86,9 +91,10 @@
           "KUATISBM",
           "KUAWBVMR",
           "KUAUNFRL",
-          "KUAUVQGU"
+          "KUAUVQGU",
+          "KUATZFAN"
         ],
-        "readOnly": true,
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -100,25 +106,16 @@
       "type": "DropDown",
       "sharedIds": [],
       "sharing": {
-        "writerIds": [
-          "KUAVYLX5"
-        ]
+        "writerIds": ["KUAVYLX5"]
       },
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "values": [
-          "Shipping",
-          "Install",
-          "Customer pickup",
-          "Conflict"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
+        "values": ["Shipping", "Install", "Customer pickup", "Conflict"],
         "options": [
           {
             "value": "Shipping",
-            "color": "Turquoise"
+            "color": "Brown"
           },
           {
             "value": "Install",
@@ -126,7 +123,7 @@
           },
           {
             "value": "Customer pickup",
-            "color": "DarkBlue"
+            "color": "Yellow"
           },
           {
             "value": "Conflict",
@@ -147,14 +144,12 @@
       "type": "Text",
       "sharedIds": [],
       "sharing": {
-        "writerIds": []
+        "writerIds": ["KUAVYLX5"]
       },
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": true,
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false,
         "allowTime": false
       },
       "description": ""
@@ -168,29 +163,89 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "contacts": [
-          "KUATJIS2",
-          "KUAWAUUX"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
+        "contacts": ["KUATJIS2", "KUAIIJPC"],
         "readOnly": false,
         "allowTime": false
       },
       "description": ""
     },
     {
-      "id": "IEADYYMRJUAJKDIX",
+      "id": "IEADYYMRJUAJFSWB",
       "accountId": "IEADYYMR",
-      "title": "Target Install Date",
+      "title": "Last Updated On",
       "type": "Date",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": ["KUAVYLX5"]
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJJEVR",
+      "accountId": "IEADYYMR",
+      "title": "ShopVox Sales Order Link",
+      "type": "Text",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": ["KUAVYLX5"]
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFEM",
+      "accountId": "IEADYYMR",
+      "title": "Estimator",
+      "type": "Contacts",
+      "sharedIds": [],
+      "sharing": {
+        "writerIds": ["KUAVYLX5"]
+      },
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false,
+        "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAJIFD5",
+      "accountId": "IEADYYMR",
+      "title": "Project Manager",
+      "type": "Contacts",
       "sharedIds": [],
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
+        "applicableEntityTypes": ["WorkItem"],
+        "contacts": [
+          "KUAIIJPC",
+          "KUAIINDI",
+          "KUAUNR4P",
+          "KUATJHVJ",
+          "KUATISBM",
+          "KUAUNFRL",
+          "KUATZFAN",
+          "KUATEHED",
+          "KUATHPK4",
+          "KUAUVQGU",
+          "KUASSV4P",
+          "KUATIEHY",
+          "KUATIDV4",
+          "KUAIIJ76"
         ],
         "readOnly": false,
         "allowTime": false
@@ -207,9 +262,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -225,9 +278,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -243,9 +294,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -261,31 +310,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "readOnly": false,
-        "allowTime": false
-      },
-      "description": ""
-    },
-    {
-      "id": "IEADYYMRJUAJFPZD",
-      "accountId": "IEADYYMR",
-      "title": "SO Subtotal",
-      "type": "Currency",
-      "spaceId": "MQAAAABm_ZEf",
-      "sharedIds": [],
-      "sharing": {},
-      "settings": {
-        "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
-        "decimalPlaces": 2,
-        "useThousandsSeparator": true,
-        "currency": "USD",
-        "aggregation": "Sum",
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -301,9 +326,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -323,9 +346,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -341,9 +362,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -359,9 +378,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "useThousandsSeparator": false,
         "aggregation": "Sum",
@@ -379,9 +396,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -397,9 +412,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -415,9 +428,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "aggregation": "Sum",
         "readOnly": false,
@@ -435,9 +446,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "useThousandsSeparator": false,
         "aggregation": "Sum",
@@ -456,9 +465,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -474,9 +481,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -494,9 +499,7 @@
       },
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "aggregation": "Sum",
         "readOnly": false,
@@ -514,9 +517,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -532,9 +533,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -549,9 +548,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -567,9 +564,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -584,9 +579,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -602,9 +595,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -619,9 +610,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -636,9 +625,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": "Id of the createdBy object received - rest of the object in the task's native description"
@@ -653,9 +640,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -670,9 +655,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -687,9 +670,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -704,9 +685,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -721,9 +700,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -739,9 +716,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -756,9 +731,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -773,9 +746,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -795,9 +766,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -817,9 +786,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -835,9 +802,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -853,9 +818,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -871,9 +834,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -889,9 +850,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -906,9 +865,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -924,9 +881,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -941,9 +896,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -958,9 +911,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -975,9 +926,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -992,9 +941,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1009,9 +956,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1031,9 +976,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1048,9 +991,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1065,9 +1006,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "aggregation": "Sum",
         "readOnly": false
@@ -1084,9 +1023,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1105,9 +1042,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -1123,9 +1058,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -1141,9 +1074,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -1159,9 +1090,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "aggregation": "Sum",
         "readOnly": false
@@ -1178,9 +1107,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1199,9 +1126,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1220,9 +1145,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1237,9 +1160,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1254,9 +1175,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "aggregation": "Sum",
         "readOnly": false
@@ -1273,9 +1192,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1294,9 +1211,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1315,9 +1230,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1332,9 +1245,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1349,9 +1260,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "aggregation": "Sum",
         "readOnly": false
@@ -1368,9 +1277,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1389,9 +1296,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1406,9 +1311,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1423,9 +1326,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1440,9 +1341,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1457,9 +1356,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 0,
         "useThousandsSeparator": false,
         "aggregation": "Sum",
@@ -1477,9 +1374,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1494,9 +1389,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1511,9 +1404,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "aggregation": "Sum",
         "readOnly": false
@@ -1530,9 +1421,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "aggregation": "Sum",
         "readOnly": false
@@ -1549,9 +1438,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1566,9 +1453,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1583,9 +1468,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1600,9 +1483,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1617,9 +1498,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1634,9 +1513,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "decimalPlaces": 2,
         "useThousandsSeparator": true,
         "currency": "USD",
@@ -1655,9 +1532,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1672,9 +1547,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1689,9 +1562,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1706,9 +1577,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1723,9 +1592,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false
       },
       "description": ""
@@ -1740,9 +1607,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -1758,9 +1623,7 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
       },
@@ -1776,11 +1639,39 @@
       "sharing": {},
       "settings": {
         "inheritanceType": "All",
-        "applicableEntityTypes": [
-          "WorkItem"
-        ],
+        "applicableEntityTypes": ["WorkItem"],
         "readOnly": false,
         "allowTime": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAKBTEZ",
+      "accountId": "IEADYYMR",
+      "title": "Linked Quote",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false
+      },
+      "description": ""
+    },
+    {
+      "id": "IEADYYMRJUAKBTE2",
+      "accountId": "IEADYYMR",
+      "title": "Linked Orders",
+      "type": "Text",
+      "spaceId": "MQAAAABm_ZEf",
+      "sharedIds": [],
+      "sharing": {},
+      "settings": {
+        "inheritanceType": "All",
+        "applicableEntityTypes": ["WorkItem"],
+        "readOnly": false
       },
       "description": ""
     }
