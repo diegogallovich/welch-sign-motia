@@ -93,6 +93,11 @@ export async function getInstallAddressFromQuote(
     // Fetch the quote using the transaction ID
     const quote = await shopvoxService.getQuote(quoteTransaction.txnId);
 
+    if (!quote) {
+      console.log("Quote not found");
+      return "";
+    }
+
     if (!quote.installingAddress) {
       console.log("No installing address found in quote");
       return "";

@@ -121,8 +121,8 @@ export const SHOPVOX_WRIKE_FOLDER_MAPPING: WrikeFolderMapping[] = [
     name: "Sarah Coggeshall",
     shopVoxUserId: "ab74aebb-5b8e-43e9-96c3-72aacfd70033",
     wrikeFolderId: {
-      forWosos: "MQAAAAEAtydW",
-      forQuotes: "MQAAAAEAtydW",
+      forWosos: "MQAAAAEBHpwc",
+      forQuotes: "MQAAAAEBHp08",
     },
   },
   {
@@ -137,8 +137,8 @@ export const SHOPVOX_WRIKE_FOLDER_MAPPING: WrikeFolderMapping[] = [
     name: "Beth Williams",
     shopVoxUserId: "9625ed25-07c9-4d80-9803-c2b9558f2f70",
     wrikeFolderId: {
-      forWosos: "MQAAAAEAtydW",
-      forQuotes: "MQAAAAEAtydW",
+      forWosos: "MQAAAAEBHps6",
+      forQuotes: "MQAAAAEBHpsc",
     },
   },
 ];

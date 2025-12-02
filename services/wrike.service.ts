@@ -876,11 +876,13 @@ export class WrikeService {
       });
     }
 
-    // Created By - always present
-    contactFields.push({
-      id: WRIKE_CUSTOM_FIELDS.CREATED_BY,
-      value: mapShopVoxToWrikeUserId(quote.createdBy.id),
-    });
+    // Created By - add only if present
+    if (quote.createdBy?.id) {
+      contactFields.push({
+        id: WRIKE_CUSTOM_FIELDS.CREATED_BY,
+        value: mapShopVoxToWrikeUserId(quote.createdBy.id),
+      });
+    }
 
     // Combine all custom fields
     return [...baseCustomFields, ...contactFields];
@@ -1234,11 +1236,13 @@ export class WrikeService {
       });
     }
 
-    // Created By - always present
-    contactFields.push({
-      id: WRIKE_CUSTOM_FIELDS.CREATED_BY,
-      value: mapShopVoxToWrikeUserId(salesOrder.createdBy.id),
-    });
+    // Created By - add only if present
+    if (salesOrder.createdBy?.id) {
+      contactFields.push({
+        id: WRIKE_CUSTOM_FIELDS.CREATED_BY,
+        value: mapShopVoxToWrikeUserId(salesOrder.createdBy.id),
+      });
+    }
 
     // Add address fields if provided
     const addressFields: any[] = [];
@@ -1302,11 +1306,15 @@ export class WrikeService {
       )}</p><p><strong>Title:</strong> ${this.escapeHtml(quote.title)}</p>`;
     }
 
-    const responsibles = [mapShopVoxToWrikeUserId(quote.createdBy.id)];
-    const parents = [
-      mapShopVoxUserIdToWrikeFolderMapping(quote.createdBy.id)?.wrikeFolderId
-        .forQuotes,
-    ];
+    const responsibles = quote.createdBy?.id
+      ? [mapShopVoxToWrikeUserId(quote.createdBy.id)]
+      : [];
+    const parents = quote.createdBy?.id
+      ? [
+          mapShopVoxUserIdToWrikeFolderMapping(quote.createdBy.id)
+            ?.wrikeFolderId.forQuotes,
+        ]
+      : [];
 
     if (quote.primarySalesRep?.id) {
       responsibles.push(mapShopVoxToWrikeUserId(quote.primarySalesRep.id));
@@ -1463,7 +1471,9 @@ export class WrikeService {
       )}</p><p><strong>Title:</strong> ${this.escapeHtml(quote.title)}</p>`;
     }
 
-    const responsibles = [mapShopVoxToWrikeUserId(quote.createdBy.id)];
+    const responsibles = quote.createdBy?.id
+      ? [mapShopVoxToWrikeUserId(quote.createdBy.id)]
+      : [];
 
     if (quote.primarySalesRep?.id) {
       responsibles.push(mapShopVoxToWrikeUserId(quote.primarySalesRep.id));
@@ -1589,11 +1599,15 @@ export class WrikeService {
       )}</p>`;
     }
 
-    const responsibles = [mapShopVoxToWrikeUserId(salesOrder.createdBy.id)];
-    const parents = [
-      mapShopVoxUserIdToWrikeFolderMapping(salesOrder.createdBy.id)
-        ?.wrikeFolderId.forWosos,
-    ];
+    const responsibles = salesOrder.createdBy?.id
+      ? [mapShopVoxToWrikeUserId(salesOrder.createdBy.id)]
+      : [];
+    const parents = salesOrder.createdBy?.id
+      ? [
+          mapShopVoxUserIdToWrikeFolderMapping(salesOrder.createdBy.id)
+            ?.wrikeFolderId.forWosos,
+        ]
+      : [];
 
     if (salesOrder.projectManager?.id) {
       responsibles.push(mapShopVoxToWrikeUserId(salesOrder.projectManager.id));
