@@ -1,4 +1,4 @@
-import { EventConfig, FlowContext, Handlers } from "motia";
+import { EventConfig, FlowContext } from "motia";
 import { z } from "zod";
 import { shopvoxService } from "../../services/shopvox.service";
 import { addLogToState, addDataToState } from "../../utils/state-logger";

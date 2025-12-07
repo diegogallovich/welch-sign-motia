@@ -1809,6 +1809,55 @@ export class WrikeService {
   }
 
   /**
+   * Updates a subtask in Wrike without setting a custom item type.
+   * This method is used for copying parent task data to subtasks.
+   * @param taskId - The Wrike task ID of the subtask
+   * @param title - The new title for the subtask
+   * @param description - The description to set on the subtask
+   * @param customFields - Array of custom fields in Wrike format [{id, value}]
+   */
+  async updateSubtask(
+    taskId: string,
+    title: string,
+    description: string,
+    customFields: Array<{ id: string; value: string }>
+  ): Promise<WrikeTaskUpdateResponse> {
+    const requestBody: any = {
+      title,
+      description,
+      customFields,
+    };
+
+    const response = await this.makeRequest(`${this.baseUrl}/tasks/${taskId}`, {
+      method: "PUT",
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      let errorDetails = "";
+      try {
+        const errorResponse = await response.json();
+        errorDetails = JSON.stringify(errorResponse, null, 2);
+      } catch (e) {
+        errorDetails = await response.text();
+      }
+
+      const errorMessage = `Failed to update Wrike subtask: ${
+        response.status
+      } ${response.statusText}\nTask ID: ${taskId}\nDescription length: ${
+        description?.length || 0
+      }\nRequest body: ${JSON.stringify(
+        requestBody,
+        null,
+        2
+      )}\nError response: ${errorDetails}`;
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  }
+
+  /**
    * Creates or updates a WoSo task in Wrike
    * Returns the task ID and whether it was created or updated
    * Automatically formats addresses for the sales order

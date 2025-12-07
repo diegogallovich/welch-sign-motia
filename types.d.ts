@@ -22,5 +22,7 @@ declare module 'motia' {
     'process-shopvox-quote-destroyed': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, { topic: 'finality:error:quote-destroyed'; data: { traceId: string; error?: { message: string; stack?: string; step?: string }; result?: unknown; input?: unknown } }>
     'process-shopvox-quote-created': EventHandler<{ id: string; name: string; changes?: Record<string, unknown[]> }, { topic: 'finality:error:quote-created'; data: { traceId: string; error?: { message: string; stack?: string; step?: string }; result?: unknown; input?: unknown } }>
     'flow-notification-handler': EventHandler<{ traceId: string; error?: { message: string; stack?: string; step?: string }; result?: unknown; input?: unknown }, never>
+    'wrike-shopvox-db-webhook': ApiRouteHandler<{ webhookId: string; eventAuthorId: string; eventType: string; taskId: string; lastUpdatedDate: string }[], unknown, { topic: 'subtask:created'; data: { subtaskId: string; parentTaskId: string } }>
+    'process-subtask-created': EventHandler<{ subtaskId: string; parentTaskId: string }, never>
   }
 }
