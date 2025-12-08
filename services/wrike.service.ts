@@ -397,41 +397,6 @@ export class WrikeService {
   }
 
   /**
-   * Determines the fulfillment method based on line item names
-   * @param lineItems - Array of line items from quote or sales order
-   * @returns "Shipping" | "Install" | "Customer pickup" | "Conflict"
-   */
-  private determineFulfillmentMethod(lineItems: any[]): string {
-    if (!lineItems || lineItems.length === 0) {
-      return "";
-    }
-
-    let hasShipping = false;
-    let hasInstall = false;
-
-    for (const item of lineItems) {
-      const name = (item?.name || "").toLowerCase();
-
-      if (name.includes("shipping")) {
-        hasShipping = true;
-      }
-
-      if (name.includes("install") || name.includes("installation")) {
-        hasInstall = true;
-      }
-
-      // Early exit if both found
-      if (hasShipping && hasInstall) {
-        return "Conflict";
-      }
-    }
-
-    if (hasShipping) return "Shipping";
-    if (hasInstall) return "Install";
-    return "Customer pickup";
-  }
-
-  /**
    * Creates HTML anchor tags for ShopVox work orders from sales orders array
    */
   private createWorkOrderLinks(salesOrders: any[]): string {
@@ -832,10 +797,6 @@ export class WrikeService {
         ),
       },
       {
-        id: WRIKE_CUSTOM_FIELDS.FULFILLMENT_METHOD,
-        value: this.determineFulfillmentMethod(quote.lineItems),
-      },
-      {
         id: WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.dueDate),
       },
@@ -1200,10 +1161,6 @@ export class WrikeService {
         value: await this.findAndLinkQuoteTasks(
           salesOrder.relatedTransactions || []
         ),
-      },
-      {
-        id: WRIKE_CUSTOM_FIELDS.FULFILLMENT_METHOD,
-        value: this.determineFulfillmentMethod(salesOrder.lineItems),
       },
     ];
 
