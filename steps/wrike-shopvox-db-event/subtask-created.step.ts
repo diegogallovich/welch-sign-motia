@@ -51,6 +51,16 @@ export const handler = async (
     logger.info(`Parent task title: ${parentTask.title}`);
     logger.info(`Subtask title: ${subtask.title}`);
 
+    // Check if subtask title already contains parent task name (idempotency check)
+    const titleAlreadyHasParentName = subtask.title.includes(parentTask.title);
+
+    if (titleAlreadyHasParentName) {
+      logger.info(
+        `Subtask title already contains parent name, skipping update for subtask ${subtaskId}`
+      );
+      return;
+    }
+
     // Build new subtask title: "{Subtask Name} - {parent task name}"
     const newSubtaskTitle = `${subtask.title} - ${parentTask.title}`;
 
