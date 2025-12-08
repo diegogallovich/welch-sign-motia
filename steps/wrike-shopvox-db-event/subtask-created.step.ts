@@ -11,7 +11,7 @@ export const config: EventConfig = {
   type: "event",
   name: "process-subtask-created",
   description:
-    "Copies custom fields from parent task to subtask and renames it",
+    "Copies custom fields from parent task to subtask and sets subtask name to match parent",
   subscribes: ["subtask:created"],
   emits: [],
   input: SubtaskCreatedInputSchema,
@@ -51,18 +51,16 @@ export const handler = async (
     logger.info(`Parent task title: ${parentTask.title}`);
     logger.info(`Subtask title: ${subtask.title}`);
 
-    // Check if subtask title already contains parent task name (idempotency check)
-    const titleAlreadyHasParentName = subtask.title.includes(parentTask.title);
-
-    if (titleAlreadyHasParentName) {
+    // Check if subtask title already matches parent task name (idempotency check)
+    if (subtask.title === parentTask.title) {
       logger.info(
-        `Subtask title already contains parent name, skipping update for subtask ${subtaskId}`
+        `Subtask title already matches parent name, skipping update for subtask ${subtaskId}`
       );
       return;
     }
 
-    // Build new subtask title: "{Subtask Name} - {parent task name}"
-    const newSubtaskTitle = `${subtask.title} - ${parentTask.title}`;
+    // Set subtask title to match parent task name
+    const newSubtaskTitle = parentTask.title;
 
     // Get parent task's custom fields
     const parentCustomFields = parentTask.customFields || [];
@@ -70,7 +68,7 @@ export const handler = async (
     logger.info(
       `Copying ${parentCustomFields.length} custom fields from parent to subtask`
     );
-    logger.info(`New subtask title: ${newSubtaskTitle}`);
+    logger.info(`Setting subtask title to parent name: ${newSubtaskTitle}`);
 
     // Update the subtask with parent's data (title and custom fields only, not description)
     await wrikeService.updateSubtask(
