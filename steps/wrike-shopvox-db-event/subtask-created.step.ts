@@ -11,7 +11,7 @@ export const config: EventConfig = {
   type: "event",
   name: "process-subtask-created",
   description:
-    "Copies custom fields and description from parent task to subtask and renames it",
+    "Copies custom fields from parent task to subtask and renames it",
   subscribes: ["subtask:created"],
   emits: [],
   input: SubtaskCreatedInputSchema,
@@ -64,20 +64,19 @@ export const handler = async (
     // Build new subtask title: "{Subtask Name} - {parent task name}"
     const newSubtaskTitle = `${subtask.title} - ${parentTask.title}`;
 
-    // Get parent task's custom fields and description
+    // Get parent task's custom fields
     const parentCustomFields = parentTask.customFields || [];
-    const parentDescription = parentTask.description || "";
 
     logger.info(
       `Copying ${parentCustomFields.length} custom fields from parent to subtask`
     );
     logger.info(`New subtask title: ${newSubtaskTitle}`);
 
-    // Update the subtask with parent's data
+    // Update the subtask with parent's data (title and custom fields only, not description)
     await wrikeService.updateSubtask(
       subtaskId,
       newSubtaskTitle,
-      parentDescription,
+      undefined,
       parentCustomFields
     );
 

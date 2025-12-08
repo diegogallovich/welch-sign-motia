@@ -1770,20 +1770,23 @@ export class WrikeService {
    * This method is used for copying parent task data to subtasks.
    * @param taskId - The Wrike task ID of the subtask
    * @param title - The new title for the subtask
-   * @param description - The description to set on the subtask
+   * @param description - Optional description to set on the subtask
    * @param customFields - Array of custom fields in Wrike format [{id, value}]
    */
   async updateSubtask(
     taskId: string,
     title: string,
-    description: string,
+    description: string | undefined,
     customFields: Array<{ id: string; value: string }>
   ): Promise<WrikeTaskUpdateResponse> {
     const requestBody: any = {
       title,
-      description,
       customFields,
     };
+
+    if (description !== undefined) {
+      requestBody.description = description;
+    }
 
     const response = await this.makeRequest(`${this.baseUrl}/tasks/${taskId}`, {
       method: "PUT",
