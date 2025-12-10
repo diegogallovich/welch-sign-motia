@@ -397,6 +397,53 @@ export class WrikeService {
   }
 
   /**
+   * Determines the fulfillment method based on line item names
+   * @param lineItems - Array of line items from quote or sales order
+   * @returns "Install" | "Shipping" | "Customer Pick Up" | "Conflict"
+   */
+  private determineFulfillmentMethod(lineItems: any[]): string {
+    if (!lineItems || lineItems.length === 0) {
+      return "";
+    }
+
+    // Keywords for each fulfillment type
+    const installKeywords = [
+      "install",
+      "service & maintenance",
+      "removal",
+      "survey",
+    ];
+    const shippingKeywords = ["ship", "shipping"];
+
+    let hasInstall = false;
+    let hasShipping = false;
+
+    for (const item of lineItems) {
+      const name = (item?.name || "").toLowerCase();
+
+      // Check for install keywords
+      if (installKeywords.some((keyword) => name.includes(keyword))) {
+        hasInstall = true;
+      }
+
+      // Check for shipping keywords
+      if (shippingKeywords.some((keyword) => name.includes(keyword))) {
+        hasShipping = true;
+      }
+
+      // Early exit if both found
+      if (hasInstall && hasShipping) {
+        return "Conflict";
+      }
+    }
+
+    // Return based on what was found
+    if (hasShipping) return "Shipping";
+    if (hasInstall) return "Install";
+    return "Customer Pick Up";
+  }
+
+  /**
    * Creates HTML anchor tags for ShopVox work orders from sales orders array
    */
   private createWorkOrderLinks(salesOrders: any[]): string {
@@ -800,6 +847,10 @@ export class WrikeService {
         id: WRIKE_CUSTOM_FIELDS.TARGET_INSTALL_DATE,
         value: this.sanitizeWrikeCustomFieldValue(quote.dueDate),
       },
+      {
+        id: WRIKE_CUSTOM_FIELDS.FULFILLMENT_METHOD,
+        value: this.determineFulfillmentMethod(quote.lineItems),
+      },
     ];
 
     // Add contact field mappings if the respective users exist in the quote
@@ -1161,6 +1212,10 @@ export class WrikeService {
         value: await this.findAndLinkQuoteTasks(
           salesOrder.relatedTransactions || []
         ),
+      },
+      {
+        id: WRIKE_CUSTOM_FIELDS.FULFILLMENT_METHOD,
+        value: this.determineFulfillmentMethod(salesOrder.lineItems),
       },
     ];
 
